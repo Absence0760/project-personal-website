@@ -1,5 +1,5 @@
 # The base URL of the site; the only required configuration variable.
-base_url = "https://github.com/Absence0760/project-personal-website"
+base_url = "https://absence0760.github.io/project-personal-website"
 
 # The site title and description; used in feeds by default.
 title       = "Jared Howard"
