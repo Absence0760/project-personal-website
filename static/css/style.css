@@ -376,6 +376,42 @@ footer {
   font-size: 0.875rem;
 }
 
+/* ── Night mode (Tokyo Night palette) ───────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:          #1a1b26;
+    --surface:     #16161e;
+    --border:      #565f89;
+    --text:        #a9b1d6;
+    --muted:       #565f89;
+    --accent:      #7aa2f7;
+    --accent-hover:#7dcfff;
+  }
+
+  .post-content code {
+    background: #24283b;
+    color: #a9b1d6;
+  }
+
+  .intro-tags li {
+    background: #24283b;
+    color: var(--text);
+  }
+
+  .intro-tags li a {
+    color: var(--text);
+  }
+
+  .tags a {
+    background: #24283b;
+    color: #a9b1d6;
+  }
+
+  .sidebar-nav a:hover {
+    background: #24283b;
+  }
+}
+
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 680px) {
   .home-layout {
