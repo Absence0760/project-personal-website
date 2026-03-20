@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ config.title }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ config.description }}{% endblock %}">
+
+  <link rel="canonical" href="{{ current_url | safe }}">
+
+  <link rel="stylesheet" href="{{ get_url(path='css/style.css') | safe }}">
+</head>
+<body>
+
+  <main>
+    <div class="home-layout">
+
+      <aside class="sidebar">
+        <div class="sidebar-bio">
+          <h1>{{ config.title }}</h1>
+          <p>{{ config.description }}</p>
+        </div>
+        <nav class="sidebar-nav">
+          <ul>
+            <li><a href="{{ get_url(path='/') | safe }}">Home</a></li>
+            <li><a href="{{ get_url(path='/notes/') | safe }}">Notes</a></li>
+            <li><a href="{{ get_url(path='/projects/') | safe }}">Projects</a></li>
+            <li><a href="{{ get_url(path='/cv') | safe }}">CV</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <div class="page-content">
+        {% block content %}{% endblock %}
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; {{ now() | date(format="%Y") }} {{ config.title }}</p>
+  </footer>
+
+  <script src="{{ get_url(path='js/transitions.js') | safe }}" defer></script>
+
+  {% block extra_scripts %}{% endblock %}
+
+</body>
+</html>
