@@ -6,4 +6,8 @@ title       = "Jared Howard"
 description = "Writing about things I find interesting."
 
 # Configuration of the Markdown rendering
+taxonomies = [
+  { name = "tags" },
+]
+
 [markdown]

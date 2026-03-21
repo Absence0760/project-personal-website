@@ -1,6 +1,8 @@
 +++
 title = "Using multiple git profiles"
 date = 2026-03-19
+[taxonomies]
+tags = ["git", "ssh", "tooling"]
 +++
 
 ### Files to create
