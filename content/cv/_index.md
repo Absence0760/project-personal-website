@@ -9,7 +9,9 @@ My role involves creating and maintaining automated cypress tests.
 
 ## Experience
 
-**SDET at Corpay** — July 2024–Current
+**QA Software Engineer at enChoice** — May 2025–Current
+
+**SDET at Corpay** — July 2024–April 2025
 
 As part of an acquisition with Paymerang, LLC. I was appointed as a Software Development Engineer in Test at Corpay, Inc.
 
