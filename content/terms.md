@@ -3,65 +3,318 @@ title = "Terms of Service"
 description = "Terms of service for software products and development work provided by Jared Howard."
 +++
 
-_Last updated: May 14, 2026._
+_Effective: May 14, 2026. Last reviewed: May 14, 2026._
 
-These terms govern the use of software products and development services
-provided by Jared Howard ("we", "our") through this website and any related
-applications.
+These Terms of Service ("**Terms**") are a binding agreement between Jared
+Howard, a sole proprietor based in the Commonwealth of Virginia ("**we**",
+"**our**", "**us**"), and the individual or organization accessing our
+website or using the software products and development services we provide
+("**you**", "**your**", or "**Customer**"). By creating an account, clicking
+"I agree" at checkout, or otherwise using the services, you confirm that
+you have read these Terms, that you have authority to bind yourself or the
+organization you represent, and that you accept these Terms.
 
-## 1. Services
+If you do not agree to these Terms, do not access or use the services.
 
-We provide two categories of service:
+## 1. The services
 
-1. **Software products we operate** — web-based applications (SaaS dashboards,
-   e-commerce storefronts, and similar tools) accessed by customers through a
-   browser, typically billed on a monthly or annual subscription.
-2. **Custom software development** — design, build, and hosting work delivered
-   to small-business clients, billed as project fees, retainers, or ongoing
-   maintenance subscriptions.
+We provide two categories of service, both digital:
 
-All deliverables are digital. We do not sell or ship physical goods, and we do
-not provide downloadable installers.
+- **Software products we operate.** Multi-tenant SaaS dashboards,
+  e-commerce storefronts, and web-based tools, sold to organizations on
+  monthly or annual subscriptions.
+- **Custom software development for small businesses.** Project fees,
+  retainers, and ongoing hosting and maintenance, billed via Stripe
+  Subscriptions or invoicing.
 
-## 2. Accounts and access
+Everything we provide is accessed through a web browser. We do not sell
+physical goods, and we do not distribute downloadable installers.
 
-Customers of our software products are responsible for keeping their account
-credentials secure and for activity performed under their account. We may
-suspend access to address abuse, non-payment, or risks to the platform.
+A specific subscription plan, statement of work, or order form ("**Order**")
+will set the price, billing cycle, scope, and any plan-specific terms for
+your engagement. If anything in an Order conflicts with these Terms, the
+Order controls for that engagement.
 
-## 3. Payment
+## 2. Eligibility and accounts
 
-Subscription fees are billed in advance for the period selected (monthly or
-annual). Custom-development invoices and retainers are billed on the terms
-agreed in the relevant statement of work. All payments are processed through
-Stripe; we do not store full payment-card details on our systems.
+You must be at least 18 years old and capable of forming a binding contract
+to use the services. If you are using the services on behalf of an
+organization, you confirm that you are authorized to bind that organization,
+and "you" includes that organization for the purposes of these Terms.
 
-## 4. Acceptable use
+You are responsible for maintaining the confidentiality of your account
+credentials and for all activity that occurs under your account. Tell us
+promptly at the address in Section 16 if you believe your account has been
+compromised.
 
-You agree not to use the services to (a) violate any applicable law,
-(b) infringe on intellectual-property or privacy rights, (c) transmit malicious
-code, or (d) attempt to interfere with the security or operation of the
-platform.
+## 3. Payment and billing
 
-## 5. Termination
+Fees for software-product subscriptions are billed in advance for the
+billing period selected at sign-up (monthly or annual). Fees for custom
+development engagements are billed according to the relevant Order
+(typically a deposit, milestone payments, retainer, or recurring
+hosting/maintenance subscription). All amounts are stated in US dollars and
+charged through Stripe, our payment processor; we do not store full
+payment-card details on our own systems.
 
-You may cancel a subscription at any time from your account or by emailing us.
-We may terminate or suspend access for material breach of these terms or for
-non-payment after written notice.
+Unless an Order says otherwise, fees are non-refundable except as expressly
+provided in our Refund and Cancellation Policy at `/refunds/`.
 
-## 6. Disclaimers and liability
+We may change the price of a subscription on renewal. We will give you at
+least 30 days' notice by email before any price change takes effect. If you
+do not want to accept the new price, you can cancel your subscription before
+the next renewal date.
 
-The services are provided "as is". To the extent permitted by law, we
-disclaim implied warranties and limit our aggregate liability to the fees paid
-by you in the twelve months preceding the claim.
+## 4. Automatic renewal of subscriptions
 
-## 7. Changes
+> ⚠️ **PLEASE READ — AUTOMATIC RENEWAL DISCLOSURE.** Software-product
+> subscriptions sold under these Terms are **negative-option (auto-renewing)
+> subscriptions**. The terms in this Section 4 apply unless an Order says
+> otherwise.
 
-We may update these terms from time to time. The "last updated" date at the
-top of this page reflects the current version. Material changes will be
-notified to active customers by email.
+**4.1 What auto-renewal means.** When you purchase a subscription, you
+authorize us to charge your payment method on file, through Stripe, for the
+recurring fee at the start of each new billing period until you cancel.
+Subscriptions renew automatically for additional periods of the same length
+(month-for-month or year-for-year) at the then-current renewal price for
+your plan.
 
-## 8. Contact
+**4.2 Pre-charge disclosure.** Before charging your payment method for the
+first time, we will display, in clear and conspicuous form at the checkout
+or sign-up step, all of the following: that the subscription auto-renews,
+the renewal cadence, the renewal amount, the date of the first renewal
+charge, and a description of how to cancel. You must affirmatively accept
+these terms (for example, by ticking a checkbox or clicking "Subscribe and
+Pay") before any charge is made; we record that acceptance.
 
-Questions about these terms? Reach us at
-[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com).
+**4.3 Renewal reminder.** For annual subscriptions, we will email a renewal
+reminder to the address on your account at least 15 days, and no more than
+45 days, before the renewal date. The reminder will state the renewal
+amount, the renewal date, and a direct link to cancel.
+
+**4.4 How to cancel.** You may cancel at any time before your next renewal
+date. Cancellation will be available from your account settings in-product
+once subscription products are live; until then, the cancellation channel
+is email to the address in Section 16, and we will confirm cancellation
+within one business day. The cancellation method we offer will, at all
+times, be at least as easy to use as the sign-up method.
+
+**4.5 Effect of cancellation.** Cancelling stops future renewals. Your
+subscription remains active through the end of the billing period that has
+already been paid for; we do not pro-rate refunds for partial periods,
+except as set out in our Refund and Cancellation Policy or as required by
+applicable law.
+
+**4.6 Failed payments.** If we cannot charge your payment method on a
+renewal, we may attempt the charge again for up to 14 days. If the charge
+ultimately fails, we may suspend or terminate your subscription. We will
+notify you by email before doing so.
+
+## 5. Acceptable use
+
+You agree not to use the services to (a) violate any applicable law or
+regulation, (b) infringe on the intellectual-property, privacy, or
+publicity rights of any person, (c) transmit malware, viruses, or other
+malicious code, (d) interfere with or attempt to compromise the security
+or operation of the services, (e) reverse-engineer, decompile, or attempt
+to extract the source code of any product we operate except to the extent
+applicable law expressly permits, or (f) use the services to compete with
+us by building a substantially similar offering.
+
+We may suspend or terminate access for any breach of this Section 5 or for
+any conduct that we reasonably believe creates risk or legal exposure for
+us or other customers.
+
+## 6. Intellectual property and content
+
+**6.1 Our materials.** As between you and us, we (and our licensors) own
+all right, title, and interest in and to the services, the software,
+documentation, designs, and any improvements, modifications, or
+derivative works thereof, including all related intellectual-property
+rights. These Terms do not transfer any ownership rights to you; we grant
+you a limited, non-exclusive, non-transferable, revocable license to use
+the services for their intended purpose during your subscription or
+engagement.
+
+**6.2 Your content.** You retain all rights to the content, data, and
+materials you submit to or store within the services ("**Customer
+Content**"). You grant us a non-exclusive, worldwide, royalty-free
+license to host, process, transmit, display, and create necessary backup
+copies of your Customer Content solely as needed to operate the services
+for you. We will not use your Customer Content to train machine-learning
+models without your prior written consent.
+
+**6.3 Custom-development deliverables.** Ownership and licensing of code
+or other materials we deliver under a custom-development engagement are
+governed by the relevant Order. By default, you receive a perpetual,
+non-exclusive, royalty-free license to use the deliverables for your
+internal business purposes; we retain ownership of any general-purpose
+tools, libraries, and pre-existing materials we use to build them.
+
+**6.4 Feedback.** Suggestions or feedback you give us about the services
+are non-confidential, and you grant us a perpetual, royalty-free right to
+use them without compensation.
+
+## 7. Third-party services
+
+The services may integrate with or link to third-party services (for
+example, Stripe for payments, GitHub Pages for site hosting, and email
+providers for transactional and support email). We are not responsible
+for the operation, availability, or content of third-party services. Your
+use of any third-party service is governed by that service's own terms.
+
+## 8. Termination
+
+**8.1 By you.** You may terminate these Terms at any time by cancelling
+your subscription and ceasing to use the services. Cancellation is
+described in Section 4.4.
+
+**8.2 By us.** We may suspend or terminate your access to the services,
+in whole or in part and with or without notice, if (a) you materially
+breach these Terms or an Order, (b) you fail to pay fees when due and the
+failure continues for more than 15 days after written notice, (c) we
+reasonably believe your continued use poses a security risk or legal
+exposure, or (d) we discontinue the services generally.
+
+**8.3 Effect.** On termination, your right to access the services ends.
+Sections 3 (for unpaid amounts), 6, 8.3, 9, 10, 11, 12, 13, 14, 15, and
+16 survive termination. We may delete Customer Content after a reasonable
+wind-down period; you are responsible for exporting any content you wish
+to retain before termination takes effect.
+
+## 9. Disclaimer of warranties
+
+> **THE SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE", WITHOUT
+> WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT
+> PERMITTED BY APPLICABLE LAW, WE EXPRESSLY DISCLAIM ALL IMPLIED
+> WARRANTIES, INCLUDING THE IMPLIED WARRANTIES OF MERCHANTABILITY,
+> FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT, AND ANY
+> WARRANTIES ARISING FROM COURSE OF DEALING, COURSE OF PERFORMANCE, OR
+> USAGE OF TRADE. WE DO NOT WARRANT THAT THE SERVICES WILL BE
+> UNINTERRUPTED, ERROR-FREE, OR FREE OF HARMFUL COMPONENTS, OR THAT ANY
+> DATA WILL BE SECURE OR NOT LOST OR ALTERED.**
+
+Some jurisdictions do not allow the exclusion of certain warranties, so
+some of the above exclusions may not apply to you.
+
+## 10. Limitation of liability
+
+> **TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, OUR AGGREGATE
+> LIABILITY ARISING OUT OF OR RELATING TO THESE TERMS OR THE SERVICES
+> WILL NOT EXCEED THE GREATER OF (A) THE FEES YOU PAID TO US IN THE
+> TWELVE MONTHS IMMEDIATELY BEFORE THE EVENT GIVING RISE TO THE CLAIM, OR
+> (B) ONE HUNDRED US DOLLARS (US $100).**
+>
+> **IN NO EVENT WILL WE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL,
+> CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR FOR ANY LOSS OF
+> PROFITS, REVENUE, DATA, GOODWILL, OR BUSINESS OPPORTUNITY, WHETHER OR
+> NOT WE WERE ADVISED OF THE POSSIBILITY OF SUCH DAMAGES AND REGARDLESS
+> OF THE THEORY OF LIABILITY.**
+
+The limitations in this Section 10 do not apply to (a) liability that
+cannot be limited under applicable law, (b) your obligation to pay fees
+owed, or (c) your obligations under Section 11 (Indemnification). Some
+jurisdictions do not allow the exclusion or limitation of certain
+damages, so some of the above limitations may not apply to you.
+
+## 11. Indemnification
+
+You agree to indemnify, defend, and hold harmless Jared Howard and any
+employees, contractors, or agents from and against any claims, damages,
+losses, liabilities, costs, and expenses (including reasonable attorneys'
+fees) arising out of or relating to (a) your Customer Content, (b) your
+breach of these Terms or an Order, (c) your violation of any law or
+third-party right, or (d) your use of the services in a manner not
+permitted by these Terms. We will give you prompt notice of any claim
+subject to this Section, allow you to control the defense and settlement
+of the claim (provided that you may not settle a claim that admits
+liability on our behalf without our written consent), and reasonably
+cooperate in the defense at your expense.
+
+## 12. Governing law
+
+These Terms, and any dispute arising out of or relating to them or the
+services, are governed by the laws of the Commonwealth of Virginia,
+without regard to its conflict-of-laws principles. The United Nations
+Convention on Contracts for the International Sale of Goods does not
+apply.
+
+## 13. Dispute resolution
+
+**13.1 Informal resolution first.** Before either party files any legal
+action arising out of or relating to these Terms, the party with a
+concern must send a written notice to the other party that describes the
+concern in reasonable detail and proposes a resolution. Notices to us go
+to the address in Section 16; notices to you go to the email on your
+account. The parties will then negotiate in good faith for at least 30
+days. Many disputes can be resolved this way, and we ask that you not
+file a legal action before completing this step.
+
+**13.2 Venue.** If a dispute is not resolved through informal resolution
+within 30 days, the dispute must be filed exclusively in the state or
+federal courts located in the Commonwealth of Virginia. Both parties
+consent to the personal jurisdiction of, and venue in, those courts and
+waive any objection based on inconvenient forum.
+
+**13.3 Time limit.** Any cause of action arising out of or relating to
+these Terms or the services must be filed within one (1) year after the
+cause of action accrues, to the extent permitted by applicable law,
+after which it is permanently barred.
+
+## 14. Changes to these Terms
+
+We may update these Terms from time to time. The "Effective" date at the
+top reflects the current version. If a change is material, we will (a)
+update the Effective date, (b) notify active subscription customers by
+email at least 15 days before the change takes effect, and (c) where
+practical, post a short summary at the top of this page describing the
+change. Your continued use of the services after the new Effective date
+constitutes acceptance of the updated Terms. If you do not accept a
+material change, your remedy is to cancel your subscription before the
+change takes effect.
+
+## 15. General provisions
+
+**15.1 Entire agreement.** These Terms, together with any Order, our
+Privacy Policy, and our Refund and Cancellation Policy, constitute the
+entire agreement between you and us regarding the services and supersede
+all prior or contemporaneous communications and proposals on the subject.
+
+**15.2 Severability.** If any provision of these Terms is held invalid or
+unenforceable, that provision will be enforced to the maximum extent
+permitted, and the remaining provisions will continue in full force.
+
+**15.3 No waiver.** Our failure to enforce any right or provision is not
+a waiver of that right or provision.
+
+**15.4 Assignment.** You may not assign or transfer these Terms or any
+rights or obligations under them without our prior written consent. We
+may assign these Terms in connection with a merger, acquisition, or sale
+of all or substantially all of our assets, on notice to you.
+
+**15.5 Force majeure.** Neither party is liable for any failure or delay
+in performance caused by events beyond its reasonable control, including
+acts of God, natural disasters, war, terrorism, civil unrest, labor
+disputes, internet or telecommunications failures, or actions of
+governmental authorities. The affected party's performance obligations
+are suspended for the duration of the event.
+
+**15.6 Notices.** Notices to us must be sent to the email address in
+Section 16. Notices to you may be sent to the email address associated
+with your account or to any postal address you have provided. A notice
+is considered given when received (for email, on the date sent absent
+bounce or delivery failure).
+
+**15.7 Relationship.** Nothing in these Terms creates a partnership,
+joint venture, employment, or agency relationship between you and us.
+
+**15.8 Headings.** Section headings are for convenience only and do not
+affect interpretation.
+
+## 16. Contact
+
+Questions about these Terms, requests to cancel a subscription, or any
+notice required by these Terms should be sent to:
+
+**Jared Howard**
+[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)
