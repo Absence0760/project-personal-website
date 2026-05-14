@@ -1,7 +1,5 @@
 # The base URL of the site; the only required configuration variable.
-# TODO(domain): swap to "https://yourdomain.com" once Route 53 domain is
-# purchased and wired up — see docs/domain-setup.md.
-base_url = "https://absence0760.github.io/project-personal-website"
+base_url = "https://jaredhoward.com"
 
 # The site title and description; used in feeds by default.
 title       = "Jared Howard"
