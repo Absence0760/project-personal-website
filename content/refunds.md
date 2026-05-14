@@ -93,13 +93,14 @@ following defaults apply:
 If a project is materially delayed by us, or if a deliverable does not
 substantially meet the agreed acceptance criteria, the SOW or applicable
 law may give you additional remedies. Tell us at the address in Section
-5 and we will work to resolve it.
+6 (Contact) and we will work to resolve it.
 
 ## 4. Billing errors
 
 If you believe you were charged in error — duplicate charge, charge after
 cancellation, wrong plan, or wrong amount — email us at the address in
-Section 5 within 60 days of the charge appearing on your statement.
+Section 6 (Contact) within 60 days of the charge appearing on your
+statement.
 Subject line: **"Billing error"**. Include the date of the charge, the
 amount, and the email address on the account.
 
