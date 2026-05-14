@@ -81,9 +81,11 @@ these are real:
 ## Open items for counsel review before launch
 
 A licensed Virginia attorney should sign off on the wording below before
-a paying subscriber is onboarded. Sections in the public legal pages
-that contain tentative draft text are marked with an HTML comment
-("DRAFT (round 2)") visible in the source but not rendered to readers.
+a paying subscriber is onboarded. (Round-2 used inline HTML "DRAFT"
+comments in the public pages to mark these clauses; round-3 removed
+them because they were visible to anyone who view-sourced the page,
+and they signalled "this is tentative" to hostile reviewers. The
+counsel-review list below is now the only canonical record.)
 
 **Round-1 items (still open, addressed in the page text):**
 
@@ -121,8 +123,12 @@ that contain tentative draft text are marked with an HTML comment
   the §11.3 procedural mechanics are appropriate.
 - [ ] **AI/ML provisions (Terms §6.2.1 and §6.2.2).** Counsel to
   confirm the split between training / third-party inference /
-  internal operational tooling, and to verify that §6.2.2 accurately
-  describes the merchant's actual AI workflow without overcommitting.
+  internal operational tooling. §6.2.2 was softened in round 3 from
+  an absolute "tools whose terms prohibit retention/training" to a
+  best-efforts policy with a stated migration commitment if a tool's
+  terms drift; counsel should confirm the softer phrasing still
+  defeats a misrepresentation argument and that the migration
+  commitment is meaningful as drafted.
 - [ ] **Custom-development assignment-on-payment (Terms §6.3).** Counsel
   to confirm the assignment language is enforceable in Virginia, the
   Background-IP carve-out is appropriately scoped, and the third-party
@@ -131,6 +137,34 @@ that contain tentative draft text are marked with an HTML comment
 - [ ] **Wind-down floor (Terms §8.3).** Counsel to confirm the 30-day
   default (10-day for non-payment) Wind-Down Period aligns with VCDPA /
   CCPA right-to-portability provisions.
+
+**Round-3 items (new tentative drafts, added 2026-05-14):**
+
+- [ ] **§11.2 unilateral election.** Round 3 added "at our sole and
+  unilateral option" plus an explicit statement that the customer has
+  no right to require a particular remedy. Counsel to confirm this
+  closes the previously-flagged uncapped-procurement path (option (i)
+  "procure rights" + option (ii) "modify" sit outside the §10 cap) and
+  is enforceable in Virginia and against B2C consumers.
+- [ ] **§15.5 force-majeure payment carve-out.** Round 3 added an
+  explicit "does not excuse or suspend any obligation to pay fees"
+  exception. Counsel to confirm the phrasing is unambiguous and
+  consistent with §4.6 (failed-payment retry) and §10(e) (fees-owed
+  carve-out from the cap).
+- [ ] **§8.2(d) general-discontinuation notice and pro-rata refund.**
+  Round 3 split the §8.2 clauses so that discontinuation under (d)
+  requires 60 days' notice plus pro-rata refund of pre-paid fees for
+  the unused period. Counsel to confirm 60 days is the right number,
+  that the carve-out from the §3 non-refundability rule is
+  unambiguous, and that no parallel obligation should apply to
+  custom-development engagements under §6.3.
+- [ ] **§3 / §15.6 deliverability reconciliation.** Round 3 removed
+  the specific "spam filter is your problem" disclaimer in §3 and now
+  defers to §15.6's "absent bounce or delivery failure" rule. Counsel
+  to confirm this satisfies the renewal-reminder receipt requirements
+  in California (Bus. & Prof. Code §17602) and New York (GBL §527-a),
+  and to confirm the merchant's customer-address-currency burden is
+  still adequate.
 
 ## Other items to revisit periodically
 
@@ -204,7 +238,14 @@ When the custom domain is registered and pointed at the site (see
   third-party analytics / tracking has crept in, and that the
   acknowledgement-only mention of Stripe / GitHub / Google still
   matches reality. (Hard URLs were removed from §4 in round 2 to
-  avoid link-rot.)
+  avoid link-rot.) Also at this cadence: review Terms §6.2.2
+  operational-tooling commitment against the actual AI tool stack in
+  use (Claude Code, IDE plugins, mail tools).
+- **On any section renumbering or split** → re-verify every internal
+  cross-reference in the file you renumbered, plus the §8.3 survival
+  list, plus every other doc that references the renumbered file by
+  section number. Round 2 caused a "Section 5" → wrong target bug in
+  Refunds when its section count grew from 5 to 6; round 3 fixed it.
 
 ## Forward-looking notes
 
