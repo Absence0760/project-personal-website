@@ -62,11 +62,10 @@ provided in our Refund and Cancellation Policy at `/refunds/`.
 
 We may change the price of a subscription on renewal. We will give you at
 least 30 days' notice by email to the address associated with your account
-before any price change takes effect. You are responsible for keeping the
-email address on your account current; we are not responsible for
-non-delivery caused by an out-of-date address, a full mailbox, or your
-spam filter. If you do not want to accept the new price, you can cancel
-your subscription before the next renewal date.
+(treated as effective notice per Section 15.6) before any price change
+takes effect. You are responsible for keeping the email address on your
+account current. If you do not want to accept the new price, you can
+cancel your subscription before the next renewal date.
 
 ## 4. Automatic renewal of subscriptions
 
@@ -102,10 +101,14 @@ once subscription products are live. Until then, the cancellation channel
 is email to the address in Section 16 with the subject line "Cancel
 subscription". **An email cancellation request takes effect on the day we
 receive it**, provided the request includes the email address on your
-account; we will confirm receipt and processing promptly, and if you have
-not received confirmation within five business days you should re-send to
-ensure delivery. The cancellation method we offer will, at all times, be
-at least as easy to use as the sign-up method.
+account; this is true regardless of when we confirm the cancellation in
+reply, and applies in any dispute (including with your card issuer). We
+will confirm receipt and processing promptly. If you have not received a
+reply from us within a reasonable time, you are welcome to re-send to
+confirm delivery — but a successfully-sent and -received original
+cancellation email remains effective even if our reply is delayed. The
+cancellation method we offer will, at all times, be at least as easy to
+use as the sign-up method.
 
 **4.5 Effect of cancellation.** Cancelling stops future renewals. Your
 subscription remains active through the end of the billing period that has
@@ -144,13 +147,6 @@ you a limited, non-exclusive, non-transferable, revocable license to use
 the services for their intended purpose during your subscription or
 engagement.
 
-<!--
-  DRAFT (round 2): The AI/ML provisions below are a tentative draft pending
-  counsel review. See docs/legal-status.md "Open items for counsel review".
-  In particular, the split between training / third-party inference /
-  internal operational tooling should be confirmed before publication.
--->
-
 **6.2 Your content.** You retain all rights to the content, data, and
 materials you submit to or store within the services ("**Customer
 Content**"). You grant us a non-exclusive, worldwide, royalty-free
@@ -170,20 +166,13 @@ own model training.
 
 **6.2.2 Operational tooling.** We use general-purpose developer and
 support tools that may incorporate AI assistance (for example, coding
-assistants and email or documentation tools). When we use those tools
-for routine development, debugging, or support tasks, we treat any
-Customer Content shared with them as confidential and use only tools
-whose terms prohibit retention or training on inputs. We do not
-knowingly paste Customer Content into public AI services or services
-that retain inputs for training.
-
-<!--
-  DRAFT (round 2): The §6.3 custom-development default below was flipped
-  from a non-exclusive licence (round 1) to assignment-on-payment.
-  Counsel should confirm the assignment language is enforceable in
-  Virginia, that "Background IP" carve-out is appropriately scoped, and
-  that the open-source / third-party-material disclaimer is sufficient.
--->
+assistants, email tools, and documentation tools). It is our policy to
+choose tools whose terms support the no-training posture in Section
+6.2.1, to treat Customer Content shared with such tools as confidential,
+and to review our tool stack periodically against this commitment. If
+we identify a tool that no longer meets this standard, we will migrate
+off it within a reasonable period or update this policy before continuing
+to use it for Customer Content.
 
 **6.3 Custom-development deliverables.** Ownership and licensing of code
 or other materials we deliver under a custom-development engagement
@@ -230,9 +219,16 @@ described in Section 4.4.
 **8.2 By us.** We may suspend or terminate your access to the services,
 in whole or in part and with or without notice, if (a) you materially
 breach these Terms or an Order, (b) you fail to pay fees when due and the
-failure continues for more than 15 days after written notice, (c) we
+failure continues for more than 15 days after written notice, or (c) we
 reasonably believe your continued use poses a security risk or legal
-exposure, or (d) we discontinue the services generally.
+exposure. We may also terminate by discontinuing the services generally
+under clause (d), but in that case we will give active subscription
+customers at least 60 days' prior written notice and will refund the
+pro-rata portion of any pre-paid fees attributable to the period after
+the discontinuation date. The pro-rata refund obligation in this clause
+(d) is in addition to, not in place of, the Wind-Down Period in Section
+8.3, and is an exception to the non-refundability of fees stated in
+Section 3.
 
 **8.3 Effect.** On termination, your right to access the services ends.
 Sections 3 (for unpaid amounts), 6, 8.3, 9, 10, 11, 12, 13, 14, 15, and
@@ -261,13 +257,6 @@ Some jurisdictions do not allow the exclusion of certain warranties, so
 some of the above exclusions may not apply to you.
 
 ## 10. Limitation of liability
-
-<!--
-  DRAFT (round 2): The enumerated carve-outs in this Section were added
-  to prevent unconscionability attack from voiding the entire cap. Counsel
-  should confirm the carve-out list is complete for Virginia and against
-  consumers in California, New Jersey, and Massachusetts in particular.
--->
 
 For the purposes of this Section 10, "**we**", "**our**", and "**us**"
 include Jared Howard and our employees, contractors, agents, licensors,
@@ -299,16 +288,6 @@ damages, so some of the limitations above may not apply to you.
 
 ## 11. Indemnification
 
-<!--
-  DRAFT (round 2): §11 was restructured into mutual indemnification —
-  11.1 (Customer → us) is the standard user indemnity; 11.2 (us → Customer)
-  is a narrow IP-infringement indemnity intended to defeat unconscionability
-  attacks on §11.1 in B2C contexts. Counsel should confirm: (a) the
-  enumerated carve-outs in 11.2 are appropriate, (b) whether §11.1 should
-  be additionally restricted to organisational customers, and (c) the
-  procedural mechanics in 11.3.
--->
-
 **11.1 By you.** You agree to indemnify, defend, and hold harmless Jared
 Howard and our employees, contractors, agents, licensors, and successors
 ("**Indemnified Parties**") from and against any third-party claims,
@@ -330,12 +309,15 @@ use of the services after we have notified you to discontinue use of an
 allegedly infringing component, or after we have offered a non-infringing
 alternative; or (e) use of the services other than as permitted by these
 Terms. If we receive notice of a claim covered by this Section, we may,
-at our option and our expense, (i) procure for you the right to continue
-using the services, (ii) modify the services so that they are
-non-infringing, or (iii) terminate the affected subscription and refund
-any pre-paid, unused fees. The remedies in this Section 11.2 are your
-sole and exclusive remedy, and our entire liability, for any claim of
-intellectual-property infringement related to the services.
+**at our sole and unilateral option and at our expense**, (i) procure
+for you the right to continue using the services, (ii) modify the
+services so that they are non-infringing, or (iii) terminate the
+affected subscription and refund any pre-paid, unused fees attributable
+to the period after termination. The choice among (i), (ii), and (iii)
+is ours alone; you have no right to require us to pursue any particular
+remedy, and we may elect (iii) at any time. The remedies in this Section
+11.2 are your sole and exclusive remedy, and our entire liability, for
+any claim of intellectual-property infringement related to the services.
 
 **11.3 Procedure.** A party seeking indemnification under this Section
 11 ("**Indemnitee**") must (a) promptly give the other party
@@ -412,7 +394,9 @@ in performance caused by events beyond its reasonable control, including
 acts of God, natural disasters, war, terrorism, civil unrest, labor
 disputes, internet or telecommunications failures, or actions of
 governmental authorities. The affected party's performance obligations
-are suspended for the duration of the event.
+are suspended for the duration of the event. **Notwithstanding the
+foregoing, this Section 15.5 does not excuse or suspend any obligation
+to pay fees that are due under these Terms or any Order.**
 
 **15.6 Notices.** Notices to us must be sent to the email address in
 Section 16. Notices to you may be sent to the email address associated
