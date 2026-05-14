@@ -1,0 +1,59 @@
+name: gitleaks
+
+# Secret-scan every push to main, every PR, and the full history once a week.
+# Catches anything that pattern-matches a known token shape (AWS keys, GitHub
+# tokens, Stripe API keys, generic high-entropy API keys, etc.) committed to
+# the repo by accident.
+#
+# This is a static site (no .env files, no app secrets), but the repo will
+# be referenced from a Stripe account — keeping a clean secret-scan record
+# matters if someone ever pastes a test key while debugging locally.
+#
+# Complements CodeQL (workflows/codeql.yml), which finds source-level injection
+# vulns but not secrets, and Scorecard (workflows/scorecard.yml), which audits
+# repo posture but doesn't read file contents.
+#
+# False positives can be allow-listed in `.gitleaks.toml` at the repo root
+# (not yet created — add on the first false hit rather than pre-empting).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Weekly full-history sweep. The push / PR triggers above only diff
+    # against the base, so a secret that landed on a forgotten branch
+    # and got merged via fast-forward could slip through.
+    # 06:00 UTC Monday — same tide as codeql.yml / scorecard.yml.
+    - cron: '0 6 * * 1'
+
+permissions: read-all
+
+jobs:
+  scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      # The action POSTs SARIF findings via the same security-events
+      # permission CodeQL uses — keeps the Security tab the single
+      # pane of glass.
+      security-events: write
+      # PR metadata for inline annotations.
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          # `fetch-depth: 0` is required for the full-history scan on the
+          # scheduled run. Push/PR triggers ignore the depth because they
+          # have access to the base ref via the workflow event itself.
+          fetch-depth: 0
+
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # GITLEAKS_LICENSE is intentionally unset — public-repo free
+          # tier covers everything we need.
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: 'false'
