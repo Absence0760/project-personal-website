@@ -53,10 +53,14 @@ practices change, this section will be updated and active customers will
 be notified before the change takes effect.
 
 **Payment-card data.** We do not collect, store, or transmit full
-payment-card numbers, CVCs, or expiration dates on our systems. All
-payment-card data is handled directly by Stripe under their
-PCI-DSS-compliant infrastructure. We receive only the limited
-billing-related fields described above in Category B.
+payment-card numbers, CVC codes, or expiration dates on our systems.
+Payment-card data is handled directly by Stripe, which states that its
+infrastructure is PCI-DSS compliant. We receive from Stripe only the
+limited billing-related fields described above in Category B; the
+"last-four of payment card" we receive is the last four digits of the
+card number for your reference, which is not considered cardholder data
+within the PCI-DSS scope and which we cannot use to charge or reconstruct
+the original card number.
 
 ## 3. Sale or sharing of personal information
 
@@ -68,9 +72,10 @@ behavioral advertising, whether or not money changes hands.
 
 **We do not sell personal information. We do not share personal
 information for cross-context behavioral advertising.** We have not done
-either of these in the 12 months preceding the Effective date above, and
-we have no plans to do so. We do not knowingly sell or share the
-personal information of consumers under the age of 16.
+either of these since we began operating, we have no plans to do so, and
+we review this statement annually. If our practices change, this Section
+3 will be updated before any change takes effect. We do not knowingly
+sell or share the personal information of consumers under the age of 16.
 
 Because we do not sell or share, the rights to opt out of sale or sharing
 described in Section 5 are not applicable — but if you believe we have
@@ -85,14 +90,19 @@ perform the service, and each is bound by contract or by the terms of
 their service offering to use that information solely on our instructions
 and for no other purpose.
 
-- **Payment processor.** Stripe, Inc. (https://stripe.com/privacy) —
-  processes payments and manages subscriptions on our behalf.
+- **Payment processor.** Stripe, Inc. — processes payments and manages
+  subscriptions on our behalf.
 - **Static-site hosting.** GitHub Pages, operated by GitHub, Inc. (a
-  Microsoft subsidiary) (https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)
-  — hosts the marketing site you are reading now.
-- **Email and support.** Google LLC (Gmail)
-  (https://policies.google.com/privacy) — receives and stores emails
-  to and from `jaredhoward0912@gmail.com`.
+  subsidiary of Microsoft Corporation) — hosts the marketing site you
+  are reading now.
+- **Email and support.** Google LLC (via Gmail) — receives and stores
+  emails to and from our published contact address.
+
+Each of these providers publishes its own privacy policy on its
+corporate website; you can locate it by searching for the company name
+plus "privacy policy". Because their privacy policies change over time
+and the URLs do not always remain stable, we no longer link to specific
+URLs from this page.
 
 Additional service providers will be added when subscription products
 launch (for example, an application-hosting platform, a transactional-email
@@ -166,12 +176,15 @@ might help.
 request on your behalf. We will require written proof of the
 authorization and verification of your identity before acting.
 
-**Response time.** We will acknowledge a verifiable request within 10
-business days and respond substantively within 45 days, or within the
-maximum period permitted by applicable law in your state. If we need an
-extension, we will notify you within the first 45 days, explain the
-reason, and extend the deadline by an additional period not to exceed
-the legal maximum.
+**Response time.** We will acknowledge and respond to verifiable
+privacy requests within the timeframes required by the law of your
+state of residence (for example, the deadlines set by the CCPA/CPRA for
+California residents and by the VCDPA for Virginia residents — both
+generally 45 days, with a single permitted extension of up to an
+additional 45 days for good cause). If we need an extension permitted
+by law, we will notify you within the original response period, explain
+the reason, and extend the deadline only by the period the relevant
+statute allows.
 
 ## 7. How to appeal a denied request (Virginia and similar states)
 
@@ -190,9 +203,10 @@ General (https://www.oag.state.va.us/).
 ## 8. Cookies, tracking, and analytics
 
 This website does **not** use third-party analytics, advertising
-cookies, advertising pixels, or cross-site tracking technologies. The
-only client-side JavaScript on the marketing site is first-party code we
-wrote (visible at `/static/js/transitions.js`).
+cookies, advertising pixels, or cross-site tracking technologies. All
+client-side JavaScript on the marketing site is first-party code we
+wrote ourselves; there are no embedded third-party scripts and no
+remote-loaded tracking tags.
 
 Subscription products may use a limited set of first-party functional
 cookies or local-storage entries (for example, to keep you signed in or
@@ -210,10 +224,10 @@ law) we will obtain consent or provide opt-out controls at that point.
 We take reasonable administrative, technical, and physical safeguards to
 protect personal information against accidental or unlawful loss, access,
 disclosure, alteration, or destruction. These include HTTPS in transit,
-reliance on Stripe's PCI-compliant infrastructure for payment-card data,
-access controls on accounts and systems, and routine review of our
-service providers. No system is perfectly secure, however, and we
-cannot guarantee absolute security.
+reliance on Stripe (which states that its infrastructure is PCI-DSS
+compliant) for all payment-card handling, access controls on accounts
+and systems, and routine review of our service providers. No system is
+perfectly secure, however, and we cannot guarantee absolute security.
 
 In the event of a security incident affecting your personal information,
 we will notify you (and any regulator we are legally required to notify)
