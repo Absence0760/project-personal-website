@@ -37,6 +37,12 @@
   </main>
 
   <footer>
+    <ul class="footer-links">
+      <li><a href="{{ get_url(path='/contact/') | safe }}">Contact</a></li>
+      <li><a href="{{ get_url(path='/terms/') | safe }}">Terms</a></li>
+      <li><a href="{{ get_url(path='/privacy/') | safe }}">Privacy</a></li>
+      <li><a href="{{ get_url(path='/refunds/') | safe }}">Refunds</a></li>
+    </ul>
     <p>&copy; {{ now() | date(format="%Y") }} {{ config.title }}</p>
   </footer>
 
