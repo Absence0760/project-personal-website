@@ -3,6 +3,11 @@ title = "Contact"
 description = "How to get in touch about software products, custom development, billing, or privacy."
 +++
 
+I'm Jared Howard, doing business as a sole proprietor in the Commonwealth
+of Virginia — the same legal entity referred to as "we" / "us" in our
+[Terms of Service](/terms/) and [Privacy Policy](/privacy/). The "I" /
+"me" voice on this page is the same person.
+
 The best way to reach me is by email:
 
 **[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)**
