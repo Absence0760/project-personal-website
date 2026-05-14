@@ -1,0 +1,28 @@
+# Dependabot configuration
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+#
+# This is a Zola static site — no npm/cargo/terraform deps to track. The only
+# dependency surface we have is the GitHub Actions referenced in
+# `.github/workflows/`. Keeping those current closes the most common
+# supply-chain gap on a small repo.
+#
+# Bumps are auto-merged for minor/patch via dependabot-auto-merge.yml; major
+# bumps stay manual.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
+    groups:
+      all-actions:
+        patterns:
+          - "*"
