@@ -1,0 +1,41 @@
+name: CI
+
+# PR-only build check. Runs `zola build` against the PR head to catch broken
+# templates, dead internal links, or invalid front-matter before merge. The
+# existing `deploy.yml` already builds + deploys on push to main; this gives
+# us the same signal one step earlier on PRs (especially dependabot's action
+# bumps — auto-merge waits on this job before landing them).
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  # Supersede in-flight runs when a new commit lands on the same PR ref.
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install Zola
+        uses: taiki-e/install-action@v2
+        with:
+          # Pinned to match deploy.yml — keeping the build version in lockstep
+          # avoids the PR going green on a different Zola than the one that
+          # will eventually deploy.
+          tool: zola@0.19.2
+
+      - name: Build site
+        # `--drafts` is intentionally not set — drafts shouldn't gate CI.
+        run: zola build
