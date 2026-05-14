@@ -19,14 +19,17 @@ times, be **at least as easy to use as the method you used to sign up**.
 
 - **From your account.** Once subscription products are live, the
   in-product cancellation control will let you cancel in a single step
-  from your account settings. We will confirm the cancellation on screen
-  and by email.
+  from your account settings. The cancellation takes effect the moment
+  you confirm it in the control; we will also confirm on screen and by
+  email.
 - **By email.** Until in-product cancellation is available, you can
   cancel by emailing us at
   [jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com) with the
   subject line **"Cancel subscription"** and the email address on your
-  account. We will process the cancellation, and confirm it by reply,
-  within one business day.
+  account. **An email cancellation takes effect on the day we receive
+  it.** We will confirm receipt and processing promptly; if you have not
+  received confirmation within five business days, please re-send to
+  ensure delivery.
 
 **What cancellation does.** Cancelling stops future renewals. Your
 subscription remains active through the end of the billing period that
@@ -34,9 +37,11 @@ has already been paid for, and we do not pro-rate refunds for partial
 periods, except as set out in Section 2 or as required by applicable law.
 
 **Annual subscription renewal reminders.** For annual plans, we email a
-renewal reminder to the address on your account at least 15 days, and no
-more than 45 days, before the renewal date. The reminder includes the
-renewal amount, the renewal date, and a direct link to cancel.
+renewal reminder to the address on your account at least 7 days, and no
+more than 45 days, before the renewal date (or such longer minimum as
+the law of your state of residence requires). The reminder includes the
+renewal amount, the renewal date, and a direct link or instructions to
+cancel.
 
 ## 2. Refunds for software-product subscriptions
 
@@ -45,28 +50,20 @@ charged, except for billing errors (see Section 4).
 
 **Annual plans.** If you cancel an annual subscription part-way through
 the term, you may request a pro-rated refund for the unused complete
-months remaining. We evaluate annual-plan refund requests against the
-following objective criteria; we will refund a pro-rated amount when
-**both** of the following apply:
+months remaining. Refund eligibility, calculation, and processing are
+described in the documentation for the specific plan you purchased.
+Until plan-specific terms are published, we will consider annual-plan
+refund requests on a case-by-case basis and aim to be reasonable; the
+default expectation is that early-cancellation refunds are available
+only within the first 30 days following the most recent renewal or
+initial purchase, and only to customers who have not breached the
+Acceptable Use provisions in our Terms of Service.
 
-1. **The request reaches us within 30 days of the most recent renewal**
-   (or, for first-year purchases, within 30 days of the initial charge).
-   Requests after 30 days are not pro-rated and the unused balance is
-   forfeited.
-2. **You have not exceeded reasonable usage of the plan.** "Reasonable
-   usage" means no more than 25% of the plan's measured usage limits
-   (where the plan has limits) and no breach of the Acceptable Use
-   provisions in our Terms of Service.
-
-When both criteria are met, we refund whole unused calendar months at the
-plan's annual-equivalent monthly rate (i.e. the annual fee divided by
-12), not the standalone monthly rate. The pro-rated refund is processed
-through Stripe to the payment method originally charged, typically within
-5–10 business days.
-
-We will respond to a refund request within 5 business days, either
-approving it or explaining the specific reason it does not meet the
-criteria above.
+Approved refunds are processed through Stripe to the payment method
+originally charged. We aim to respond to refund requests promptly,
+typically within a few business days, and to issue approved refunds
+within a commercially reasonable time after approval (Stripe-side
+processing can add additional days outside our control).
 
 **Refunds outside this framework.** We may, in our sole discretion, issue
 a discretionary refund outside the criteria above (for example, in cases
@@ -106,9 +103,11 @@ Section 5 within 60 days of the charge appearing on your statement.
 Subject line: **"Billing error"**. Include the date of the charge, the
 amount, and the email address on the account.
 
-We will investigate and respond within 5 business days. Verifiable
-billing errors are refunded in full to the payment method originally
-charged.
+We will investigate promptly and respond within a commercially reasonable
+time, typically within a few business days; investigations that require
+Stripe-side action may take longer because of factors outside our
+control. Verifiable billing errors are refunded in full to the payment
+method originally charged.
 
 ## 5. Billing disputes and chargebacks
 
@@ -122,13 +121,11 @@ line **"Billing dispute"**.
 
 **If a chargeback is filed.** We respond to chargebacks through Stripe's
 disputes process. In responding, we provide Stripe and the card network
-with the evidence we have for the relevant transaction, which typically
-includes: the original sign-up record (date, IP, plan, agreed price), the
-auto-renewal disclosure shown at checkout, any cancellation history,
-service-usage logs for the period in question, and the email
-correspondence between us. We do not provide unrelated personal
-information or content beyond what is needed to substantiate the
-transaction.
+with such evidence as we have for the relevant transaction — typically
+covering the sign-up and renewal record, the auto-renewal disclosure
+shown at checkout, cancellation history, and the email correspondence
+between us. We do not provide unrelated personal information or content
+beyond what is needed to substantiate the transaction.
 
 We may decline to provide further services to a customer who files a
 chargeback for a charge that is properly owed under these Terms.
