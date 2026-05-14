@@ -80,9 +80,12 @@ these are real:
 
 ## Open items for counsel review before launch
 
-The `us-legal-doc-reviewer` flagged four Critical items. The drafts
-address each on the page, but a licensed Virginia attorney should sign
-off on the wording before a paying subscriber is onboarded.
+A licensed Virginia attorney should sign off on the wording below before
+a paying subscriber is onboarded. Sections in the public legal pages
+that contain tentative draft text are marked with an HTML comment
+("DRAFT (round 2)") visible in the source but not rendered to readers.
+
+**Round-1 items (still open, addressed in the page text):**
 
 - [ ] **ROSCA + state-ARL alignment.** Counsel to confirm Terms §4 plus
   the planned checkout-disclosure UX satisfies both ROSCA (15 U.S.C. §8403)
@@ -100,6 +103,34 @@ off on the wording before a paying subscriber is onboarded.
   cancel UX, when built, satisfies the FTC click-to-cancel rule's
   "same medium" principle and California's single-step cancellation
   requirement.
+
+**Round-2 items (new tentative drafts, added 2026-05-14):**
+
+- [ ] **Liability cap carve-outs (Terms §10).** Counsel to confirm the
+  enumerated carve-outs (gross negligence, wilful misconduct, fraud,
+  personal injury, our §11.2 indemnity, non-waivable claims) are
+  complete for Virginia and for B2C exposure in California, New Jersey,
+  and Massachusetts in particular. The cap currently relies on these
+  carve-outs to survive an unconscionability attack.
+- [ ] **Mutual indemnification (Terms §11.1 + §11.2).** Counsel to
+  confirm: (a) the narrow IP-infringement indemnity in §11.2 is the
+  right scope, (b) the enumerated exclusions in §11.2 (Customer Content,
+  modifications, combinations, post-notice use) are complete, (c)
+  whether §11.1 should be additionally restricted to organisational
+  customers to avoid unconscionability attack in B2C contexts, and (d)
+  the §11.3 procedural mechanics are appropriate.
+- [ ] **AI/ML provisions (Terms §6.2.1 and §6.2.2).** Counsel to
+  confirm the split between training / third-party inference /
+  internal operational tooling, and to verify that §6.2.2 accurately
+  describes the merchant's actual AI workflow without overcommitting.
+- [ ] **Custom-development assignment-on-payment (Terms §6.3).** Counsel
+  to confirm the assignment language is enforceable in Virginia, the
+  Background-IP carve-out is appropriately scoped, and the third-party
+  / open-source materials disclaimer is sufficient. Also confirm whether
+  an explicit SOW IP clause should be a precondition for engagement.
+- [ ] **Wind-down floor (Terms §8.3).** Counsel to confirm the 30-day
+  default (10-day for non-payment) Wind-Down Period aligns with VCDPA /
+  CCPA right-to-portability provisions.
 
 ## Other items to revisit periodically
 
@@ -122,6 +153,43 @@ quarterly while pre-launch, then annually):
 - [ ] **State expansion.** If we register the sole prop or form an LLC
   in a different state, Terms §12 and Privacy §1 need to be updated.
 
+## Launch gates (hard blockers for first paying subscriber)
+
+The public legal pages commit to specific behaviour that the product
+has to actually deliver. Do **not** start billing a subscriber until
+every item below is either built or the relevant page is edited to
+remove the future-tense commitment:
+
+- [ ] **In-product cancellation control.** Terms §4.4 and Refunds §1
+  both promise this in future tense. Build it, or edit both sections
+  before the first paid signup.
+- [ ] **Pre-charge auto-renewal disclosure UX.** Terms §4.2 promises a
+  "clear and conspicuous" disclosure at checkout with affirmative
+  consent. Build the checkbox-with-disclosure step, or edit §4.2 to
+  match what the actual UX does.
+- [ ] **Automated annual-renewal reminder email.** Terms §4.3 commits
+  to a 7–45 day reminder window. Stand up the automation (or use a
+  Stripe customer-portal feature that does it) before the first
+  annual subscription is sold.
+- [ ] **Plan-specific refund documentation.** Refunds §2 defers
+  annual-pro-rata to "the documentation for the specific plan you
+  purchased". Write that documentation for each plan, or edit §2 to
+  remove the deferral, before annual plans go on sale.
+
+## Post-domain-purchase items
+
+When the custom domain is registered and pointed at the site (see
+`docs/domain-setup.md`), do these as part of the cutover:
+
+- [ ] **Move the published legal-notice address to a domain-controlled
+  forwarder** (e.g. `legal@<domain>` or `contact@<domain>`, forwarding
+  to the Gmail inbox). Reduces the risk that a Gmail suspension nukes
+  every customer-facing legal-notice channel at once. Update Terms §16,
+  Privacy §11, Refunds §6, and Contact page accordingly.
+- [ ] **Re-publish with the custom domain in `base_url`** (per
+  `docs/domain-setup.md`) and then re-run the `us-legal-doc-reviewer`
+  to catch any references to the old GitHub-Pages URL.
+
 ## Maintenance rhythm
 
 - After any material site change → re-run the `us-legal-doc-reviewer`
@@ -131,3 +199,30 @@ quarterly while pre-launch, then annually):
 - On every Stripe risk-review request → cross-check that the submitted
   business description still matches Terms §1 and the homepage services
   section.
+- **Quarterly** while pre-launch (annually post-launch) → verify the
+  sub-processor list in Privacy §4 is still accurate, that no
+  third-party analytics / tracking has crept in, and that the
+  acknowledgement-only mention of Stripe / GitHub / Google still
+  matches reality. (Hard URLs were removed from §4 in round 2 to
+  avoid link-rot.)
+
+## Forward-looking notes
+
+These don't need action today but should trigger an audit if they ever
+change:
+
+- **Trade name / DBA.** The business currently operates under the legal
+  name "Jared Howard". The homepage links to a GitHub profile under the
+  handle `Absence0760`. If we ever adopt a trade name (whether
+  `Absence0760` or anything else) in customer-facing copy, Virginia DBA
+  registration applies and Terms §16, Privacy §11, Refunds §6, the
+  homepage, and the footer all need to be updated to use the trade
+  name consistently.
+- **Entity formation.** Currently a sole proprietorship. If we form a
+  Virginia LLC or move to another state, Terms §12, Privacy §1, and the
+  legal-notice address all change.
+- **Future contractors.** Terms §10 and §11 both now extend "us" to
+  cover employees, contractors, agents, licensors, and successors. If
+  we ever sub-contract custom-development work, ensure the contractor
+  is bound by an NDA / IP-assignment agreement so the §11.2 indemnity
+  obligation doesn't outrun what the contractor is liable to us for.
