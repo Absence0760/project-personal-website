@@ -61,9 +61,12 @@ Unless an Order says otherwise, fees are non-refundable except as expressly
 provided in our Refund and Cancellation Policy at `/refunds/`.
 
 We may change the price of a subscription on renewal. We will give you at
-least 30 days' notice by email before any price change takes effect. If you
-do not want to accept the new price, you can cancel your subscription before
-the next renewal date.
+least 30 days' notice by email to the address associated with your account
+before any price change takes effect. You are responsible for keeping the
+email address on your account current; we are not responsible for
+non-delivery caused by an out-of-date address, a full mailbox, or your
+spam filter. If you do not want to accept the new price, you can cancel
+your subscription before the next renewal date.
 
 ## 4. Automatic renewal of subscriptions
 
@@ -88,16 +91,21 @@ these terms (for example, by ticking a checkbox or clicking "Subscribe and
 Pay") before any charge is made; we record that acceptance.
 
 **4.3 Renewal reminder.** For annual subscriptions, we will email a renewal
-reminder to the address on your account at least 15 days, and no more than
-45 days, before the renewal date. The reminder will state the renewal
-amount, the renewal date, and a direct link to cancel.
+reminder to the address on your account at least 7 days, and no more than
+45 days, before the renewal date — or such longer minimum as the law of
+your state of residence requires. The reminder will state the renewal
+amount, the renewal date, and a direct link or instructions to cancel.
 
 **4.4 How to cancel.** You may cancel at any time before your next renewal
 date. Cancellation will be available from your account settings in-product
-once subscription products are live; until then, the cancellation channel
-is email to the address in Section 16, and we will confirm cancellation
-within one business day. The cancellation method we offer will, at all
-times, be at least as easy to use as the sign-up method.
+once subscription products are live. Until then, the cancellation channel
+is email to the address in Section 16 with the subject line "Cancel
+subscription". **An email cancellation request takes effect on the day we
+receive it**, provided the request includes the email address on your
+account; we will confirm receipt and processing promptly, and if you have
+not received confirmation within five business days you should re-send to
+ensure delivery. The cancellation method we offer will, at all times, be
+at least as easy to use as the sign-up method.
 
 **4.5 Effect of cancellation.** Cancelling stops future renewals. Your
 subscription remains active through the end of the billing period that has
@@ -116,10 +124,10 @@ You agree not to use the services to (a) violate any applicable law or
 regulation, (b) infringe on the intellectual-property, privacy, or
 publicity rights of any person, (c) transmit malware, viruses, or other
 malicious code, (d) interfere with or attempt to compromise the security
-or operation of the services, (e) reverse-engineer, decompile, or attempt
-to extract the source code of any product we operate except to the extent
-applicable law expressly permits, or (f) use the services to compete with
-us by building a substantially similar offering.
+or operation of the services, or (e) reverse-engineer, decompile, or
+otherwise attempt to extract the source code, underlying ideas, or
+trade-secret algorithms of any product we operate except to the extent
+applicable law expressly permits.
 
 We may suspend or terminate access for any breach of this Section 5 or for
 any conduct that we reasonably believe creates risk or legal exposure for
@@ -136,20 +144,70 @@ you a limited, non-exclusive, non-transferable, revocable license to use
 the services for their intended purpose during your subscription or
 engagement.
 
+<!--
+  DRAFT (round 2): The AI/ML provisions below are a tentative draft pending
+  counsel review. See docs/legal-status.md "Open items for counsel review".
+  In particular, the split between training / third-party inference /
+  internal operational tooling should be confirmed before publication.
+-->
+
 **6.2 Your content.** You retain all rights to the content, data, and
 materials you submit to or store within the services ("**Customer
 Content**"). You grant us a non-exclusive, worldwide, royalty-free
 license to host, process, transmit, display, and create necessary backup
 copies of your Customer Content solely as needed to operate the services
-for you. We will not use your Customer Content to train machine-learning
-models without your prior written consent.
+for you, to provide you with support, and to comply with legal
+obligations.
+
+**6.2.1 No training on Customer Content.** We will not use Customer
+Content to train machine-learning models — whether our own models or the
+models of any third party — without your prior written consent. Where
+we use AI-assisted features within the services that send Customer
+Content to a third-party AI provider for *inference* (for example, to
+generate a response to your input), we will do so only under contractual
+terms that prohibit the provider from using Customer Content for their
+own model training.
+
+**6.2.2 Operational tooling.** We use general-purpose developer and
+support tools that may incorporate AI assistance (for example, coding
+assistants and email or documentation tools). When we use those tools
+for routine development, debugging, or support tasks, we treat any
+Customer Content shared with them as confidential and use only tools
+whose terms prohibit retention or training on inputs. We do not
+knowingly paste Customer Content into public AI services or services
+that retain inputs for training.
+
+<!--
+  DRAFT (round 2): The §6.3 custom-development default below was flipped
+  from a non-exclusive licence (round 1) to assignment-on-payment.
+  Counsel should confirm the assignment language is enforceable in
+  Virginia, that "Background IP" carve-out is appropriately scoped, and
+  that the open-source / third-party-material disclaimer is sufficient.
+-->
 
 **6.3 Custom-development deliverables.** Ownership and licensing of code
-or other materials we deliver under a custom-development engagement are
-governed by the relevant Order. By default, you receive a perpetual,
-non-exclusive, royalty-free license to use the deliverables for your
-internal business purposes; we retain ownership of any general-purpose
-tools, libraries, and pre-existing materials we use to build them.
+or other materials we deliver under a custom-development engagement
+("**Deliverables**") are governed by the relevant Order. Unless the
+Order says otherwise:
+
+- **Assignment on full payment.** Upon our receipt of full payment of
+  the fees due for a Deliverable, we assign to you all of our right,
+  title, and interest in that Deliverable, subject to the carve-outs
+  below. Until we have received full payment, you have no right to use
+  the Deliverable, and any prior delivery to you is for review purposes
+  only.
+- **Background IP.** We retain ownership of (a) any general-purpose
+  tools, libraries, frameworks, scripts, methodologies, and pre-existing
+  materials we owned or developed independently of the engagement
+  ("**Background IP**"), and (b) any general-purpose improvements to
+  our Background IP made during the engagement. On payment, we grant you
+  a perpetual, irrevocable, worldwide, royalty-free, non-exclusive
+  license to use the Background IP solely as incorporated in the
+  Deliverable and for the Deliverable's intended use.
+- **Third-party materials.** Open-source dependencies and other
+  third-party materials incorporated in the Deliverable are licensed to
+  you directly by their respective rights-holders under their own
+  licenses; we do not own those materials and cannot assign them to you.
 
 **6.4 Feedback.** Suggestions or feedback you give us about the services
 are non-confidential, and you grant us a perpetual, royalty-free right to
@@ -178,9 +236,14 @@ exposure, or (d) we discontinue the services generally.
 
 **8.3 Effect.** On termination, your right to access the services ends.
 Sections 3 (for unpaid amounts), 6, 8.3, 9, 10, 11, 12, 13, 14, 15, and
-16 survive termination. We may delete Customer Content after a reasonable
-wind-down period; you are responsible for exporting any content you wish
-to retain before termination takes effect.
+16 survive termination. We will retain Customer Content for at least 30
+days after termination (the "**Wind-Down Period**"), during which you
+may request export of your Customer Content; for terminations caused by
+your non-payment of fees that remain unpaid more than 30 days after
+written notice, the Wind-Down Period is 10 days. After the Wind-Down
+Period, we may delete Customer Content without further notice. You are
+responsible for exporting any content you wish to retain before the
+Wind-Down Period ends.
 
 ## 9. Disclaimer of warranties
 
@@ -199,6 +262,17 @@ some of the above exclusions may not apply to you.
 
 ## 10. Limitation of liability
 
+<!--
+  DRAFT (round 2): The enumerated carve-outs in this Section were added
+  to prevent unconscionability attack from voiding the entire cap. Counsel
+  should confirm the carve-out list is complete for Virginia and against
+  consumers in California, New Jersey, and Massachusetts in particular.
+-->
+
+For the purposes of this Section 10, "**we**", "**our**", and "**us**"
+include Jared Howard and our employees, contractors, agents, licensors,
+and successors.
+
 > **TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, OUR AGGREGATE
 > LIABILITY ARISING OUT OF OR RELATING TO THESE TERMS OR THE SERVICES
 > WILL NOT EXCEED THE GREATER OF (A) THE FEES YOU PAID TO US IN THE
@@ -211,25 +285,66 @@ some of the above exclusions may not apply to you.
 > NOT WE WERE ADVISED OF THE POSSIBILITY OF SUCH DAMAGES AND REGARDLESS
 > OF THE THEORY OF LIABILITY.**
 
-The limitations in this Section 10 do not apply to (a) liability that
-cannot be limited under applicable law, (b) your obligation to pay fees
-owed, or (c) your obligations under Section 11 (Indemnification). Some
-jurisdictions do not allow the exclusion or limitation of certain
-damages, so some of the above limitations may not apply to you.
+The limitations and exclusions in this Section 10 do **not** apply to:
+
+(a) our gross negligence, wilful misconduct, or fraud;
+(b) death or personal injury caused by our negligence;
+(c) our indemnification obligations under Section 11.2 (if any);
+(d) liability that cannot be limited or excluded under applicable law;
+(e) your obligation to pay fees owed under any Order; or
+(f) your indemnification obligations under Section 11.1.
+
+Some jurisdictions do not allow the exclusion or limitation of certain
+damages, so some of the limitations above may not apply to you.
 
 ## 11. Indemnification
 
-You agree to indemnify, defend, and hold harmless Jared Howard and any
-employees, contractors, or agents from and against any claims, damages,
-losses, liabilities, costs, and expenses (including reasonable attorneys'
-fees) arising out of or relating to (a) your Customer Content, (b) your
-breach of these Terms or an Order, (c) your violation of any law or
-third-party right, or (d) your use of the services in a manner not
-permitted by these Terms. We will give you prompt notice of any claim
-subject to this Section, allow you to control the defense and settlement
-of the claim (provided that you may not settle a claim that admits
-liability on our behalf without our written consent), and reasonably
-cooperate in the defense at your expense.
+<!--
+  DRAFT (round 2): §11 was restructured into mutual indemnification —
+  11.1 (Customer → us) is the standard user indemnity; 11.2 (us → Customer)
+  is a narrow IP-infringement indemnity intended to defeat unconscionability
+  attacks on §11.1 in B2C contexts. Counsel should confirm: (a) the
+  enumerated carve-outs in 11.2 are appropriate, (b) whether §11.1 should
+  be additionally restricted to organisational customers, and (c) the
+  procedural mechanics in 11.3.
+-->
+
+**11.1 By you.** You agree to indemnify, defend, and hold harmless Jared
+Howard and our employees, contractors, agents, licensors, and successors
+("**Indemnified Parties**") from and against any third-party claims,
+damages, losses, liabilities, costs, and expenses (including reasonable
+attorneys' fees) arising out of or relating to (a) your Customer Content,
+(b) your breach of these Terms or an Order, (c) your violation of any
+law or third-party right, or (d) your use of the services in a manner
+not permitted by these Terms.
+
+**11.2 By us.** We agree to defend, indemnify, and hold you harmless
+from any third-party claim that the services, as provided by us and
+used by you in accordance with these Terms, directly infringe a US
+patent, copyright, trademark, or trade-secret right of that third party.
+Our obligation under this Section 11.2 does **not** apply to any claim
+arising from or relating to (a) Customer Content; (b) any modification
+of the services by anyone other than us; (c) use of the services in
+combination with materials, content, or software we did not provide; (d)
+use of the services after we have notified you to discontinue use of an
+allegedly infringing component, or after we have offered a non-infringing
+alternative; or (e) use of the services other than as permitted by these
+Terms. If we receive notice of a claim covered by this Section, we may,
+at our option and our expense, (i) procure for you the right to continue
+using the services, (ii) modify the services so that they are
+non-infringing, or (iii) terminate the affected subscription and refund
+any pre-paid, unused fees. The remedies in this Section 11.2 are your
+sole and exclusive remedy, and our entire liability, for any claim of
+intellectual-property infringement related to the services.
+
+**11.3 Procedure.** A party seeking indemnification under this Section
+11 ("**Indemnitee**") must (a) promptly give the other party
+("**Indemnitor**") written notice of the claim, (b) allow the Indemnitor
+sole control of the defense and settlement of the claim (provided that
+the Indemnitor may not settle a claim that imposes liability or admits
+fault on the Indemnitee without the Indemnitee's prior written consent,
+not to be unreasonably withheld), and (c) reasonably cooperate in the
+defense at the Indemnitor's expense.
 
 ## 12. Governing law
 
