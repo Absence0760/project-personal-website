@@ -23,10 +23,16 @@ non-US jurisdictions; if you are located outside the United States, by
 using the services you understand that your personal information will be
 processed in the United States.
 
-We do not knowingly collect personal information from children under 13.
-If you believe a child under 13 has provided us with personal
-information, contact us at the address in Section 11 and we will delete
-it.
+Our Terms of Service require users to be at least 18 years old. We do
+not knowingly collect personal information from anyone under 18, and we
+do not direct the services to minors. If you believe someone under 18
+has provided us with personal information — including a child under 13,
+which carries additional protections under the federal Children's Online
+Privacy Protection Act — contact us at the address in Section 11 and we
+will delete the information and close the account. For California
+residents aged 13–17, the California "Eraser Law" (Bus. & Prof. Code
+§22581) gives you the right to request removal of content you have
+posted; that right is described in Section 5.
 
 ## 2. Personal information we collect
 
@@ -71,11 +77,12 @@ disclosing personal information to a third party for cross-context
 behavioral advertising, whether or not money changes hands.
 
 **We do not sell personal information. We do not share personal
-information for cross-context behavioral advertising.** We have not done
-either of these since we began operating, we have no plans to do so, and
-we review this statement annually. If our practices change, this Section
-3 will be updated before any change takes effect. We do not knowingly
-sell or share the personal information of consumers under the age of 16.
+information for cross-context behavioral advertising.** As of the
+Effective date of this policy, we have not done either, and we have no
+plans to do so. We review this statement annually. If our practices
+change, this Section 3 will be updated before any change takes effect.
+We do not knowingly sell or share the personal information of consumers
+under the age of 16.
 
 Because we do not sell or share, the rights to opt out of sale or sharing
 described in Section 5 are not applicable — but if you believe we have
@@ -181,10 +188,13 @@ privacy requests within the timeframes required by the law of your
 state of residence (for example, the deadlines set by the CCPA/CPRA for
 California residents and by the VCDPA for Virginia residents — both
 generally 45 days, with a single permitted extension of up to an
-additional 45 days for good cause). If we need an extension permitted
-by law, we will notify you within the original response period, explain
-the reason, and extend the deadline only by the period the relevant
-statute allows.
+additional 45 days for good cause). For residents of US states without
+a comprehensive privacy statute, we apply a baseline of 45 days from a
+verifiable request, with one extension of up to an additional 45 days
+for good cause where needed. If we need an extension permitted by law,
+we will notify you within the original response period, explain the
+reason, and extend the deadline only by the period the relevant
+statute (or, for non-statute states, this policy) allows.
 
 ## 7. How to appeal a denied request (Virginia and similar states)
 
@@ -202,11 +212,12 @@ General (https://www.oag.state.va.us/).
 
 ## 8. Cookies, tracking, and analytics
 
-This website does **not** use third-party analytics, advertising
-cookies, advertising pixels, or cross-site tracking technologies. All
-client-side JavaScript on the marketing site is first-party code we
-wrote ourselves; there are no embedded third-party scripts and no
-remote-loaded tracking tags.
+As of the Effective date of this policy, this website does **not** use
+third-party analytics, advertising cookies, advertising pixels, or
+cross-site tracking technologies. All client-side JavaScript on the
+marketing site is first-party code we wrote ourselves; there are no
+embedded third-party scripts and no remote-loaded tracking tags as of
+that date.
 
 Subscription products may use a limited set of first-party functional
 cookies or local-storage entries (for example, to keep you signed in or
