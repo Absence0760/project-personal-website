@@ -2,45 +2,47 @@
 # `changed-files` list is the set of glob patterns that, if matched by any
 # changed file, applies the label.
 #
-# Adjust the path globs to match your project's actual layout — these are
-# sensible defaults for a pnpm-monorepo web app with infra + docs.
+# These globs reflect this repo's actual layout — a Zola static site with
+# no `frontend/` / `backend/` / `infra/` split.
 
-"area:frontend":
+"area:content":
   - changed-files:
       - any-glob-to-any-file:
-          - frontend/**
-          - apps/web/**
+          - content/**
 
-"area:backend":
+"area:legal":
   - changed-files:
       - any-glob-to-any-file:
-          - backend/**
-          - apps/backend/**
+          - content/terms.md
+          - content/privacy.md
+          - content/refunds.md
+          - content/contact.md
+          - docs/legal-status.md
 
-"area:infra":
+"area:templates":
   - changed-files:
       - any-glob-to-any-file:
-          - infra/**
+          - templates/**
+          - config.toml
+
+"area:static":
+  - changed-files:
+      - any-glob-to-any-file:
+          - static/**
+
+"area:ci":
+  - changed-files:
+      - any-glob-to-any-file:
           - .github/workflows/**
           - .github/dependabot.yml
+          - .pre-commit-config.yaml
 
 "area:docs":
   - changed-files:
       - any-glob-to-any-file:
           - "**/*.md"
           - docs/**
-          - "**/CLAUDE.md"
-
-"area:tests":
-  - changed-files:
-      - any-glob-to-any-file:
-          - "**/*.test.ts"
-          - "**/*.test.js"
-          - "**/*.spec.ts"
-          - "**/tests/**"
-          - "**/test/**"
-          - "**/__tests__/**"
-          - playwright/**
+          - CLAUDE.md
 
 "area:claude":
   - changed-files:
@@ -50,11 +52,5 @@
 "area:deps":
   - changed-files:
       - any-glob-to-any-file:
-          - "**/package.json"
-          - "**/pnpm-lock.yaml"
-          - "**/pyproject.toml"
-          - "**/requirements*.txt"
-          - "**/Cargo.toml"
-          - "**/Cargo.lock"
-          - "**/go.mod"
-          - "**/go.sum"
+          - .github/dependabot.yml
+          - .github/workflows/**
