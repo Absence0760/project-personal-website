@@ -1,8 +1,15 @@
 # Custom domain setup (Route 53 + GitHub Pages)
 
-Steps to run **once the Route 53 domain has been purchased**. The repo is staged
-for everything except the domain string itself — search for `TODO(domain)` to
-find the spots that need the real value.
+How this site's custom domain is wired up — captured both as a history of
+what was done for `jaredhoward.com` and as a recipe if the domain ever needs
+to be repointed or replaced. The repo's current state is:
+
+- `static/CNAME` contains `jaredhoward.com`
+- `config.toml` has `base_url = "https://jaredhoward.com"`
+- DNS lives in Route 53 with the records described below
+
+If you're following these steps to set up a *different* domain, replace
+every occurrence of `yourdomain.com` below with the real one.
 
 ## 1. Add a `CNAME` file to the site root
 
