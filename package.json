@@ -1,0 +1,16 @@
+{
+  "name": "project-personal-website",
+  "private": true,
+  "description": "Personal website at jaredhoward.com — Zola static site deployed to GitHub Pages.",
+  "scripts": {
+    "dev": "zola serve",
+    "build": "zola build",
+    "check": "zola check",
+    "test": "zola build",
+    "preview": "zola serve --base-url http://localhost"
+  },
+  "engines": {
+    "pnpm": ">=9"
+  },
+  "packageManager": "pnpm@10.33.2"
+}
