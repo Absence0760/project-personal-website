@@ -11,33 +11,33 @@
 
 ## Surface touched
 
-- [ ] Application code (`src/` once it lands)
-- [ ] Database migrations
-- [ ] Infrastructure (`infra/`)
-- [ ] Operator scripts (`bin/`)
+- [ ] Site content (`content/`) — including the legal pages
+- [ ] Templates (`templates/`)
+- [ ] Static assets (`static/` — CSS, JS, images, `CNAME`, `cv.pdf`)
+- [ ] Site config (`config.toml`)
 - [ ] CI / GitHub Actions (`.github/`)
-- [ ] E2E tests (`tests-e2e/`)
-- [ ] Docs only
+- [ ] Project docs (`docs/`, `CLAUDE.md`, `README.md`, etc.)
+- [ ] `.claude/` tooling
 
-## Money / data safety checklist
+## Static-site safety checklist
 
 <!-- Tick what applies. Untick lines that genuinely don't apply, but
      don't delete the row — so the next reviewer can see you considered
      it. -->
 
-- [ ] No new path moves money (or: the new path is idempotent and writes an audit row)
-- [ ] No new query reads tenant-scoped data without scoping (or: the scoping helper is used)
-- [ ] No new endpoint is mounted before the auth middleware
-- [ ] No PII / banking data is logged or returned to unauthenticated callers
-- [ ] No secret has a hardcoded fallback (`process.env.X || "..."`)
-- [ ] Money columns / variables use a fixed-precision type, not `float`/`number`
+- [ ] No third-party script / font / pixel / iframe added without a matching update to `content/privacy.md` (§4 and §8 commit the site to staying first-party only)
+- [ ] No tracker / analytics / chat widget loaded on page load (consent gate or first-party only)
+- [ ] No secret, API token, or private email address committed in HTML/JS/CSS or front-matter
+- [ ] Legal-page edits run through `docs/legal-status.md` (Effective / Last reviewed updated where required; cross-references still resolve)
+- [ ] Internal links still resolve (`zola build` exits 0; no dead anchors to `/terms/`, `/privacy/`, `/refunds/`, `/contact/`)
+- [ ] If `static/CNAME` or `base_url` changed, `docs/domain-setup.md` was followed and re-verified
 
 ## Test plan
 
 <!-- How this was verified. Delete rows that don't apply. -->
 
-- [ ] Unit tests pass locally
-- [ ] Integration tests pass locally
-- [ ] Manual walkthrough on the affected surface (describe below)
+- [ ] `zola build` passes locally
+- [ ] `zola serve` walkthrough on the affected pages
+- [ ] CI build job is green
 
-<!-- Manual walkthrough notes: -->
+<!-- Walkthrough notes: -->
