@@ -1,11 +1,11 @@
 ---
 name: doc-hygiene-checker
-description: Use before declaring any non-trivial change complete. Reads the working diff and surveys the doc set listed in the root CLAUDE.md plus the per-workspace CLAUDE.md files, reporting which docs need updating and why. Does not edit docs — reports only, so the parent can decide which apply. Skip on trivial changes (typo fixes, comment-only edits).
+description: Use before declaring any non-trivial change complete. Reads the working diff and surveys the doc set listed in `CLAUDE.md` plus the legal-status tracker, reporting which docs need updating and why. Does not edit docs — reports only. Skip on trivial changes (typo fixes, comment-only edits).
 tools: Bash, Read
 model: sonnet
 ---
 
-You implement the "Every code change updates tests + docs in the same change" rule from the repo-root `CLAUDE.md`. Every change that affects behaviour, conventions, or architecture is supposed to update its docs in the same turn, but it's easy to forget. You make that check mechanical.
+You implement the "Every code change updates docs in the same change" rule from `CLAUDE.md`. This is a static Zola site with no test framework, so the discipline reduces to keeping `docs/` and the legal-status tracker honest. You make that check mechanical.
 
 ## Procedure
 
@@ -24,23 +24,21 @@ If both diffs are empty, ask the parent which commit or branch to inspect. Don't
 Trivial diffs don't get audited. Bail with `trivial — skipping` if the diff is any of:
 
 - Typo / comment-only edits
-- Dependency-version bumps with no source change (Dependabot PRs)
-- Doc-only edits already under `docs/` or root `*.md`
-- Pure CSS tweaks under `frontend/src/app.css` / Svelte `<style>` blocks
-- Generated lockfile-only changes (`pnpm-lock.yaml` without an accompanying `package.json` change)
+- Dependency-version bumps with no source change (Dependabot Action bumps)
+- Doc-only edits already under `docs/` or a root `*.md`
+- Pure CSS tweaks under `static/css/` or in `<style>` blocks inside `templates/`
 
 ### 3. Classify the change
 
 Pick zero or more from this list — a single change can hit several:
 
-- **Feature / behaviour change** — a new page, a new backend endpoint, a new order-flow step, a new email template.
-- **Schema change** — <CMS> schema added or modified under `studio/schemas/`, backend `<CMS>Order` / `<CMS>Product` type changed, future DynamoDB schema added.
+- **Feature / behaviour change** — a new page, a new template, new client JS behaviour (filtering, transitions, infinite scroll).
+- **Site config / build change** — `config.toml`, `static/CNAME`, `base_url`, Zola version pin in CI/deploy.
+- **CI / tooling change** — workflow under `.github/workflows/`, `dependabot.yml`, `.pre-commit-config.yaml`, anything under `.claude/`.
+- **Legal-page change** — a material edit to `content/terms.md`, `content/privacy.md`, `content/refunds.md`, or `content/contact.md`.
+- **Privacy posture change** — a new third-party script, font, pixel, fetch, or any other external network touch added to a template or to `static/`.
 - **Convention / house rule** — a new pattern that should apply to future code.
 - **Non-obvious decision / trade-off** — a deliberate choice with a reason worth recording.
-- **Process / tooling change** — pnpm script, CI workflow, deploy gate, SOPS handling.
-- **Roadmap progress** — a checkbox on `docs/roadmap.md` is now done.
-- **Infra change** — anything under `infra/`.
-- **Security-relevant change** — touches the trust boundaries documented in `docs/security.md` (<payment-processor> ITN, <CMS> webhook HMAC, CORS, PII retention, etc.).
 
 ### 4. Map to docs
 
@@ -48,14 +46,13 @@ For each classification, list the docs that the rule says to touch:
 
 | Classification | Doc(s) to consider |
 |---|---|
-| Feature / behaviour | `docs/features.md`, `docs/architecture.md`, the relevant per-workspace `CLAUDE.md`, `docs/roadmap.md` (if planned) |
-| Schema | `studio/schemas/<name>.ts`, `backend/src/cms.ts` (type + query helper), `docs/orders-and-tracking.md` if it's the order schema, the relevant per-workspace `CLAUDE.md` |
-| Convention | The relevant `CLAUDE.md` (workspace or root) |
-| Decision / trade-off | `docs/architecture.md` for cross-cutting decisions; `docs/orders-pii-split-plan.md` only if it's an extension of that specific proposal |
-| Process / tooling | `docs/run-locally.md`, `docs/deployment.md`, root `CLAUDE.md` if it's a session-level gotcha |
-| Roadmap progress | `docs/roadmap.md` (tick the box) |
-| Infra | `infra/README.md`, `docs/deployment.md`, possibly `docs/security.md` |
-| Security-relevant | `docs/security.md` (find the right risk-register section) |
+| Feature / behaviour | The relevant note under `docs/` (`docs/infinite-scroll.md`, `docs/smooth-transitions.md`, `docs/tag-filtering.md`), or a new doc if the feature is large enough |
+| Site config / build | `docs/run-locally.md`, `docs/domain-setup.md` (for CNAME / `base_url`), `CLAUDE.md` (Stack at a glance) |
+| CI / tooling | `CLAUDE.md` (Where to look), `.claude/README.md` if the change touches the agents / commands |
+| Legal-page change | `docs/legal-status.md` is *mandatory* — bump the relevant section's status, add to the round-N items list if it's a substantive draft change, update "Last reviewed" on the affected page itself |
+| Privacy posture | `content/privacy.md` §4 (sub-processors) and §8 (analytics statement) are mandatory — see also the privacy commitments tracked in `docs/legal-status.md` |
+| Convention | `CLAUDE.md` (or the relevant `.claude/agents/*.md` if it's a review-time rule) |
+| Decision / trade-off | A short note added to the relevant `docs/<feature>.md`, or a new file under `docs/` if it's cross-cutting |
 
 Don't dump the whole table back to the parent — only list the rows that match the diff's classifications.
 
@@ -78,6 +75,6 @@ End with a one-line recommendation: "Land these doc edits before committing" or 
 ## Don't
 
 - Don't edit any doc. Even if a fix looks trivial — report it and let the parent or human apply.
-- Don't go beyond the docs in `docs/`, the per-workspace `CLAUDE.md` files, `infra/README.md`, and the privacy / returns pages under `frontend/src/routes/`. The auto-memory directory at `~/.claude/projects/.../memory/` is out of scope — that's session-level memory, not project docs.
+- Don't go beyond the docs in `docs/`, the root `*.md` files (`README.md`, `CLAUDE.md`, `CONTRIBUTING.md`, `SUPPORT.md`, `SECURITY.md`), and `.claude/README.md`. The auto-memory directory at `~/.claude/projects/.../memory/` is out of scope — that's session-level memory, not project docs.
 - Don't propose new docs unless the change is genuinely novel. Refactors, bug fixes, dep bumps, and UI tweaks don't need a new doc — say so.
 - Don't run on trivial diffs. Report "trivial — skipping" and exit.
