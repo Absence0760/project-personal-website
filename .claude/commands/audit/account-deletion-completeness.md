@@ -19,7 +19,7 @@ Under that posture, there is no `delete-account` handler to audit. The audit con
 ## What to check
 
 1. **No account system exists yet.**
-   - No backend code (no `package.json`, no Lambda / Worker / server-side rendering).
+   - No backend code (the root `package.json` is a script-only pnpm wrapper around the `zola` CLI; no Lambda, no Worker, no server-side rendering).
    - No third-party auth (Auth0 / Clerk / Supabase Auth / Firebase Auth) loaded in any template.
    - No newsletter / subscription form (Substack widget, ConvertKit form, Mailchimp embed) that would create an addressable user record.
 

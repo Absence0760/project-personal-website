@@ -41,37 +41,37 @@ If the argument is empty or "audit", list the candidate pages with a one-line "w
 
 1. **Pre-flight:**
    - Confirm the target file exists. If not, stop and report.
-   - Confirm `zola build` passes on the working tree before you start — if it's already failing, something else is broken; fix that first.
+   - Confirm `pnpm build` passes on the working tree before you start — if it's already failing, something else is broken; fix that first.
    - The repo convention is "don't run the dev server to visually verify UI changes" (per `CLAUDE.md`). The agent does not take screenshots; the operator reviews the page in their own browser session.
 
 2. **Resolve target → invoke the agent:**
 
    Spawn the `ui-polisher` agent with a prompt like:
 
-   > "Polish the UI/UX of `<resolved file path>`. The user's stated intent was: `<the original argument string>`. Follow your agent spec: audit, plan, edit, verify with `zola build`, report. Do not commit. If the target is a legal page and the polish would renumber sections or change clause wording, refuse — that's a `/safe-edit` task per `docs/legal-status.md`."
+   > "Polish the UI/UX of `<resolved file path>`. The user's stated intent was: `<the original argument string>`. Follow your agent spec: audit, plan, edit, verify with `pnpm build`, report. Do not commit. If the target is a legal page and the polish would renumber sections or change clause wording, refuse — that's a `/safe-edit` task per `docs/legal-status.md`."
 
    The agent's spec covers the pattern library, the verify step, and the refuse cases. Trust it.
 
 3. **Relay the agent's report.** When it returns, surface:
 
    - The list of files changed (run `git diff --stat` to confirm matches).
-   - The "Notes for the human" section verbatim — including the agent's request that the user open `zola serve` and review the page visually.
+   - The "Notes for the human" section verbatim — including the agent's request that the user open `pnpm dev` and review the page visually.
 
 4. **Wait for the user's call on the commit.** Do not pre-stage or pre-commit. When the user says yes:
 
-   - Stage the changed files explicitly (don't `git add -A` — risks pulling in `public/` output from `zola build`).
+   - Stage the changed files explicitly (don't `git add -A` — risks pulling in `public/` output from `pnpm build`).
    - Commit message follows the repo's recent style seen in `git log --oneline` — `feat(scope):` for new surface, `chore(scope):` for tooling, `fix(scope):` for correctness. **No `Co-Authored-By` / "Generated with Claude Code" / robot-emoji footers** — the user-level rule in `~/.claude/CLAUDE.md` wins.
 
 ## Cost reality
 
-This command costs more than a normal edit — a `zola build` run and an agent context. Don't burn it on a 5-pixel padding tweak — for that, the user edits directly. The command earns its cost on hierarchy-level changes (a flat content page that wants a `<dl>`, a sidebar that doesn't collapse, a legal page whose `<h2>` spacing has drifted).
+This command costs more than a normal edit — a `pnpm build` run and an agent context. Don't burn it on a 5-pixel padding tweak — for that, the user edits directly. The command earns its cost on hierarchy-level changes (a flat content page that wants a `<dl>`, a sidebar that doesn't collapse, a legal page whose `<h2>` spacing has drifted).
 
 ## What this command does NOT replace
 
 - `/check` for a pre-commit gate (code-review + test-gap + doc-hygiene).
 - `/safe-edit` for changes to legal pages, the homepage services section, the deploy workflow, or anything that adds an external network touch.
 - `/audit/*` for periodic broad sweeps (secrets, XSS, deps, accessibility).
-- Visual verification. The operator runs `zola serve` and reviews the page themselves — that's the repo convention.
+- Visual verification. The operator runs `pnpm dev` and reviews the page themselves — that's the repo convention.
 
 ## Tone
 

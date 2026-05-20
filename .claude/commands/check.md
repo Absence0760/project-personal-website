@@ -35,7 +35,7 @@ If the diff is trivial (typo, comment, single-line dep bump, generated-file rege
 Send a single message with three Agent tool calls:
 
 - `code-reviewer` — prompt: "Review the working diff against this project's documented conventions in `CLAUDE.md` and `docs/legal-status.md`. Output the strict format from your spec."
-- `test-gap-checker` — prompt: "Audit the working diff for missing verification (zola build, manual walkthrough notes, legal-page cross-reference check) per the root CLAUDE.md verification rule. Output the format from your spec. Note: this repo has no test framework — do not flag 'missing vitest tests'."
+- `test-gap-checker` — prompt: "Audit the working diff for missing verification (pnpm build, manual walkthrough notes, legal-page cross-reference check) per the root CLAUDE.md verification rule. Output the format from your spec. Note: this repo has no test framework — do not flag 'missing vitest tests'."
 - `doc-hygiene-checker` — prompt: "Audit the working diff against the root CLAUDE.md doc-update rule. Output which docs need updating. Note: this repo's doc surface is `docs/` plus `docs/legal-status.md` if the diff touches a legal page."
 
 Parallel because they're independent — all three only `git diff` + `Read` files.

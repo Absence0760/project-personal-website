@@ -54,7 +54,7 @@ The cost of this loop is real (~2-3x tokens, ~30-60s extra latency, one or two `
    - Any Notes or Out-of-scope observations the reviewer surfaced (worth knowing, not blocking).
    - Ask whether to commit. **Never commit without being asked** (project rule from `CLAUDE.md`).
 
-6. **On user "yes":** stage the changed files explicitly (don't `git add -A` — could pick up scratch output from `zola build`), draft a commit message that follows the project's style (conventional-commit prefix per the recent `git log`, no `Co-Authored-By`, no Claude footer), commit, report success.
+6. **On user "yes":** stage the changed files explicitly (don't `git add -A` — could pick up scratch output from `pnpm build`), draft a commit message that follows the project's style (conventional-commit prefix per the recent `git log`, no `Co-Authored-By`, no Claude footer), commit, report success.
 
 ## Loop-termination guarantees
 
@@ -66,7 +66,7 @@ The cost of this loop is real (~2-3x tokens, ~30-60s extra latency, one or two `
 ## What this command does NOT replace
 
 - `/check` is the lighter pre-commit gate — review + test-gap + doc-hygiene, single pass, advisory. Use it for everyday changes that don't warrant `/safe-edit`'s 2-3x cost. The two are complementary.
-- `zola build` still runs when you'd normally run it. The reviewer is on top of it, not instead.
+- `pnpm build` still runs when you'd normally run it. The reviewer is on top of it, not instead.
 - `/audit/*` is still the right tool for periodic broad sweeps. `/safe-edit` is per-change.
 
 ## Tone

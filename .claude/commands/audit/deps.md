@@ -6,7 +6,9 @@ Sweep dependencies for known CVEs and version drift; verify Dependabot covers ev
 
 ## What this is
 
-This repo has no `package.json`, no `Cargo.toml`, no `go.mod`, no `pyproject.toml`. There are **no language-package dependencies**. The only thing Dependabot tracks here is GitHub Actions referenced in `.github/workflows/`. Several of those workflows have elevated permissions (`id-token: write` on `deploy.yml`, `contents: write` + `pull-requests: write` on `claude.yml` and `dependabot-auto-merge.yml`), so an un-pinned action ref on those is a supply-chain risk worth the same severity treatment a runtime CVE would get on a typical Node project.
+This repo has a root `package.json`, but it declares **no `dependencies` and no `devDependencies`** — it only exposes `pnpm dev` / `pnpm build` / `pnpm check` as thin wrappers around the `zola` CLI. No `Cargo.toml`, no `go.mod`, no `pyproject.toml`. There are **no language-package dependencies to update**, so Dependabot's npm ecosystem is intentionally not configured here. The only thing Dependabot tracks is GitHub Actions referenced in `.github/workflows/`. Several of those workflows have elevated permissions (`id-token: write` on `deploy.yml`, `contents: write` + `pull-requests: write` on `claude.yml` and `dependabot-auto-merge.yml`), so an un-pinned action ref on those is a supply-chain risk worth the same severity treatment a runtime CVE would get on a typical Node project.
+
+If the root `package.json` ever grows a real `dependencies` / `devDependencies` block, this audit needs an `npm`-ecosystem Dependabot entry (and a `pnpm audit` pass) added back.
 
 ## What to check
 
@@ -17,7 +19,7 @@ This repo has no `package.json`, no `Cargo.toml`, no `go.mod`, no `pyproject.tom
    - Commit-message prefix `chore(ci)` with scope — matches repo style.
    - Flag anything missing or anything that would create excessive PR churn.
 
-2. **No language-package ecosystem accidentally enabled.** Confirm `.github/dependabot.yml` does NOT list `npm`, `cargo`, `pip`, `gomod`, etc. — adding one without a matching manifest would generate "no manifest found" errors. (None currently — flag if added.)
+2. **No language-package ecosystem accidentally enabled.** Confirm `.github/dependabot.yml` does NOT list `npm`, `cargo`, `pip`, `gomod`, etc. — adding `npm` while the root `package.json` still has no dependencies would just create empty noise; adding the others without a matching manifest would generate "no manifest found" errors. (None currently — flag if added.)
 
 3. **GitHub Actions pinning.** Grep `.github/workflows/` for `uses: <action>@<ref>`.
    - SHA pins (`@<40-hex-chars>`) are the safer default for any workflow that touches `${{ secrets.* }}` or `id-token: write`. Scorecard's `Pinned-Dependencies` check enforces this.

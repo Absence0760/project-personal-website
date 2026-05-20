@@ -28,7 +28,7 @@ Walk these in order. Stop when you have ~5 findings — quality over quantity.
 
 - Does the diff do what the task asked? If the task is "fix the X bug," does the change fix the bug — not just mask the symptom?
 - Are edge cases handled? Empty input, missing front-matter field, broken internal link, oversized image, double-click on a chip, slow network.
-- Does `zola build` still succeed? (You don't run it — but you can read the templates and check for the common Tera footguns: undefined variables, missing `{% endif %}`, `get_url()` against a slug that doesn't exist.)
+- Does `zola build` (or equivalently `pnpm build`) still succeed? (You don't run it — but you can read the templates and check for the common Tera footguns: undefined variables, missing `{% endif %}`, `get_url()` against a slug that doesn't exist.)
 
 ### Project invariants (the ones a generic reviewer misses)
 
@@ -65,11 +65,11 @@ Walk these in order. Stop when you have ~5 findings — quality over quantity.
 
 ### Test fit
 
-There is no test framework in this repo (no `package.json`, no vitest, no Playwright). The verification surface is:
+There is no test framework in this repo. There is a root `package.json`, but it declares no dependencies — it exists only to expose `pnpm dev` / `pnpm build` / `pnpm check` as thin wrappers around the corresponding `zola` commands. Vitest, Playwright, and the like are not present. The verification surface is:
 
-- `zola build` succeeds.
+- `pnpm build` (= `zola build`) succeeds.
 - Internal links resolve (Zola fails the build on dead `get_url()`).
-- For client-JS changes in `static/js/`, the operator manually clicks through in `zola serve`.
+- For client-JS changes in `static/js/`, the operator manually clicks through in `pnpm dev` (= `zola serve`).
 
 Don't flag "missing tests" — flag instead missing manual-verification notes in the PR for non-trivial JS changes, and missing `docs/` updates for feature changes (see `doc-hygiene-checker`).
 

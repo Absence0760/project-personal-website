@@ -20,7 +20,7 @@ Under that posture, there is no exporter to audit. The audit confirms that postu
    If the policy now promises an export endpoint that doesn't exist, that's a Critical — the policy commits to something product won't deliver.
 
 2. **No data-collection endpoints have crept in.** This means:
-   - No backend code in this repo (still no `package.json`, no Lambda, no Worker, no server-side rendering).
+   - No backend code in this repo (the root `package.json` is a script-only pnpm wrapper around the `zola` CLI; no Lambda, no Worker, no server-side rendering).
    - No third-party form-handler (Formspree, Tally, Typeform, Netlify Forms) in `templates/` or `content/`. Grep for `action="https`, `data-netlify`, `formspree.io`, `tally.so`, `typeform.com`.
    - No analytics / session-recording / CRM that would accumulate visitor data over time (out of scope of this audit, but mention).
 
