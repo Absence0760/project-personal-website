@@ -1,34 +1,72 @@
 # .claude/ — Claude Code tooling
 
-These agents and commands were derived from real working projects (primarily `meryl-green-designs`, a SvelteKit + Hono + DynamoDB e-commerce site) and **lightly generalized** with placeholder names: `<payment-processor>`, `<CMS>`, `<email-service>`, `<aws-region>`, `<EMAIL_SERVICE>_API_KEY`, etc.
+Slash commands and agents tuned for this repo — a Zola personal website at
+[jaredhoward.com](https://jaredhoward.com), deployed to GitHub Pages, that
+also serves as the public business URL for Stripe sign-up.
 
-**They will not be 100% accurate for your project out of the box.** Each new project should re-read these and replace placeholder examples with the actual services / routes / file paths in use. Treat them as templates of *structure and rigor*, not as fully-portable boilerplate.
+The point of having `.claude/` files in the tree (rather than relying on
+ad-hoc instructions per session) is that the discipline the legal pages
+require — see `docs/legal-status.md` — is the kind of thing a code-only
+reviewer would miss. Each agent here knows the trust boundaries and the
+non-obvious load-bearing rules.
 
 ## What's here
 
 ### Agents (`agents/`)
 
-- **`code-reviewer.md`** — invoked at PR / pre-commit time to review the diff against the project's documented rules.
-- **`doc-hygiene-checker.md`** — checks that code changes update docs and tests in the same change.
-- **`test-gap-checker.md`** — finds modules / routes without test coverage.
-- **`ui-polisher.md`** — applies typography / layout polish to frontend surfaces. Heavily SvelteKit-flavoured; adapt for other frontend frameworks.
-- **`repo-security-auditor.md`** — read-only security auditor. The "trust boundaries" section needs rewriting per project — the example boundaries (frontend ↔ user, backend ↔ caller, backend ↔ <CMS>, backend ↔ <payment-processor>) are meryl-shape, not universal.
+- **`code-reviewer.md`** — read-only diff review against the rules
+  encoded in `CLAUDE.md` and `docs/legal-status.md`. Invoked from
+  `/check` and `/safe-edit`.
+- **`doc-hygiene-checker.md`** — flags when a non-trivial code change
+  hasn't been paired with a doc update.
+- **`test-gap-checker.md`** — there is no test framework here, so this
+  agent is mostly a guard against regressions in the legal-page
+  cross-references and the few bits of client JS in `static/js/`.
+- **`ui-polisher.md`** — typography / layout polish targeted at Zola
+  templates and Markdown content.
+- **`repo-security-auditor.md`** — invoked by the `/audit/*` commands.
+  Knows that this site has no backend, no secrets, no PII, no auth — so
+  the real audit surface is "what could leak into the deployed bundle"
+  and "is the deployed bundle still consistent with the privacy policy?"
+- **`compliance-auditor.md`** — invoked by the legal-flavoured audit
+  commands. Knows the legal-page commitments in `content/` plus the
+  `docs/legal-status.md` tracker, and audits the *deployed surface*
+  against them — not a hypothetical SaaS backend.
 
 ### Commands (`commands/`)
 
-- **`check.md`** — run typecheck + tests + format + lint and report.
-- **`safe-edit.md`** — workflow for edits to security-sensitive or load-bearing files.
-- **`polish-ui.md`** — orchestrates the `ui-polisher` agent against a target surface.
-- **`release-readiness.md`** — go/no-go checklist before tagging a release.
-- **`audit/`** — directory of focused security audits. Each command delegates to the `repo-security-auditor` agent with a specific area:
-  - `secrets.md`, `infra.md`, `deps.md`, `xss.md`, `cost-controls.md`
-  - `all.md` runs them all in sequence
+- **`check.md`** — run code-reviewer + test-gap-checker + doc-hygiene
+  against the working diff.
+- **`safe-edit.md`** — fix-and-review loop for load-bearing changes
+  (legal pages, deploy workflow, CSP-shaped HTML).
+- **`polish-ui.md`** — typography / layout polish on a template or page.
+- **`release-readiness.md`** — go/no-go checklist before tagging a
+  release (here, tags map to deploys via `deploy.yml`).
+- **`audit/`** — focused security and compliance sweeps:
+  - `secrets.md`, `xss.md`, `deps.md` — generic supply-chain hygiene
+  - `cookie-consent.md`, `third-party-data-flows.md` — the privacy-
+    policy commitment ("first-party only") is enforceable, and these
+    audits keep the deployed bundle honest against it
+  - `accessibility.md` — WCAG / EAA pass on the deployed surface
+  - `gdpr.md`, `data-export-completeness.md`,
+    `account-deletion-completeness.md` — currently scoped to "this
+    site has no accounts and processes no PII; the policy says so;
+    confirm the deployed surface matches". They become real audits if
+    the site ever gains a backend
+  - `cost-controls.md`, `infra.md` — kept as no-op stubs that simply
+    state "N/A — GitHub Pages, no AWS, no Lambda". Useful if any of
+    that ever changes
+  - `all.md` runs every wired area
   - `README.md` is the index
 
-## Adapting these for a new project
+## Conventions worth knowing before editing these
 
-1. Rewrite the trust-boundary map in `agents/repo-security-auditor.md` to match your stack's actual third-party integrations.
-2. Update route tables in `audit/cost-controls.md` and `audit/infra.md` to match your `backend/src/routes/*` and `infra/*.tf`.
-3. Replace the `<placeholder>` tokens (`<payment-processor>`, `<CMS>`, `<email-service>`, `<aws-region>`) with real service names so the agents stop emitting them in reports.
-4. Add stack-specific audits not covered here (Postgres RLS? Edge functions? Mobile-twin parity? — see `project-running`'s `.claude/commands/audit/` for ideas).
-5. Remove audits that don't apply (e.g. `cost-controls.md` doesn't apply to a static-only site with no Lambda / no third-party APIs).
+- The agents and commands are tuned for *this site*. If they start
+  emitting findings about Svelte / Hono / SOPS / Lambda / Sanity / a
+  backend route table — that's drift, not a real finding. Re-read the
+  agent and strip the stale guidance.
+- Legal-page changes are special — they go through `docs/legal-status.md`
+  before merging. Several agents reference that file by name.
+- This site is intentionally first-party only and tracker-free. If an
+  audit ever surfaces a new third-party network call, that's a finding
+  regardless of how innocuous the destination looks.
