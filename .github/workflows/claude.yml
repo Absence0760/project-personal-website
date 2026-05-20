@@ -63,12 +63,14 @@ jobs:
       # Bash allowlist is deliberately tight. Broad patterns like
       # `Bash(gh *)` would allow `gh release create` (triggers production
       # deploys), `gh secret set`, `gh workflow run`, etc.; `Bash(git *)`
-      # would allow `git push --force`. Each command below is read-only or
-      # scoped to repo-local development tasks. There is no `package.json`
-      # here — the build is `zola build`, and there is no test framework.
+      # would allow `git push --force`. Each command below is read-only
+      # or scoped to repo-local development tasks. The build is `zola
+      # build` (or equivalently `pnpm build` — the root `package.json`
+      # exposes thin pnpm wrappers around the zola CLI, no deps); there
+      # is no test framework.
       - name: Run Claude Code
         uses: anthropics/claude-code-action@51ea8ea73a139f2a74ff649e3092c25a904aed7e # v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          claude_args: "--max-turns 40 --allowedTools 'Read,Write,Edit,Glob,Grep,Bash(zola build),Bash(zola check),Bash(git log:*),Bash(git diff:*),Bash(git status),Bash(git show:*),Bash(git blame:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh run view:*),Bash(gh run list:*)'"
+          claude_args: "--max-turns 40 --allowedTools 'Read,Write,Edit,Glob,Grep,Bash(zola build),Bash(zola check),Bash(pnpm build),Bash(pnpm check),Bash(pnpm test),Bash(git log:*),Bash(git diff:*),Bash(git status),Bash(git show:*),Bash(git blame:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(gh pr diff:*),Bash(gh issue view:*),Bash(gh issue list:*),Bash(gh run view:*),Bash(gh run list:*)'"
