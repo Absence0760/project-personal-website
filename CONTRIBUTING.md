@@ -41,10 +41,13 @@ Per the rule in `CLAUDE.md`: every PR that touches non-trivial code also updates
 ## Running the checks locally
 
 ```
-zola build                 # builds into ./public, fails on broken templates / dead links
-zola serve                 # local dev server with live reload
+pnpm build                 # builds into ./public, fails on broken templates / dead links
+pnpm dev                   # local dev server with live reload
+pnpm check                 # zola check (link + template validation)
 pre-commit run --all-files # gitleaks + the other hygiene hooks
 ```
+
+These are pnpm script wrappers around the underlying `zola build` / `zola serve` / `zola check` commands — see the root `package.json`. You can call `zola` directly if you prefer; the package.json declares no dependencies and is purely an interface convenience.
 
 If Claude Code is available, `/check` runs the diff-review / doc-hygiene / test-gap agents in parallel and reports — see `.claude/commands/check.md`.
 

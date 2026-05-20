@@ -13,9 +13,9 @@ The site also serves as the public business URL for Stripe sign-up. That means t
 - **Generator:** Zola (pinned to `0.19.2` in `.github/workflows/ci.yml` + `deploy.yml`).
 - **Templates:** Tera, under `templates/`.
 - **Content:** Markdown with TOML front-matter, under `content/`.
-- **Client JS:** vanilla, under `static/js/`. No bundler, no `package.json`, no test framework.
+- **Client JS:** vanilla, under `static/js/`. No bundler, no test framework.
 - **Deploy:** `actions/deploy-pages` on push to `main` (`.github/workflows/deploy.yml`).
-- **Local dev:** `zola serve` (live reload), `zola build` (outputs to `public/`). See `docs/run-locally.md`.
+- **Local dev:** `pnpm dev` (live reload) / `pnpm build` (outputs to `public/`) / `pnpm check`. The root `package.json` is a thin pnpm wrapper around `zola serve` / `zola build` / `zola check` — declares no dependencies, exists for muscle-memory consistency with the rest of the repos on this workstation. See `docs/run-locally.md`.
 
 ## Repo-wide hard rules
 
@@ -35,7 +35,7 @@ Treat "code changed, docs unchanged" as an incomplete task — flag it before ha
 
 ## UI verification
 
-Don't spin up the dev server to visually verify UI changes before reporting a task complete. `zola build` succeeding + the CI build check (`.github/workflows/ci.yml`) are enough; the operator reviews visuals themselves. Only run `zola serve` if explicitly asked.
+Don't spin up the dev server to visually verify UI changes before reporting a task complete. `pnpm build` (`zola build`) succeeding + the CI build check (`.github/workflows/ci.yml`) are enough; the operator reviews visuals themselves. Only run `pnpm dev` (`zola serve`) if explicitly asked.
 
 ## Available Claude tooling
 

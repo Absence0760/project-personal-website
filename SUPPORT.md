@@ -14,7 +14,7 @@ Use the **Bug report** template at `.github/ISSUE_TEMPLATE/bug_report.md`. Inclu
 
 - What you expected vs. what happened
 - Steps to reproduce (the minimum set)
-- Where you saw it (URL on jaredhoward.com, or a local `zola serve` reproduction), browser + OS if it looks browser-specific
+- Where you saw it (URL on jaredhoward.com, or a local `pnpm dev` / `zola serve` reproduction), browser + OS if it looks browser-specific
 - Relevant console / network errors
 
 ## Security vulnerabilities
