@@ -1,45 +1,59 @@
 ---
-description: Verify every third-party SDK / script / fetch is gated on consent for EU users (ePrivacy + GDPR)
+description: Verify the site sets no cookies and loads no third-party scripts. Expected finding state is empty.
 ---
 
-Audit the web app's cookie + script consent posture. Every non-essential third-party load on an EU IP must be gated on the user's affirmative consent.
+Audit the site's cookie + script consent posture. **Expected finding state: empty.**
 
 ## Goal
 
-ePrivacy Directive Art 5(3) (still in force) + GDPR (consent must be freely given, specific, informed, unambiguous) require:
-- A consent banner before any non-essential cookie or third-party script fires.
-- Granular toggles (analytics / functional / marketing) rather than one all-or-nothing button.
-- Equally prominent "Reject all" alongside "Accept all" (UK ICO + French CNIL guidance — multiple regulator fines in 2024 for dark patterns).
-- A "withdraw consent" path that's no harder to reach than the original opt-in.
+`content/privacy.md` §4 and §8 commit this site to being first-party only — no third-party analytics, no embedded scripts, no consent banner because there is nothing requiring consent. ePrivacy Directive Art 5(3) + GDPR require a consent banner *only* if non-essential cookies or third-party scripts actually fire. Since none do, no banner is needed.
 
-This project has **no consent banner today**. The audit's job is to enumerate every third-party load that would need to be gated, so the user knows the scope of work before deciding to ship a banner.
+The audit's job is to verify that posture still holds. If a third-party script ever ships, the posture is broken and *either* the script comes out *or* the policy + consent UX has to land — in the same change.
 
 ## What to check
 
-1. **Page-load chain.** Walk `the frontend entry HTML`, `the frontend root layout`, `the frontend root SSR layout`, every `+page.server.ts` and `+layout.ts`. Anything that fires on `mount` or in SSR top-level that hits a non-essential third-party.
-2. **the error monitor.** Web + mobile error-monitoring SDKs may fire before consent. Confirm `enabled: false` on load, the error-monitor init is deferred until consent, and that **session replay** is OFF by default everywhere — replay is the highest-risk feature because it captures the DOM.
-3. **the subscription-SDK.** the subscription SDK package — verify it doesn't fire any analytics on import.
-4. **Map tile fetches.** Every render of any map components fetches map tiles. the map provider logs the requesting IP per tile fetch. Map fetches need consent under strict ePrivacy reading, **but** they're plausibly justifiable as "strictly necessary" for an essential feature (showing a route on a map). Document the position; it's defensible if disclosed in the cookie notice.
-5. **AI streaming endpoint.** an AI-call endpoint calls the AI provider. The user-initiated nature means consent is implicit when they tap an AI-call UI surface — but the *first-load* fetch of the page doesn't need to fire the AI provider. Verify nothing pre-warms it.
-6. **alternate-provider fallback.** Same as the AI provider.
-7. **OAuth redirects (Google / Apple).** Pre-click, the buttons must not fire any provider SDK. The redirect itself is user-initiated → consent implicit.
-8. **external APIs.** Server-side or post-action; check none are called from the unauthenticated landing page.
-9. **Local-storage / IndexedDB.** Storing settings keyed by `user_id` is fine; storing a tracking identifier or session pings on first visit is not. Grep `localStorage`, `sessionStorage`, `indexedDB`.
-10. **Cookies.** Walk `Set-Cookie` headers. auth provider cookies are *strictly necessary* (the user is logged in). Any other cookie (analytics, session replay, ads) needs the banner gate.
+1. **Templates.** Walk every file in `templates/`. Grep each for:
+   - `<script src=` — any external script source is a finding.
+   - `<link rel="stylesheet" href="http` (or `//`) — any external stylesheet is a finding.
+   - `<iframe`, `<embed`, `<object` — any embedded third-party content is a finding.
+   - `<img src="http` (where the host isn't `jaredhoward.com`) — externally-hosted images are a finding (they hand the visitor's IP to a third party).
+   - Web-font `@font-face` rules with external `src:` URLs.
+
+2. **Markdown content.** Walk every file in `content/`. Same greps as step 1 — raw HTML is permitted inside Markdown by default, so an external `<script>` or `<iframe>` can sneak in via a `notes/*.md` post.
+
+3. **Stylesheet.** Read `static/css/style.css`. Grep for:
+   - `@import url(http` — external font / CSS import.
+   - `background-image: url(http` — externally-hosted image.
+   - `src: url(http` in any `@font-face` rule.
+
+4. **Client JS.** Walk `static/js/`. Grep each file for:
+   - `fetch(` with a non-relative URL (anything starting with `http://`, `https://`, or `//`).
+   - `XMLHttpRequest` with a non-relative URL.
+   - `new Image()` / `img.src =` with a non-relative URL.
+   - `import(` (dynamic import) with a remote URL.
+   - `document.createElement('script')` followed by setting `src` to a remote URL.
+
+5. **Cookies.** This site sets none on the client side. Confirm there is no `document.cookie =` write anywhere in `static/js/`. (GitHub Pages does not set any first-party cookie on its own.)
+
+6. **`localStorage` / `sessionStorage` / `indexedDB`.** None of these are tracking by themselves, but if `static/js/*` starts writing to them, surface as a Note — the policy says "we collect nothing", and a stored identifier would soften that claim.
+
+## Expected finding state
+
+For this repo, the expected state is **clean — zero findings**. A non-empty result is the load-bearing signal: the policy claim in `content/privacy.md` §4 + §8 is now wrong, and either the bundle or the policy has to move.
 
 ## Report
 
-- **Critical** — a third-party SDK that captures PII (session-replay (if used), analytics, ads) fires before consent and is on by default.
-- **High** — a non-essential third-party load that fires on the unauthenticated landing page.
-- **Medium** — a third-party load that's gated *only* on auth (anon EU user still hits it on /, /login, /privacy).
-- **Low** — a third-party that's plausibly essential (map tiles) but not yet disclosed in any cookie notice (there is no notice today).
+- **Critical** — any third-party script / iframe / pixel / font / fetch fires on a deployed page. The policy is contradicted; surface immediately and recommend either removal or a policy + consent-UX update in the same change.
+- **High** — `localStorage`/`sessionStorage`/`indexedDB` writes that store an identifier; cookie set client-side.
+- **Medium** — an externally-hosted asset that's "probably essential" (e.g. a CV image hosted on a personal CDN) — defensible but not currently disclosed in the policy.
+- **Low** — a comment or dead code that references a third-party load even if it never runs.
 
-For each: the file/line that fires the load, what data it carries, and how to gate it (deferred init, conditional load, etc.).
+For each: the file:line that triggers the load, what data it carries, and the policy section it contradicts (`content/privacy.md` §4 or §8).
 
-End with a **clean** section listing third-party loads that fire only after user-initiated action (clicking Coach, opening a map screen, signing in) and are therefore implicit-consent-defensible.
+End with a **clean** section listing the surfaces you walked and found nothing on — explicitly: "templates/: clean", "static/js/: clean", "static/css/: clean", "content/: clean".
 
 ## Delegate to
 
-Use the `compliance-auditor` agent: `"Audit the web app's cookie + third-party-SDK consent posture per ePrivacy Art 5(3) + GDPR."`
+Use the `compliance-auditor` agent: `"Audit the site's cookie + third-party-script posture. The expected finding state is empty; surface anything that fires."`
 
 Read-only. Findings only.

@@ -12,7 +12,7 @@ Run a parallel three-agent audit on the working diff, aggregate findings, and re
 - After a feature change, to confirm test + doc updates went with it.
 
 **Wrong fit — refuse:**
-- Trivial diffs (typos, comment edits, dep-version bumps with no source change, Svelte template / CSS-only tweaks). The agents skip these, and running the command burns ~30s of agent time for nothing.
+- Trivial diffs (typos, comment edits, dep-version bumps with no source change, pure CSS tweaks, single-line content edits). The agents skip these, and running the command burns ~30s of agent time for nothing.
 - Empty `git status` — there's nothing to audit. Tell the user.
 
 ## What this command does NOT do
@@ -28,15 +28,15 @@ Run `git status`. If both staged and unstaged are empty, abort: tell the user th
 
 ### 2. Confirm it's not trivial
 
-If the diff is trivial (typo, comment, single-line dep bump, generated-file regen only, Svelte template / CSS-only), abort with a one-line "trivial — skipping `/check`" message. The agents would each independently bail on the same diff.
+If the diff is trivial (typo, comment, single-line dep bump, generated-file regen only, pure CSS-only), abort with a one-line "trivial — skipping `/check`" message. The agents would each independently bail on the same diff.
 
 ### 3. Spawn three agents in parallel
 
 Send a single message with three Agent tool calls:
 
-- `code-reviewer` — prompt: "Review the working diff against this project's documented conventions. Output the strict format from your spec."
-- `test-gap-checker` — prompt: "Audit the working diff for missing vitest test surface per the root CLAUDE.md tests-and-docs rule. Output the format from your spec."
-- `doc-hygiene-checker` — prompt: "Audit the working diff against the root CLAUDE.md doc-update rule. Output which docs need updating."
+- `code-reviewer` — prompt: "Review the working diff against this project's documented conventions in `CLAUDE.md` and `docs/legal-status.md`. Output the strict format from your spec."
+- `test-gap-checker` — prompt: "Audit the working diff for missing verification (zola build, manual walkthrough notes, legal-page cross-reference check) per the root CLAUDE.md verification rule. Output the format from your spec. Note: this repo has no test framework — do not flag 'missing vitest tests'."
+- `doc-hygiene-checker` — prompt: "Audit the working diff against the root CLAUDE.md doc-update rule. Output which docs need updating. Note: this repo's doc surface is `docs/` plus `docs/legal-status.md` if the diff touches a legal page."
 
 Parallel because they're independent — all three only `git diff` + `Read` files.
 
@@ -53,8 +53,8 @@ When all three return, build a single short report:
 Status: <CLEAN | NEEDS_CHANGES>
 <verbatim findings list, or "no concrete findings">
 
-### Test gaps (`test-gap-checker`)
-<verbatim verdicts list, or "test surface is consistent">
+### Verification gaps (`test-gap-checker`)
+<verbatim verdicts list, or "verification surface is consistent">
 
 ### Doc gaps (`doc-hygiene-checker`)
 <verbatim verdicts list, or "doc set is clean">
@@ -62,9 +62,9 @@ Status: <CLEAN | NEEDS_CHANGES>
 ### Recommendation
 <one of:>
 - All three came back clean — ready to commit.
-- Code review and docs are clean; <N> test gap(s) — the user should decide whether to land tests now or in a follow-up.
+- Code review and docs are clean; <N> verification gap(s) — the operator should decide whether to capture the walkthrough now or land as-is.
 - <N> code-review finding(s) — apply or push back before committing.
-- Multiple gaps across review / tests / docs — list and let the user pick.
+- Multiple gaps across review / verification / docs — list and let the operator pick.
 ```
 
 ### 5. Hand off
@@ -74,6 +74,6 @@ Ask the user how they want to proceed. **Do not** apply any fixes automatically.
 ## Tone
 
 Don't narrate the parallel-agent fan-out in user-facing text. The user sees:
-- A one-line "Running review + test-gap + doc-hygiene checks…"
+- A one-line "Running review + verification-gap + doc-hygiene checks…"
 - The aggregated report.
-- A short "Want me to apply the test gaps? Land it as-is? Add a follow-up task?" question at the end.
+- A short "Want me to apply the gaps? Land it as-is? Add a follow-up task?" question at the end.

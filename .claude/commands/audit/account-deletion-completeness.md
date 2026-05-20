@@ -1,45 +1,59 @@
 ---
-description: Verify GDPR Art 17 erasure — every personal-data table + Storage object + third-party link is cleared by delete-account
+description: Posture confirmation — this site has no accounts, so there is nothing to delete. Expected finding state is "still no accounts to delete".
 ---
 
-Audit the account-deletion path for completeness. When a user invokes "delete my account", nothing personal should remain.
+Audit the account-deletion path for completeness.
 
 ## Goal
 
-GDPR Art 17 (right to erasure) requires us to erase personal data on request. Apple + Google both *mandate* an in-app account-deletion route for any app that supports account creation — failure is a store-rejection blocker. The internal risk is orphaned rows: a AI-conversation tables row pointing at a deleted `auth.users.id`, a `run-photos` Storage object that survived the auth-user delete because the prefix walker missed `thumbs/`, a an external service token still queueing webhook events for a user that no longer exists.
+GDPR Art 17 (right to erasure) requires a service to delete personal data on request. Apple and Google both *mandate* an in-app account-deletion route for any app that supports account creation. This site supports no account creation — there is no signup, no login, no profile, no `auth.users` table because there is no auth.
+
+The legal pages reflect this:
+
+- `content/terms.md` §4.4 commits to a future in-product cancellation control once a paid subscription product ships.
+- `content/refunds.md` §1 commits to the same.
+- `docs/legal-status.md` "Launch gates" lists both as hard blockers before the first paying subscriber.
+
+Under that posture, there is no `delete-account` handler to audit. The audit confirms that posture still holds — that no surface in this repo has quietly grown an account system or a user-state store.
 
 ## What to check
 
-1. **Handler.** `the account-deletion backend route`. Read it. Map every step to an asset class (DB row / Storage prefix / third-party link).
-2. **Foreign keys.** Walk every `the backend app/supabase/migrations/*.sql` for `references auth.users` and `references public.user_profiles`. Each one needs either `on delete cascade` (preferred, deletes automatically) or an explicit delete in the handler. Flag any that have neither.
-3. **Personal-data tables.** From `compliance-auditor.md`'s list: `runs`, `routes`, `route_reviews`, `clubs` (the user as owner), `club_members`, `events` (as host), `event_attendees`, `club_posts`, `training_plans`, `plan_weeks`, `plan_workouts`, `user_settings`, `user_device_settings`, `event_results`, `race_sessions`, `race_pings`, `user_coach_usage`, `device_tokens`, `fitness_snapshots`, `personal_records`, AI-conversation tables, `user_follows` (both directions), `run_kudos`, `run_comments`, `run_photos`, `saved_routes`, `segments` (as creator), `segment_efforts`, `notifications` (recipient + actor), `run_matched_tracks`, `gear`, `run_gear`, session-event tables, `route_history`, `heatmap_points`. Each one must drain.
-4. **Two-sided relations.** `user_follows` has `(follower_id, followed_id)` — both halves must drop. `run_kudos` and `run_comments` reference both the *author* and the *run owner* — if the user deletes, their authored rows must drop AND their runs' kudos must drop. `event_attendees` similar.
-5. **Storage prefixes.** Buckets: `runs` (`{user_id}/*.json.gz`, `{user_id}/exports/*`), `run-photos` (`{user_id}/<run_id>/<photo>.jpg` + `{user_id}/<run_id>/thumb.webp`), `avatars` (`{user_id}/*`). The Storage walker in `delete-account/index.ts` must traverse each. Per ADR `decisions §33`, `recursive Storage prefix walk` was added to drain `{user_id}/exports/`; verify it also handles `run-photos` thumbnail subprefix.
-6. **Third-party revocations.**
-   - **an external service**: revoke the OAuth token via `https://www.strava.com/oauth/deauthorize` before deleting the row in `integrations`. Otherwise the next webhook event still maps to the (now deleted) user.
-   - **the subscription provider**: subscriber id outlives our row. Per the subscription provider docs, call `purchases.deleteCustomerInfo` or the equivalent server API.
-   - **FCM / APNs**: invalidate every row in `device_tokens` so push notifications stop. Worth telling FCM the token is dead (otherwise we keep wasting send budget).
-   - **the error monitor**: purge user via `https://docs.sentry.io/api/projects/delete-a-projects-user/` or accept that the error monitor retains pseudonymised event metadata under their DPA. Document the choice.
-   - **the AI provider**: per their data-retention policies, prompts are retained 30 days (the AI provider) and not used for training. No revocation API; document.
-7. **Order.** The auth user must be the last thing deleted. If we delete the auth row first, every subsequent owner-scoped query fails RLS. Verify.
-8. **Confirmation.** The UI confirmation should require typing the email or password — Apple specifically flags one-tap deletions as a UX risk. Verify the web + mobile confirmation flow.
-9. **Auditability.** A pseudonymised log of the deletion (`user_id`, timestamp, deletion-result-set) is *helpful* for legal-hold but *not allowed* to be PII. If we log anything, confirm it's hashed.
-10. **Re-signup.** If the same email signs up later, do we create a fresh account or recover the deleted one? GDPR Art 17 implies fresh-only. Verify.
-11. **Test coverage.** Is there an end-to-end deletion test? `the backend app/supabase/tests/` is the home for pgtap suites — look for one that creates a user, populates every personal-data table, calls `delete-account`, and asserts every table is empty.
+1. **No account system exists yet.**
+   - No backend code (no `package.json`, no Lambda / Worker / server-side rendering).
+   - No third-party auth (Auth0 / Clerk / Supabase Auth / Firebase Auth) loaded in any template.
+   - No newsletter / subscription form (Substack widget, ConvertKit form, Mailchimp embed) that would create an addressable user record.
+
+2. **Privacy policy still reflects "no accounts".** Read `content/privacy.md`. Confirm it does not promise a delete-account UI that doesn't exist. If it now claims "delete your account from Settings", that's a Critical — the policy promises what the product doesn't have.
+
+3. **Launch gates still flagged in `docs/legal-status.md`.** The tracker should still list:
+   - "In-product cancellation control" as not yet built.
+   - "Pre-charge auto-renewal disclosure UX" as not yet built.
+   - "Automated annual-renewal reminder email" as not yet built.
+   - "Plan-specific refund documentation" as not yet built.
+
+   If any of these have been ticked off without the corresponding product surface landing in this repo, that's a finding — the tracker drifted ahead of reality.
+
+4. **No identifier writes in client JS.** Walk `static/js/`. Confirm no `localStorage` / `sessionStorage` / cookie set creates a stable identifier the operator would have to delete on request.
+
+## Expected finding state
+
+For this repo, the expected state is **clean — no accounts, no exporter, no deletion endpoint needed**. A non-empty result means either the policy now promises something the product doesn't deliver, or an account-shaped surface has quietly landed.
 
 ## Report
 
-- **Critical** — a personal-data table is not drained AND has no cascade. Trivially reproducible orphan after deletion.
-- **High** — Storage prefix not walked, or third-party link not revoked.
-- **Medium** — order issue (auth user deleted too early), missing audit log, no end-to-end test.
-- **Low** — UX confirmation too easy, re-signup recovery instead of fresh.
+- **Critical** — the policy now promises an in-product cancellation / account-deletion UI but no such surface exists; or an account surface exists but the policy is silent.
+- **High** — `docs/legal-status.md` has been edited to claim a launch gate is met when the in-tree product doesn't support it.
+- **Medium** — third-party widget loaded that creates an addressable record but no deletion path is documented.
+- **Low** — undocumented intent on a borderline data point (e.g. a `localStorage` key that arguably constitutes account state).
 
-For each: the `<table>` or `<bucket>/<prefix>` or third-party + where the handler would change.
-
-End with a **clean** list of tables / buckets / third-party links that are fully covered.
+End with a **clean** section: "no accounts", "no auth", "no delete-account handler needed", "launch-gate status in `docs/legal-status.md`: still open per tracker".
 
 ## Delegate to
 
-Use the `compliance-auditor` agent: `"Audit the delete-account handler for completeness per GDPR Art 17 + Apple/Play account-deletion mandates."`
+Use the `compliance-auditor` agent: `"Audit the account-deletion posture for this static site. The expected state is 'no accounts' — surface anything that contradicts that."`
 
 Read-only. Findings only.
+
+## When this command becomes real
+
+If this repo ever grows an account system, an auth flow, or any addressable user record, this command needs a real body. The previous template revision had an extensive completeness audit (FK cascade coverage, Storage prefix walk, third-party revocation, deletion order, audit log) — look at the donor-project history in `git log` for prior shape.

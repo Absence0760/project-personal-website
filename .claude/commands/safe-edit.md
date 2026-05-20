@@ -3,24 +3,27 @@ description: Implement a non-trivial change with a code-reviewer agent loop — 
 argument-hint: <task description>
 ---
 
-Implement the task `$ARGUMENTS` with a project-specific code-reviewer agent in the loop.
+Implement the task `$ARGUMENTS` with the project-specific `code-reviewer` agent in the loop.
 
 ## When to use this command
 
 **Right fit:**
-- Security-sensitive changes — anything touching the <payment-processor> ITN handler, the <CMS> webhook handler, CORS config, rate limiting, the email pipeline (especially the banking-details regression test), or the SOPS-encrypted secrets files.
-- Order-flow changes — `POST /orders`, `GET /orders/:ref`, the order status state machine, the customer status emails.
-- <CMS> schema changes — `studio/schemas/*.ts` plus the matching `backend/src/cms.ts` type + helper + new route.
-- Infra changes — anything under `infra/`, especially OIDC trust policy, S3 bucket policy, KMS, CloudFront security headers, Lambda permissions.
-- Cross-workspace refactors that touch frontend + backend + studio at once.
+
+- Edits to the four legal pages — `content/terms.md`, `content/privacy.md`, `content/refunds.md`, `content/contact.md` — or to `docs/legal-status.md`. These pages are pre-counsel-reviewed and have cross-reference invariants that a casual edit can break.
+- Changes that add, remove, or alter a third-party network call — even something as innocuous as an embedded video or a hosted font. These break the first-party commitment in `content/privacy.md` §4 and §8 and need explicit policy edits in the same diff.
+- Changes to `templates/base.html` (every page renders through it) or to the homepage services section in `templates/index.html` (it has to stay aligned with Terms §1).
+- Changes to `static/CNAME`, `base_url` in `config.toml`, or the Zola version pinned in `.github/workflows/ci.yml` / `deploy.yml`.
+- CI workflow changes — anything under `.github/workflows/` that touches `id-token`, `pull_request_target`, or the Claude Code allowlist.
 - Anything you want a second pair of eyes on before commit.
 
 **Wrong fit — refuse and tell the user to edit directly:**
+
 - Typos and one-line doc corrections.
-- Comment edits.
-- Single-property CSS / Svelte template changes.
-- Dependency-version bumps that don't change source.
-- Anything where the diff is going to be < ~10 lines and touches no project invariant.
+- Comment edits in JS / templates.
+- Single-property CSS tweaks in `static/css/style.css`.
+- Dependency-version bumps (Dependabot Action PRs).
+- New entries in a `content/notes/` post or other non-legal content.
+- Anything where the diff is < ~10 lines and touches no project invariant listed above.
 
 The cost of this loop is real (~2-3x tokens, ~30-60s extra latency, one or two `code-reviewer` agent runs). Don't burn it on changes that don't warrant it. **If the task is trivial, abort and tell the user to just edit it normally.**
 
@@ -49,9 +52,9 @@ The cost of this loop is real (~2-3x tokens, ~30-60s extra latency, one or two `
    - What was changed (one-line summary, not a recap of the diff).
    - Which review round produced the clean status.
    - Any Notes or Out-of-scope observations the reviewer surfaced (worth knowing, not blocking).
-   - Ask whether to commit. **Never commit without being asked** (project rule from the root `CLAUDE.md`).
+   - Ask whether to commit. **Never commit without being asked** (project rule from `CLAUDE.md`).
 
-6. **On user "yes":** stage the changed files explicitly (don't `git add -A` — could pick up an unrelated SOPS plaintext sibling), draft a commit message that follows the project's style (no `Co-Authored-By`, no Claude footer, conventional-commit prefix per the recent log), commit, report success.
+6. **On user "yes":** stage the changed files explicitly (don't `git add -A` — could pick up scratch output from `zola build`), draft a commit message that follows the project's style (conventional-commit prefix per the recent `git log`, no `Co-Authored-By`, no Claude footer), commit, report success.
 
 ## Loop-termination guarantees
 
@@ -63,7 +66,7 @@ The cost of this loop is real (~2-3x tokens, ~30-60s extra latency, one or two `
 ## What this command does NOT replace
 
 - `/check` is the lighter pre-commit gate — review + test-gap + doc-hygiene, single pass, advisory. Use it for everyday changes that don't warrant `/safe-edit`'s 2-3x cost. The two are complementary.
-- `pnpm check` / `pnpm test` still run when you'd normally run them. The reviewer is on top of them, not instead.
+- `zola build` still runs when you'd normally run it. The reviewer is on top of it, not instead.
 - `/audit/*` is still the right tool for periodic broad sweeps. `/safe-edit` is per-change.
 
 ## Tone

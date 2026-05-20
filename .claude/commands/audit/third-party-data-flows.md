@@ -1,45 +1,28 @@
 ---
-description: Map every outbound personal-data hop into a sub-processor list ready for the Privacy Policy
+description: Map every outbound network touch the deployed bundle makes. Expected output is an empty (or near-empty) sub-processor list.
 ---
 
-Audit every outbound flow of personal data to a third-party processor. Output is the input to a GDPR Art 30 Record of Processing Activities and the sub-processor list of a Privacy Policy.
+Audit every outbound network flow the deployed bundle makes. Output is the sub-processor list to paste into `content/privacy.md` §4.
 
 ## Goal
 
-A regulator's first ask in any incident is "show me your sub-processor list". A user's most-clicked Privacy Policy section is "who does my data go to?". Both need the same artefact: a table of provider × data × purpose × region × DPA + opt-out path. This audit produces it by walking the codebase.
+`content/privacy.md` §4 names Stripe (as the operator's payment processor at the business level), GitHub (as the platform hosting the site), and Google (as the email provider). It explicitly excludes third-party analytics, fonts, CDNs, chat widgets, and the like. The audit's job is to confirm the deployed bundle does not contradict that list — and to give the operator a regenerated sub-processor table if it does (so they can update the policy in the same change).
+
+For a truly first-party static site, the table this command produces should be **empty or contain only same-origin / GitHub-Pages CDN entries**.
 
 ## What to check
 
-1. **Provider inventory.** Grep for every outbound endpoint by base URL:
-   - `strava.com`, `connect.garmin.com`, `parkrun.com`
-   - `api.anthropic.com`, `api.openai.com` (or `OPENAI_BASE_URL` for local Ollama)
-   - `api.revenuecat.com`, `api.stripe.com`
-   - `api.maptiler.com`, `*.tiles.mapbox.com` if any
-   - `sentry.io`, `*.ingest.sentry.io`
-   - an external weather API (`api.open-meteo.com` — elevation for route builder)
-   - Google APIs (`googleapis.com`, `accounts.google.com`)
-   - Apple (`appleid.apple.com`)
-   - AWS endpoints (S3, CloudFront, Lambda, KMS, Route 53) — surfaced via Terraform
-   - the auth/data platform
-   - <hosted-worker-platform> (your worker host) — Go worker + the routing service internal
-2. **Per-flow analysis.** For each:
-   - What user data leaves? (email, IP, sensor data, payment intent, prompt text, error stack — list yours)
-   - From where? (web client, backend route, Go worker, mobile native)
-   - To which region? (US east-1, EU west-1, ap-southeast-2)
-   - DPA / SCC URL?
-   - Opt-out mechanism if any? (user disconnects integration, disables session-replay (if used), etc.)
-   - Legal basis? (consent / contract / legitimate interest)
-3. **Tiles.** the map provider logs the requesting IP + viewport coordinates. Every web map render → the map provider log. Treat tile fetches as a personal-data hop.
-4. **Coach prompts.** `an AI-call entrypoint (e.g. an LLM streaming endpoint)` + the Lambda variant build a prompt that includes <sensitive-data summary built for the AI call>. That's HEALTH data sent to the AI provider. Confirm:
-   - JWT-gated (only owner's data goes out)
-   - Region of the API endpoint
-   - the AI provider's data-retention statement
-   - alternate-provider fallback (if used) data-retention statement
-5. **the error monitor.** the error monitor sees `user_id` (pseudonymous uuid), URL paths, error stack traces. Replay (if enabled) sees DOM. Confirm replay is OFF by default + opt-in.
-6. **Third-party webhook payloads.** A third-party service POSTs event ids to our webhook endpoint. Each event triggers a fetch of the full activity. The data goes from external service → backend worker → the data platform. The flow direction is *inbound*, but it creates a *retention* obligation here that mirrors the upstream source.
-7. **OAuth handoffs.** social OAuth ID tokens are presented to the auth provider, which validates against the provider. Personal data exposed = email + uid + provider profile fields. Confirm the validation flow doesn't log the token.
-8. **Email.** Local dev uses the local mail capture tool. Prod uses the email provider — confirm which (<email-service>? another transactional email provider? in-house?). Each is a sub-processor.
-9. **Sub-sub-processors.** AWS uses sub-processors of its own (CloudFront edge nodes by region). The project's Privacy Policy needs to point users to AWS's sub-processor list rather than enumerate it.
+1. **Templates.** Walk every file in `templates/`. Inventory every `src=`, `href=`, `url(...)` reference. Same-origin URLs (`{{ get_url(...) | safe }}`, relative paths) are fine. Any `https://` / `http://` / `//` URL pointing elsewhere is a sub-processor entry.
+
+2. **Stylesheet.** Read `static/css/style.css`. Inventory every `@import`, `url(...)`, `src:`. Same-origin → fine. External → sub-processor entry.
+
+3. **Client JS.** Walk `static/js/`. Inventory every `fetch()`, `XMLHttpRequest`, `new Image()`, dynamic `import()`, `document.createElement('script')` with `src` assignment. All current uses (in `transitions.js`, `infinite-scroll.js`) are same-origin `fetch()`s of the same Zola build. Confirm.
+
+4. **Markdown content.** Walk every file in `content/`. Markdown permits raw HTML; surface any `<script src=`, `<link rel="stylesheet" href=`, `<iframe>`, `<embed>`, `<img src=` that points off-origin.
+
+5. **CV PDF.** `static/cv.pdf` is a binary; out of scope for this static-audit pass. Flag as a manual-review item.
+
+6. **GitHub Pages itself.** GitHub serves the bundle. GitHub's own logs (request IP, user-agent, referrer) are kept by GitHub on the operator's behalf. This belongs in the sub-processor list as "GitHub Pages (hosting + access logs)" — confirm `content/privacy.md` §4 still names it.
 
 ## Report
 
@@ -47,22 +30,22 @@ Output two artefacts:
 
 ### (A) Sub-processor table
 
-| Provider | Data | Region | Purpose | DPA / SCC | Opt-out |
+| Provider | Data carried | Region | Purpose | Policy cite | Currently disclosed in `content/privacy.md` §4? |
 |---|---|---|---|---|---|
 
-One row per flow. The user pastes this into the Privacy Policy.
+One row per outbound flow you found. For a clean repo this table has one or two rows (GitHub Pages, possibly Stripe if any Stripe.js gets added — but currently no Stripe.js is loaded here).
 
 ### (B) Findings
 
-- **Critical** — a sub-processor on the list that the user does not currently disclose anywhere.
-- **High** — a flow that bypasses an opt-out the user has asserted in Settings (e.g. user disabled the error monitor but it still fires).
-- **Medium** — missing region detail or unclear data-retention period.
-- **Low** — undocumented sub-sub-processor chain.
+- **Critical** — a sub-processor that is *not* currently disclosed anywhere in `content/privacy.md` §4 (or that's disclosed but with materially wrong language).
+- **High** — a sub-processor that's disclosed for one purpose but actually receives data for a different purpose.
+- **Medium** — missing region detail or unclear data-retention statement for a disclosed sub-processor.
+- **Low** — sub-sub-processor chain that the policy could point to (e.g. "GitHub uses sub-processors of its own — see github.com/site/privacy").
 
-End with a **clean** section: outbound endpoints in the codebase where you confirmed no personal data leaves.
+End with a **clean** section listing the surfaces you walked where you confirmed no outbound personal-data flow happens.
 
 ## Delegate to
 
-Use the `compliance-auditor` agent: `"Map every outbound personal-data flow in this monorepo into a sub-processor list."`
+Use the `compliance-auditor` agent: `"Map every outbound network touch this static site's deployed bundle makes into a sub-processor table. Cross-check against content/privacy.md §4."`
 
-Read-only. Output the table + findings. Don't recommend a default Privacy Policy — that's `intl-legal-doc-reviewer`'s job once the user drafts one.
+Read-only. Output the table + findings.

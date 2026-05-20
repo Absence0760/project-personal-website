@@ -1,54 +1,65 @@
 ---
-description: Audit user-content and CMS-content rendering paths for XSS — Svelte `{@html}`, portable-text serializers, dynamic href attributes
+description: Audit content and template rendering paths for XSS — Tera `| safe` filter usage, client JS that interpolates URL state, raw HTML in Markdown content
 ---
 
-Find every place user-supplied or CMS-supplied text is rendered as HTML, and verify it's either escaped (Svelte's default) or sanitised.
+Find every place the deployed bundle renders dynamic input as HTML, and verify it's either escaped (Tera's default) or sanitised.
 
 ## Goal
 
-The frontend is a static SvelteKit site. Most strings are rendered as text via `{value}` — safe by default. The risk surfaces are: anything using `{@html}`, portable-text renderers, dynamically constructed `href` attributes, and SVG content. CMS content (products, gallery, testimonials) is editorially controlled but still flows through the same paths — a typo in the schema or a third-party portable-text serialiser that allows raw HTML is the regression to catch.
+This is a Zola static site. Most strings are rendered as text via `{{ value }}` — safe by default (Tera HTML-escapes). The risk surfaces are:
+
+1. Anywhere `| safe` is applied to a value that isn't strictly trusted at build time.
+2. Anywhere client JS in `static/js/` interpolates URL state (query params, hash fragments, history) into the DOM.
+3. Anywhere Markdown content embeds raw HTML.
+
+There is no CMS, no rich-text serialiser, no user-content submission system, no server-rendered email. The surface is small but the build inlines everything, so an oversight ships.
 
 ## What to check
 
-1. **Svelte `{@html}`.** Grep `frontend/src/` for `{@html`. For every hit, trace the source of the rendered string. If it originates from the <CMS> (CMS content) or any user input (order form notes echoed back, etc.), the rendered value must come out of a sanitiser. Static / build-time strings are fine.
+1. **Tera `| safe` filter.**
+   - Grep `templates/` for `| safe`. For every hit, confirm the value being marked safe is build-time-trusted:
+     - Hard-coded URL paths (from `get_url(path=...)`) — fine.
+     - `current_url`, `canonical` — fine, set by Zola itself.
+     - Anything coming from a Markdown front-matter field — needs justification; front-matter content is operator-controlled so usually fine, but flag for review.
+   - The current uses in `templates/base.html` are all `get_url(...)` / `current_url` (URL outputs that Zola guarantees safe). If a new `| safe` lands on a user-supplied or page-content field, that's a Medium-or-higher finding.
 
-2. **Portable Text / rich-text rendering.** If the project ever introduces a <CMS> rich-text renderer (custom serialisers, `@portabletext/svelte`, etc.), confirm:
-   - No serialiser maps to `{@html}` without sanitisation.
-   - URL-shaped marks (`link` annotations) reject `javascript:` and `data:` schemes.
-   Today the frontend uses image URLs only — flag the new surface if it appears.
+2. **Markdown raw HTML.**
+   - Zola permits raw HTML in Markdown by default. Grep `content/**/*.md` for `<script`, `<iframe`, `<object`, `<embed`, `<style`. Any hit is at minimum a Medium — the legal pages should be pure prose; raw script tags suggest tracker drift.
+   - The CV section and other long-form content may legitimately use `<dl>` / `<details>` HTML — those are fine. The concern is script / iframe / embed.
 
-3. **Dynamic `href` / `src` attributes.** Grep `frontend/src/` for `href={` and `src={` inside `<a>` and `<img>`. For each, trace the source. If user/CMS-controlled, the value must be validated to reject `javascript:` / `data:` schemes. Reference: `mailto:` and same-origin paths are fine.
+3. **Client JS DOM injection.**
+   - `static/js/transitions.js` swaps `<main>` content from a `fetch()`'d HTML response. Trace: the source is the same-origin Zola build, no user input, so the swap is safe by construction. **But** confirm the URL handling code never uses `window.location.hash` / `search` to construct an element ID or selector without escaping — that's the typical XSS sink in same-origin SPA-like transitions.
+   - `static/js/tag-filter.js` reads `data-tag` attributes and selects elements. Confirm `data-tag` values come from Zola's templating (operator-controlled at build time), not from URL state.
+   - `static/js/infinite-scroll.js` fetches next-page HTML and appends nodes. Same logic as `transitions.js` — confirm URL handling doesn't accept attacker-controlled IDs.
 
-4. **CMS-rendered fields used in attributes.** <CMS> product / gallery / testimonial schemas have `title`, `description`, `text`, `slug` etc. fields. Grep where each lands in the DOM — text-content via `{value}` is fine; an attribute (`alt`, `title`, `aria-label`) needs no special handling but if it's an `href`/`src`, see step 3.
+4. **Dynamic `href` / `src` in templates.**
+   - Grep `templates/` for `href="{{` and `src="{{`. For each, confirm the interpolated value can't be a `javascript:` or `data:` scheme. Page permalinks from `page.permalink` are Zola-generated; fine. External URLs from front-matter would be a finding if they exist.
 
-5. **SVG content.** SVG can carry script. Today the frontend uses <CMS> image URLs (PNG/JPG/WebP via the CDN), not SVG, but if SVG ever becomes a renderable image type, confirm:
-   - <CMS>'s image CDN rejects SVG MIME on the bucket policy, OR
-   - The frontend only renders `<img src="...">` (browser treats `<img>`-loaded SVG as image, no script execution), never inline `{@html svgSource}`.
+5. **Inline event handlers and `style="..."` attributes.**
+   - Grep `templates/` and `content/` for `onclick=`, `onerror=`, `onload=`. Any hit is at least Medium.
+   - Inline `style="..."` is not XSS per se but is a code-smell — surface as Low.
 
-6. **Email-template HTML.** Backend `email-templates.ts` builds HTML strings sent via <email-service>. Customer name, address, notes, items, and tracking info all land in HTML. Confirm every interpolation goes through an escape helper (the project uses a small one inside `email-templates.ts`); inspect any new template path that's added.
+## Expected finding state
 
-7. **The banking-details regression test.** `backend/src/__tests__/email.test.ts` has the "no banking details in automated pending-payment email" guard. This is **not strictly an XSS test** but it lives in the same area — if the diff touches email templates, confirm the guard still passes.
+For this repo, the expected state is **at most a small number of Notes** (e.g. "all `| safe` uses are `get_url` outputs — fine"). A High / Critical finding indicates real XSS surface.
 
 ## Report
 
-- **High** — user/CMS input reaches the DOM as HTML without sanitisation. Provide a payload that would prove it (e.g. `<img src=x onerror=alert(1)>` injected via a <CMS> field renders as a script-trigger).
-- **Medium** — sanitisation exists but is bypassable (e.g. a portable-text serialiser config that allows raw HTML through a specific block type), or `href` validation accepts a borderline scheme.
-- **Low** — escaping is correct but the surrounding code makes future XSS easy to introduce (e.g. a helper that returns a string sometimes-as-HTML, sometimes-as-text).
+- **High** — operator/user-controllable string reaches the DOM as HTML without sanitisation, or as a `href`/`src` value that could be `javascript:`.
+- **Medium** — raw `<script>` / `<iframe>` in a Markdown file (also a privacy-policy finding — see `/audit/cookie-consent`); a `| safe` on a value whose provenance is unclear.
+- **Low** — inline event handlers, `style="..."`, or other code-smell that isn't immediately exploitable but makes future XSS easy to introduce.
 
-For each: file:line, the source of the user-supplied text, the rendering site, the missing sanitiser.
+For each: file:line, the source of the dynamic value, the rendering site, the missing escape / sanitiser.
 
 ## Useful starting points
 
-- `frontend/src/lib/Cart.svelte`, `frontend/src/routes/contact/+page.svelte` — the order-form / customer-input paths
-- `frontend/src/routes/shop/+page.svelte`, `frontend/src/routes/shop/[slug]/+page.svelte` — CMS product rendering
-- `frontend/src/routes/gallery/+page.svelte` — CMS gallery rendering
-- `frontend/src/lib/cms.ts` — image URL builder (read-through to the <CMS>'s public CDN)
-- `backend/src/email-templates.ts` — server-rendered HTML emails
-- `backend/src/__tests__/email.test.ts` — the banking-details regression guard
-- `docs/security.md` — search "XSS", "sanitise", "escape"
+- `templates/base.html` — the shared layout; `{{ ... | safe }}` calls live here
+- `templates/index.html`, `templates/section.html`, `templates/page.html`, `templates/cv/section.html`, `templates/taxonomy_*.html` — render content fields
+- `static/js/transitions.js`, `static/js/tag-filter.js`, `static/js/infinite-scroll.js` — client-side DOM mutation
+- `content/**/*.md` — pure-prose Markdown; any raw HTML beyond `<dl>` / `<details>` / structural elements is suspicious
 
 ## Delegate to
 
-Use the `repo-security-auditor` agent: `"Audit user-content and CMS-content rendering paths for XSS — Svelte {@html}, portable-text serialisers, dynamic href/src, SVG, server-rendered email HTML."`
+Use the `repo-security-auditor` agent: `"Audit content and template rendering paths for XSS — Tera | safe filter usage, raw HTML in Markdown, client JS that interpolates URL state."`
 
 Read-only. Report findings; don't patch without confirmation.

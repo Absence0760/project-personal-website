@@ -1,46 +1,48 @@
 ---
-description: Audit the project's GDPR posture — lawful basis, consent, DSAR, retention, transfers, age gate, breach plan
+description: Confirm the site's posture remains US-targeted, tracker-free, and PII-free — the conditions under which GDPR exposure stays minimal
 ---
 
-Audit the GDPR / UK GDPR posture of this monorepo. The goal is a punch list the user can fix before opening signup to EU / UK / EEA users.
+Audit the GDPR / UK GDPR posture of this site.
 
 ## Goal
 
-GDPR fines are calibrated to global revenue, not local impact. The headline numbers (€20M or 4% of global turnover) get the press; the actual launch risk is reviewer rejection by Apple / Google Play if no in-app privacy policy + account-deletion + age-gate exist. Find every gap.
+This site is a Zola static site at `jaredhoward.com` deployed to GitHub Pages. It has no backend, no accounts, no PII storage, and no marketing targeted at the EU / UK. Per `content/privacy.md` §1 and `content/terms.md` §12, the operator's stated jurisdiction and customer base are US-only.
+
+Under that posture, GDPR exposure is minimal: no controllership over EU personal data, no Art 27 EU representative requirement, no consent banner needed (no cookies, no third-party scripts), no DSAR endpoints (nothing to export or delete). The audit's job is to confirm the posture still holds — not to manufacture compliance debt where there is none.
+
+If the operator ever starts marketing to EU customers, this audit becomes a much bigger lift (lawful basis per data class, DPA, transfer mechanism, age gate, breach plan, DPIA for any high-risk processing). Track that change-of-intent in `docs/legal-status.md "International / non-US user posture"`.
 
 ## What to check
 
-1. **Privacy policy + Terms of Service.** Do `/privacy` and `/terms` routes exist in `the frontend routes directory`? Are they linked from the signup form, the marketing footer, and the iOS / Android in-app surface? Without them, both stores reject.
-2. **Lawful basis (Art 6) per data category.** For each personal-data column the user listed in `compliance-auditor.md`, what lawful basis would the user claim? Consent / contract / legitimate interest are the three plausible ones. Health data (HR, <sensitive data categories — list yours>) probably needs Art 9 explicit consent. Flag every column that has no obvious basis.
-3. **Consent capture.** No cookie / SDK consent banner today on the web app — confirm. Document what would need to fire only after consent on an EU IP (the error monitor, the map provider, the subscription-SDK, AI streaming endpoint).
-4. **DSAR endpoints.**
-   - **Export (Art 20)**: `the data-export worker` (primary) and `the data-export backend route` (rollback). Are they wired to a UI surface? Is the output machine-readable JSON or CSV (Art 20 requires "structured, commonly used, machine-readable")?
-   - **Erasure (Art 17)**: `the account-deletion backend route`. Does the UI expose it on every platform (web, Android, iOS, watches that have account state)?
-   - **Rectification (Art 16)**: edit-profile flow. Verify it.
-   - **Access (Art 15)**: same surface as export, usually.
-   - **Restriction (Art 18) + objection (Art 21)**: do we honour an "object to processing" flow at all today? Probably not.
-5. **Retention.** Are there documented retention periods? Stale session-event tables, abandoned AI-conversation tables, half-finished signups in the user-auth table? Without auto-deletion this is a "keep forever" posture, which is hard to defend.
-6. **Cross-border transfers (Chapter V).** each processor's region (data platform, cloud regions, AI provider, etc.)? (third-party providers have their own regions). Every flow from an EU data subject to a non-EU processor needs SCCs or an adequacy decision. List the flows + their required mechanism.
-7. **DPO + EU representative (Art 27).** If we have no establishment in the EU and offer goods/services to EU residents, we need an EU rep listed in the Privacy Policy. Do we?
-8. **Children (Art 8).** Member-state age of consent ranges from 13 (BE) to 16 (most of EU). The app does not collect age and has no age gate. Apple requires age gating in App Store Connect; Play requires the Data Safety form to declare "targets children?" If we're not children-targeted, we still need to discourage <16 signups for EU.
-9. **Breach notification (Art 33/34).** Is there an on-call runbook for a personal-data breach? 72-hour clock to the supervisory authority. Probably not documented anywhere today.
-10. **Records of processing (Art 30).** Do we maintain a Record of Processing Activities (the RoPA)? It's a sub-processor list + lawful basis matrix. The output of `/audit/third-party-data-flows` is essentially this — confirm we have a static copy.
-11. **Cookie / ePrivacy.** ePrivacy Directive (still in force; the GDPR did not replace it) requires consent for non-essential cookies + scripts. Audit the load order of every third-party SDK on the web entry.
-12. **DPIA (Art 35).** Continuous location + biometric data are explicitly named in EDPB guidance as "high-risk processing" requiring a DPIA before launch. Is there one?
+1. **US-only posture is still stated.** Read `content/privacy.md` §1 and `content/terms.md` §12. Confirm both still say US-targeted, US governing law, US dispute resolution. If either has softened toward "global" / "EU welcome" without `docs/legal-status.md` flagging the change, surface as Critical — the posture-of-record changed without the policy catching up.
+
+2. **No third-party scripts / fonts / pixels / iframes.** Run a deployed-bundle sweep equivalent to `/audit/cookie-consent`: grep every `templates/*.html`, every file under `static/`, and every Markdown file in `content/` for `<script src=`, `<link rel="stylesheet" href="http`, `<iframe`, `@import url(http`, `<img src="http` (where `http` includes `https`). If everything resolves to same-origin or to the Zola-generated relative URL, posture holds. Any external host is at minimum a High and forces a `content/privacy.md` §4 update.
+
+3. **No tracker-shaped client JS.** Walk `static/js/`. The current set (`transitions.js`, `tag-filter.js`, `infinite-scroll.js`) is first-party DOM behaviour with no analytics calls. Any new file or any new `fetch()` to a non-same-origin URL is a finding.
+
+4. **No analytics commitments to renege on.** Confirm `content/privacy.md` §8 ("We do not currently use third-party analytics...") matches reality. If the policy says "no third-party analytics" and the bundle ships an analytics call, that's the cross-validation failure this audit exists to catch.
+
+5. **No PII collection surfaces.** Confirm `content/contact.md` still uses a `mailto:` link (or equivalent) rather than a POST endpoint to a third-party form-handler. A "Formspree-shaped" handler would route visitor email + body to a sub-processor — would need policy update.
+
+6. **`docs/legal-status.md` tracker still says US-only.** Read its "Forward-looking notes" → "International / non-US user posture" section. If the tracker says "still US-only" and the bundle / policy still says so, posture is consistent. If the tracker has been edited toward EU intent without the policy catching up, surface as Critical.
+
+## Expected finding state
+
+For this repo, the expected state is **clean** — every step above resolves to the same first-party / US-only / PII-free posture stated in the policy. A non-empty result is the load-bearing signal.
 
 ## Report
 
-- **Critical** — store-rejection blockers (no in-app privacy policy, no account-deletion UI, no age gate where required).
-- **High** — required by GDPR for any EU user signup (no consent banner before SDK load, no DSAR UI, no SCCs for US processors).
-- **Medium** — best-practice gap (no retention policy, no RoPA, no DPIA on live-location).
-- **Low** — defence-in-depth (no admin-access audit log, no per-request data-handling log).
+- **Critical** — the bundle contradicts a statement in `content/privacy.md` (tracker added, third-party fetch landed, etc.).
+- **High** — the policy has been softened to imply EU intent or PII collection without the supporting product/UX work, OR the bundle has a network touch the policy doesn't disclose.
+- **Medium** — `docs/legal-status.md` tracker is silent on a change the policy reflects.
+- **Low** — undocumented intent on a borderline asset (e.g. a self-hosted but third-party-attributed image).
 
-For each: regime cite (GDPR Art X / UK ICO guidance / EDPB op-N) + concrete fix scope (file or "policy doc + product change").
+For each: regime cite (CCPA / VCDPA / GDPR Art X if EU intent emerges) + concrete fix scope (file or "policy doc + product change"). Always end legal-claim bullets with "ask counsel if unsure" — this is not legal advice.
 
-End with a **clean** list of GDPR areas that look fine.
+End with a **clean** list of GDPR areas that look fine — explicitly call out "EU targeting: not present", "PII collection: none", "third-party scripts: none" if each is true.
 
 ## Delegate to
 
-Use the `compliance-auditor` agent: `"Audit the GDPR / UK GDPR posture of this monorepo."`
+Use the `compliance-auditor` agent: `"Audit the GDPR posture of this US-targeted static site. The expected finding state is clean; surface anything that contradicts the posture statements in content/privacy.md and content/terms.md."`
 
-Read-only. Findings only. Always end legal claims with "ask counsel if unsure" — this is not legal advice.
+Read-only. Findings only. Always end legal claims with "ask counsel if unsure".

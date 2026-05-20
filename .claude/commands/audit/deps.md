@@ -1,90 +1,63 @@
 ---
-description: Cross-workspace dependency audit (pnpm + Dependabot config + GitHub Actions pinning)
+description: Dependency audit — GitHub Actions pinning, Dependabot coverage, action-version drift. This repo has no language deps, only Actions.
 ---
 
-Sweep dependencies across every workspace for known CVEs and version drift; verify Dependabot covers everything and CI workflow pins aren't a supply-chain risk.
+Sweep dependencies for known CVEs and version drift; verify Dependabot covers everything and CI workflow pins aren't a supply-chain risk.
 
 ## What this is
 
-The repo has four workspaces with their own `package.json`:
-
-- `frontend/` — SvelteKit 5, Vite, vitest
-- `backend/` — Hono, `<cms-client>`, esbuild, vitest
-- `studio/` — <CMS> Studio v5, React 19
-- `infra/` — no Node deps (Terraform); skip
-
-Plus:
-
-- **Root `package.json`** — workspace orchestration + pnpm overrides (currently `js-yaml@<3.14.2` and `cookie@<0.7.0`)
-- **GitHub Actions** — `.github/workflows/*.yml` — action SHA pinning vs `@v6` floating tags
-- **Dependabot config** — `.github/dependabot.yml` — must cover every workspace + GitHub Actions
-
-There's already a scheduled `audit.yml` workflow that runs `pnpm audit` weekly and files an issue on findings. This command does the equivalent sweep on demand plus the supply-chain checks the scheduled job doesn't cover (Dependabot config drift, workflow pinning).
+This repo has no `package.json`, no `Cargo.toml`, no `go.mod`, no `pyproject.toml`. There are **no language-package dependencies**. The only thing Dependabot tracks here is GitHub Actions referenced in `.github/workflows/`. Several of those workflows have elevated permissions (`id-token: write` on `deploy.yml`, `contents: write` + `pull-requests: write` on `claude.yml` and `dependabot-auto-merge.yml`), so an un-pinned action ref on those is a supply-chain risk worth the same severity treatment a runtime CVE would get on a typical Node project.
 
 ## What to check
 
-1. **`pnpm audit` per workspace.** Run from the repo root:
-   ```
-   pnpm -r --filter @my-project/frontend audit --audit-level=moderate
-   pnpm -r --filter @my-project/backend  audit --audit-level=moderate
-   pnpm -r --filter @my-project/studio   audit --audit-level=moderate
-   ```
-   Collect moderate+ findings. For each: package, version, CVE, fix version, manifest path. The canonical resolution shape in this repo is the cookie override added in commit `79befae` — a transitive that upstream hasn't fixed gets pinned via the root `package.json`'s `pnpm.overrides` block.
+1. **Dependabot coverage.** Read `.github/dependabot.yml`. The expected shape is:
+   - Exactly one `package-ecosystem: "github-actions"` entry, `directory: "/"`, weekly schedule.
+   - `open-pull-requests-limit` reasonable (currently 3 — fine for a small repo).
+   - Grouped (`groups.all-actions.patterns: ["*"]`) so a single PR holds the week's bumps instead of one PR per action.
+   - Commit-message prefix `chore(ci)` with scope — matches repo style.
+   - Flag anything missing or anything that would create excessive PR churn.
 
-2. **Open audit issue.**
-   ```
-   gh issue list --label dependency-audit --state open
-   ```
-   If one exists, surface its title — that's the scheduled `audit.yml`'s most recent flagged set. Confirm whether the findings match what `pnpm audit` returns today.
+2. **No language-package ecosystem accidentally enabled.** Confirm `.github/dependabot.yml` does NOT list `npm`, `cargo`, `pip`, `gomod`, etc. — adding one without a matching manifest would generate "no manifest found" errors. (None currently — flag if added.)
 
-3. **Dependabot coverage.** Read `.github/dependabot.yml`. The expected shape is:
-   - `package-ecosystem: "npm"` × 3 — one entry per workspace at `/frontend`, `/backend`, `/studio`.
-   - `package-ecosystem: "github-actions"` × 1 — `directory: "/"` (Dependabot scans `.github/workflows/` from this root).
-   - Schedule weekly; grouped where it reduces PR churn (svelte-ecosystem, <cms>, types, <backend-framework>).
-   - **No npm entry at `/`** — the root `package.json` only holds workspace orchestration + pnpm overrides; nothing for Dependabot to bump.
-   - Flag any missing workspace entry, any non-weekly schedule, or any ungrouped flood of related packages.
+3. **GitHub Actions pinning.** Grep `.github/workflows/` for `uses: <action>@<ref>`.
+   - SHA pins (`@<40-hex-chars>`) are the safer default for any workflow that touches `${{ secrets.* }}` or `id-token: write`. Scorecard's `Pinned-Dependencies` check enforces this.
+   - Floating refs (`@v6`, `@main`) are supply-chain risks on elevated-permission workflows. Flag any on:
+     - `.github/workflows/deploy.yml` (id-token: write) — Critical if floating.
+     - `.github/workflows/claude.yml` (contents/pull-requests/issues write) — Critical if floating.
+     - `.github/workflows/dependabot-auto-merge.yml` (contents/pull-requests write) — Critical if floating.
+     - `.github/workflows/labeler.yml` (pull-requests write) — High.
+     - `.github/workflows/pr-title-lint.yml` (read-only) — Low.
+     - `.github/workflows/ci.yml`, `codeql.yml`, `gitleaks.yml`, `scorecard.yml` — Medium / High depending on permissions.
+   - At time of last audit, every workflow in this repo pins by SHA with the version comment alongside (commit `89ab7ca` "ci: SHA-pin actions in deploy and ci workflows for Scorecard"). Expected state: all SHA-pinned.
 
-4. **Lockfile-sync workflow exists.** Dependabot edits `<workspace>/package.json` but never touches the root `pnpm-lock.yaml`, which breaks `ci.yml`'s `pnpm install --frozen-lockfile`. The compensating workflow is `.github/workflows/dependabot-lockfile.yml` — it regenerates the lockfile on every Dependabot PR and commits the result back so CI retriggers and the PR can go green without manual intervention. Verify:
-   - The workflow file exists.
-   - It uses `DEPENDABOT_LOCKFILE_PAT` (a fine-grained PAT with `Contents: Write`), not `GITHUB_TOKEN` — GitHub blocks the latter from retriggering `pull_request` events.
-   - The PAT is scoped to this repo and has an expiry. If it's stale or revoked, dep PRs pile up unmerged.
+4. **Action-version drift.**
+   - For each pinned action, check whether a newer minor / patch version is available. Dependabot opens these as PRs weekly — the audit just confirms the auto-merge worked or surfaces any stuck PR.
+   - `gh pr list --label "github_actions"` shows the current Dependabot queue.
 
-5. **GitHub Actions pinning.** Grep `.github/workflows/` for `uses: <action>@<ref>`.
-   - Floating refs (`@main`, `@v6`) are supply-chain risks for actions that can be force-pushed by the publisher.
-   - SHA pins (`@<sha>`) are the safer default for workflows that touch `${{ secrets.* }}` or deploy.
-   - Flag floating refs on `deploy-frontend.yml`, `deploy-backend.yml`, `deploy-studio.yml`, and `claude.yml` (which has access to project tokens). `ci.yml`, `codeql.yml`, `audit.yml` are lower-stakes but worth surfacing too.
-
-6. **Override hygiene.** Read the root `package.json` `pnpm.overrides` block. For each override:
-   - Confirm it's still needed — has upstream shipped a fix that lets us drop the override? Pull the latest version of the package from npm and check.
-   - Confirm the override range is tight (e.g. `^0.7.0` not `>=0.7.0` — see the cookie override discussion).
-   - Confirm there's a comment or commit message explaining *why* (the original CVE).
-
-7. **Node engines.** Root `package.json` declares `"engines": { "node": ">=22" }`. Confirm:
-   - CI workflows use `node-version: 22` (not `18`, not `20`, not unspecified).
-   - Lambda runtime in `infra/lambda.tf` matches (`nodejs22.x` or newer; `nodejs20.x` deprecates 2026-Q2).
-
-8. **Local toolchain drift.** Optional but worth flagging if obvious: check the user's `~/.bashrc.d/` setup gives a recent enough pnpm + node. The `update-all` function in `~/.bashrc.d/32-functions-update.sh` covers system tools; if local node/pnpm versions are wildly out of sync with what CI uses, flag it.
+5. **Auto-merge guardrails.**
+   - Read `.github/workflows/dependabot-auto-merge.yml`. The author gate (`if: github.actor == 'dependabot[bot]'`) must be present. The signed-metadata check via `dependabot/fetch-metadata` must be present.
+   - Major-version bumps must stay manual (the `update-type == 'version-update:semver-minor' || ...semver-patch'` gate).
+   - Required CI checks must be configured in branch protection — this command can't read branch protection from inside the repo, so surface as "verify in repo Settings → Branches".
 
 ## Report
 
-- **Critical** — known-exploited CVE in a runtime path (the production Lambda or the deployed frontend bundle), not just a dev-only transitive.
-- **High** — a CVE with a fix available; a deploy workflow using a floating action ref; Dependabot missing an entire workspace.
-- **Medium** — version drift with no CVE but the upgrade is overdue; loose override range; Node engines mismatch between repo and Lambda runtime.
-- **Low** — undocumented override, floating ref in a non-deploy workflow, dependabot grouping that could be tightened.
+- **Critical** — a floating action ref on a workflow with elevated permissions (`id-token: write`, `contents: write`, `pull-requests: write`).
+- **High** — a floating ref on a workflow without elevated permissions but with secrets access; Dependabot ecosystem missing; auto-merge guardrails weakened.
+- **Medium** — version drift on a SHA-pinned action where a newer patch is available and Dependabot hasn't filed it; `open-pull-requests-limit` too high (>5 for this repo).
+- **Low** — undocumented pinning rationale, grouping that could be tightened.
 
-For each finding: package + version + advisory link + the file to change + the upgrade command (or the override expression).
+For each finding: action name + current ref + recommended ref + the file:line to change.
 
 ## Useful starting points
 
-- `package.json` (root) — workspace orchestration + overrides
-- `frontend/package.json`, `backend/package.json`, `studio/package.json`
-- `.github/workflows/*.yml`
 - `.github/dependabot.yml`
-- `infra/lambda.tf` — runtime declaration
-- The latest `audit.yml` workflow run for the current findings set
+- `.github/workflows/*.yml` — grep `uses:` per file
+- `.github/workflows/dependabot-auto-merge.yml` — auto-merge guardrails
+- `.github/workflows/scorecard.yml` — pinned-dependencies check publisher
+- Commit `89ab7ca` — the SHA-pinning baseline this repo set
 
 ## Delegate to
 
-Use a `general-purpose` agent — the work is mostly running each tool in turn and reading the output. Pass this file as the prompt body.
+Use the `repo-security-auditor` agent: `"Audit GitHub Actions dependency hygiene — pinning, Dependabot coverage, auto-merge guardrails. This repo has no language-package dependencies."`
 
-Read-only audit. Recommend upgrades; don't apply them without instruction (a major bump is its own conversation).
+Read-only audit. Recommend upgrades; don't apply them without instruction.
