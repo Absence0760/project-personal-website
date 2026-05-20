@@ -4,7 +4,7 @@ Need help with this project? Here's where to go.
 
 ## Questions about usage
 
-1. Read `README.md` first, then `docs/STACK.md` for stack-specific setup steps.
+1. Read `README.md` first, then `docs/run-locally.md` for the local-dev quick start. `CLAUDE.md` has a fuller "stack at a glance".
 2. Search [existing issues](../../issues) — your question may already be answered or being worked on.
 3. If not, open a new issue. Pick the **Feature request** template if you're proposing a change, or open a blank issue with a clear question if you're stuck.
 
@@ -14,8 +14,8 @@ Use the **Bug report** template at `.github/ISSUE_TEMPLATE/bug_report.md`. Inclu
 
 - What you expected vs. what happened
 - Steps to reproduce (the minimum set)
-- Environment (version / commit SHA, OS, runtime version)
-- Relevant logs (redact anything secret-looking)
+- Where you saw it (URL on jaredhoward.com, or a local `zola serve` reproduction), browser + OS if it looks browser-specific
+- Relevant console / network errors
 
 ## Security vulnerabilities
 

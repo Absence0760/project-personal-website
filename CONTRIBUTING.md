@@ -6,7 +6,7 @@ Thanks for considering a contribution. This file describes how to work in this r
 
 - Open an issue (or comment on an existing one) describing what you want to change. For non-trivial changes, get rough agreement on the approach before opening a PR — it's easier to redirect a sentence than a 500-line diff.
 - Look at recent commits in the area you're touching for style cues.
-- Stack-specific dev setup is in `docs/STACK.md`.
+- Local dev quick reference lives in `docs/run-locally.md`; the rest of the stack lives in `CLAUDE.md`.
 
 ## Branching
 
@@ -32,34 +32,33 @@ chore(scope): bump dependency Z
 docs(scope): clarify the setup steps for X
 ```
 
-Scope is the area you're touching (e.g. `frontend`, `backend`, `infra`, `auth`, `audit`, etc.). Keep the subject line under 70 characters; put rationale in the body if the change isn't self-evident.
+Scope is the area you're touching (e.g. `templates`, `content`, `static`, `ci`, `docs`, `legal`, etc.). Keep the subject line under 70 characters; put rationale in the body if the change isn't self-evident.
 
-## Tests + docs are part of the change
+## Docs are part of the change
 
-Per the rule in `CLAUDE.md`: every PR that touches code also touches tests and docs in the same diff. If a change is genuinely untestable (config, pure styling, a one-line constant), say so in the PR description — don't skip silently.
+Per the rule in `CLAUDE.md`: every PR that touches non-trivial code also updates the relevant doc in the same diff. There is no test framework here (no `package.json`, no vitest, no Playwright); the discipline reduces to keeping `docs/` and — for changes that touch legal pages — `docs/legal-status.md` honest.
 
 ## Running the checks locally
 
 ```
-pnpm install               # bootstrap (or the stack's equivalent)
-pnpm check                 # typecheck across workspaces
-pnpm test                  # unit / integration tests
+zola build                 # builds into ./public, fails on broken templates / dead links
+zola serve                 # local dev server with live reload
 pre-commit run --all-files # gitleaks + the other hygiene hooks
 ```
 
-Or, if Claude Code is available: `/check` runs all of the above in sequence and reports.
+If Claude Code is available, `/check` runs the diff-review / doc-hygiene / test-gap agents in parallel and reports — see `.claude/commands/check.md`.
 
 ## Opening a PR
 
 - Title: same conventional-commit format as commits.
-- Description: fill in the `pull_request_template.md`. The "Money / data safety checklist" is there for a reason — even ticking the boxes is a useful prompt to think through each item.
+- Description: fill in the `pull_request_template.md`. The "Static-site safety checklist" is there for a reason — even ticking the boxes is a useful prompt to think through each item (especially the privacy-policy and legal-page rows).
 - Mark as **Draft** while CI is still running; flip to ready when checks are green.
 - Don't squash on merge unless you're cleaning up a noisy WIP series — preserving meaningful commits in `main` makes `git blame` more useful.
 
 ## Reviewing a PR
 
-- Pull the branch locally, run the test suite, exercise the change manually if it's user-visible.
-- The `/code-reviewer` agent (in `.claude/agents/`) can produce a first-pass review. Use it as a starting point, not a substitute for human eyes.
+- Pull the branch locally, run `zola build` (and `zola serve` if the change is visible), and click through the affected pages.
+- `/check` (or `/safe-edit` for security- or legal-page-adjacent changes) invokes the `code-reviewer` agent for a first-pass review. Use it as a starting point, not a substitute for human eyes.
 
 ## Security findings
 
