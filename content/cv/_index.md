@@ -4,8 +4,11 @@ template = "cv/section.html"
 +++
 ## Summary
 
-Full time employee at enChoice working as a Software Development Engineer in Test (SDET).
-My role involves creating and maintaining automated cypress tests.
+Software engineer working as a Software Development Engineer in Test (SDET) at
+Corpay, where I lead the development and maintenance of automated Cypress and
+Playwright test suites. Alongside the day job I run an independent practice
+building and maintaining custom web applications for small businesses, and I'm
+registering to take on federal contract work through SAM.gov.
 
 ## Experience
 

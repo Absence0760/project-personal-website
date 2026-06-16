@@ -3,11 +3,6 @@ base_url = "https://jaredhoward.com"
 
 # The site title and description; used in feeds by default.
 title       = "Jared Howard"
-description = "Writing about things I find interesting."
-
-# Configuration of the Markdown rendering
-taxonomies = [
-  { name = "tags" },
-]
+description = "Custom web and software development for small businesses and government agencies."
 
 [markdown]

@@ -1,63 +1,69 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="intro">
-  <p class="intro-lead">
-      I grew up in South Africa, moved to the US to play college tennis, and ended up in software...
+<section class="hero">
+  <h1 class="hero-title">Web &amp; software development for businesses and government.</h1>
+  <p class="hero-lead">
+    I'm Jared Howard — a software engineer building custom web applications,
+    SaaS tools, and automated test suites. I work with small businesses that
+    need a dependable build, and I'm registering to serve federal agencies
+    through SAM.gov.
   </p>
-  <p class="intro-body">
-    I now work as an SDET at enChoice — building automated tests.
-    Outside of work I tinker with Neovim, pick up new plugins, and stay active through tennis and rock climbing.
-  </p>
-  <ul class="intro-tags">
-    <li>📍 United States</li>
-    <li>💼 SDET at enChoice</li>
-    <li>🎾 Tennis</li>
-    <li>
-      <a href="https://github.com/Absence0760">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/></svg>
-        GitHub
-      </a>
-    </li>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="{{ get_url(path='/contact/') | safe }}">Start a project</a>
+    <a class="btn btn-secondary" href="{{ get_url(path='/capabilities/') | safe }}">Capability statement</a>
+  </div>
+</section>
+
+<section class="streams">
+  <h2>What I do</h2>
+  <div class="stream-grid">
+    <div class="stream-card">
+      <h3>Custom web &amp; software development</h3>
+      <p>
+        Web apps, multi-tenant SaaS dashboards, e-commerce storefronts, and
+        browser-based tools for small businesses — built, hosted, and maintained.
+        Billed as project fees, retainers, or Stripe subscriptions.
+      </p>
+    </div>
+    <div class="stream-card">
+      <h3>Government &amp; federal IT services</h3>
+      <p>
+        Custom application development, systems integration, and test automation
+        for public-sector buyers. Registering on SAM.gov under NAICS 541511 /
+        541512 / 513210 — see the
+        <a href="{{ get_url(path='/capabilities/') | safe }}">capability statement</a>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="capabilities-strip">
+  <h2>Tools I work with</h2>
+  <ul class="tech-tags">
+    <li>JavaScript / TypeScript</li>
+    <li>Python</li>
+    <li>Cypress &amp; Playwright</li>
+    <li>AWS</li>
+    <li>Terraform</li>
+    <li>CI/CD</li>
   </ul>
 </section>
 
-<section class="services">
-  <h2>What I'm building</h2>
+<section class="home-about">
+  <h2>About</h2>
   <p>
-    Alongside the day job I run a small software practice with two streams of work:
+    I'm a software engineer based in Virginia, working as an SDET at Corpay and
+    running an independent development practice on the side. I grew up in South
+    Africa, moved to the US to play college tennis, and built a career in
+    software and quality engineering. See my
+    <a href="{{ get_url(path='/cv') | safe }}">CV</a> for the full background, or
+    my work on
+    <a href="https://github.com/Absence0760" rel="noopener">GitHub</a>.
   </p>
-  <ul class="services-list">
-    <li>
-      <strong>Products I operate.</strong>
-      Multi-tenant SaaS dashboards, e-commerce storefronts, and web-based tools,
-      sold to organisations on monthly or annual subscriptions.
-    </li>
-    <li>
-      <strong>Custom development for small businesses.</strong>
-      Project fees, retainers, and ongoing hosting and maintenance, billed via
-      Stripe Subscriptions or invoicing.
-    </li>
-  </ul>
-  <p class="services-note">
-    Everything is browser-based — no downloadable installers, no physical goods.
-    See <a href="{{ get_url(path='/contact/') | safe }}">contact</a> if you'd like
-    to talk about a project.
+  <p class="home-cta-line">
+    Have something you'd like built?
+    <a href="{{ get_url(path='/contact/') | safe }}">Get in touch</a>.
   </p>
-</section>
-
-<section class="recent-posts">
-  <h2>Recent Notes</h2>
-  <ul>
-    {% set blog = get_section(path="notes/_index.md") %}
-    {% for page in blog.pages | slice(end=10) %}
-    <li>
-      <a href="{{ page.permalink | safe }}">{{ page.title }}</a>
-      {% if page.date %}
-      <span class="date">{{ page.date | date(format="%B %e, %Y") }}</span>
-      {% endif %}
-    </li>
-    {% endfor %}
-  </ul>
 </section>
 {% endblock %}
