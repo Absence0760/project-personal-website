@@ -8,6 +8,11 @@ to be repointed or replaced. The repo's current state is:
 - `config.toml` has `base_url = "https://jaredhoward.com"`
 - DNS lives in Route 53 with the records described below
 
+> **Email** for `@jaredhoward.com` is hosted separately by Migadu and adds its
+> own records (`MX`/`SPF`/`DKIM`/`DMARC`) to this same zone — see
+> [`email-setup.md`](./email-setup.md). Those records coexist with the website
+> records below (different record types), so the two setups don't collide.
+
 If you're following these steps to set up a *different* domain, replace
 every occurrence of `yourdomain.com` below with the real one.
 
