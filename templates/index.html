@@ -2,16 +2,15 @@
 
 {% block content %}
 <section class="hero">
-  <h1 class="hero-title">Web &amp; software development for businesses and government.</h1>
+  <h1 class="hero-title">Software and web development for businesses and government.</h1>
   <p class="hero-lead">
-    I'm Jared Howard — a software engineer building custom web applications,
-    SaaS tools, and automated test suites. I work with small businesses that
-    need a dependable build, and I'm registering to serve federal agencies
-    through SAM.gov.
+    I'm Jared Howard, a software engineer. I build custom web applications,
+    internal tools, and automated test suites — and I keep them running after
+    launch.
   </p>
   <div class="hero-cta">
     <a class="btn btn-primary" href="{{ get_url(path='/contact/') | safe }}">Start a project</a>
-    <a class="btn btn-secondary" href="{{ get_url(path='/capabilities/') | safe }}">Capability statement</a>
+    <a class="btn btn-secondary" href="{{ get_url(path='/capabilities/') | safe }}">Capabilities</a>
   </div>
 </section>
 
@@ -19,19 +18,18 @@
   <h2>What I do</h2>
   <div class="stream-grid">
     <div class="stream-card">
-      <h3>Custom web &amp; software development</h3>
+      <h3>For small businesses</h3>
       <p>
-        Web apps, multi-tenant SaaS dashboards, e-commerce storefronts, and
-        browser-based tools for small businesses — built, hosted, and maintained.
-        Billed as project fees, retainers, or Stripe subscriptions.
+        Custom web apps, SaaS dashboards, e-commerce storefronts, and internal
+        tools — designed, built, hosted, and maintained. Billed as project fees,
+        retainers, or subscriptions.
       </p>
     </div>
     <div class="stream-card">
-      <h3>Government &amp; federal IT services</h3>
+      <h3>For government</h3>
       <p>
-        Custom application development, systems integration, and test automation
-        for public-sector buyers. Registering on SAM.gov under NAICS 541511 /
-        541512 / 513210 — see the
+        Application development, systems integration, and test automation for
+        public-sector work, under NAICS 541511, 541512, and 513210. See the
         <a href="{{ get_url(path='/capabilities/') | safe }}">capability statement</a>.
       </p>
     </div>
@@ -53,17 +51,14 @@
 <section class="home-about">
   <h2>About</h2>
   <p>
-    I'm a software engineer based in Virginia, working as an SDET at Corpay and
-    running an independent development practice on the side. I grew up in South
-    Africa, moved to the US to play college tennis, and built a career in
-    software and quality engineering. See my
-    <a href="{{ get_url(path='/cv') | safe }}">CV</a> for the full background, or
-    my work on
-    <a href="https://github.com/Absence0760" rel="noopener">GitHub</a>.
+    I'm based in Virginia and work as a software development engineer in test at
+    Corpay, building and maintaining automated test suites. Alongside that I run
+    an independent development practice. My
+    <a href="{{ get_url(path='/cv') | safe }}">CV</a> has the full background, and
+    my code is on <a href="https://github.com/Absence0760" rel="noopener">GitHub</a>.
   </p>
   <p class="home-cta-line">
-    Have something you'd like built?
-    <a href="{{ get_url(path='/contact/') | safe }}">Get in touch</a>.
+    <a href="{{ get_url(path='/contact/') | safe }}">Get in touch</a> to talk about a project.
   </p>
 </section>
 {% endblock %}

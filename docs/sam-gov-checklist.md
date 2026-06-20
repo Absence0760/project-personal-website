@@ -37,19 +37,26 @@ them and the steps to replace the placeholders afterward.
 
 ## After registration: update the capability statement
 
-Edit `content/capabilities.md`:
+The public pages deliberately say nothing about registration status — they
+describe the work, not the back-office process. So the only edit needed once
+you're registered is to **add the identifiers** to the corporate-data block.
 
-- Replace the **UEI** `[ TO BE ASSIGNED ]` with the assigned 12-char UEI.
-- Replace the **CAGE code** `[ TO BE ASSIGNED ]` with the assigned code.
-- Remove the `> Status: draft — registration in progress.` callout once active.
+In `content/capabilities.md`, add two rows near the top of the
+`<dl class="capability-data">` block (under "Location"):
+
+```html
+<dt>UEI (Unique Entity Identifier)</dt>
+<dd>YOUR-12-CHAR-UEI</dd>
+
+<dt>CAGE code</dt>
+<dd>YOUR-CAGE</dd>
+```
+
 - Update the **Socioeconomic status** line if any set-aside certification is
   granted.
-- Update the parallel "registering on SAM.gov" wording on the homepage
-  (`templates/index.html`) and `content/services.md`.
 
-Then run `pnpm build` and `pnpm check`, and (if material) run the legal pages
-past `docs/legal-status.md` — though identifiers are factual data, not legal
-commitments, so they normally don't trigger the tracker.
+Then run `pnpm build` and `pnpm check`. Identifiers are factual data, not legal
+commitments, so this normally doesn't trigger the `docs/legal-status.md` tracker.
 
 ## Optional follow-ups
 

@@ -7,8 +7,7 @@ template = "cv/section.html"
 Software engineer working as a Software Development Engineer in Test (SDET) at
 Corpay, where I lead the development and maintenance of automated Cypress and
 Playwright test suites. Alongside the day job I run an independent practice
-building and maintaining custom web applications for small businesses, and I'm
-registering to take on federal contract work through SAM.gov.
+building and maintaining custom web applications for small-business clients.
 
 ## Experience
 

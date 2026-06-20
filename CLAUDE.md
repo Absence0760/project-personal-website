@@ -6,7 +6,7 @@ Guidance for Claude Code working in this repository. Keep this file short — it
 
 A **professional services website** at [jaredhoward.com](https://jaredhoward.com), built with [Zola](https://www.getzola.org/) and deployed to GitHub Pages. It markets Jared Howard's custom web/software-development practice to two audiences: small-business clients and federal buyers via SAM.gov. There is **no backend, no database, no payment integration in this codebase, and no PII storage** — the only deployed artefacts are HTML, CSS, a small first-party JS bundle, and a CV PDF.
 
-Content pages: **Home** (`templates/index.html`), **Services** (`content/services.md`), **Capability Statement** (`content/capabilities.md` — the federal one-pager; carries `[ TO BE ASSIGNED ]` placeholders until SAM.gov registration completes, see `docs/sam-gov-checklist.md`), **CV** (`content/cv/`), plus the legal pages. Marketing/legal pages render through the clean prose template `templates/page.html`.
+Content pages: **Home** (`templates/index.html`), **Services** (`content/services.md`), **Capability Statement** (`content/capabilities.md` — the federal one-pager; UEI/CAGE rows are added to its corporate-data block once SAM.gov registration completes, see `docs/sam-gov-checklist.md`), **CV** (`content/cv/`), plus the legal pages. Marketing/legal pages render through the clean prose template `templates/page.html`.
 
 The site also serves as the public business URL for Stripe sign-up. That means the legal pages under `/content/` (`terms.md`, `privacy.md`, `refunds.md`, `contact.md`) are load-bearing and changes to them need the discipline laid out in `docs/legal-status.md`.
 
@@ -53,6 +53,7 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 
 - `docs/run-locally.md` — `zola serve` / `zola build` quick reference.
 - `docs/domain-setup.md` — how the GitHub Pages + Route 53 + custom domain wiring was set up.
+- `docs/email-setup.md` — email for `@jaredhoward.com` is hosted by **Migadu** (managed IMAP/SMTP; self-hosting was rejected). The MX/SPF/DKIM/DMARC records live in the **manually-managed** `jaredhoward.com` Route 53 zone (this `project-personal-website` account) — no Terraform yet. Read before touching DNS or the contact address.
 - `docs/legal-status.md` — pre-counsel tracker for the four legal pages; **read before editing any of them**.
 - `docs/sam-gov-checklist.md` — what to obtain (UEI, CAGE, NAICS, certs) to replace the capability-statement placeholders once SAM.gov registration is done.
 - `docs/smooth-transitions.md` — feature note for `static/js/transitions.js` (the one remaining bit of client JS).

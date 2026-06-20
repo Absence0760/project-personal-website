@@ -3,16 +3,6 @@ title = "Capability Statement"
 description = "Federal capability statement for Jared Howard — custom software and web development, test automation, and cloud services. NAICS 541511 / 541512 / 513210."
 +++
 
-<!--
-  DRAFT capability statement. The corporate-data placeholders below
-  ([ TO BE ASSIGNED ]) are filled once SAM.gov registration completes.
-  Step-by-step: see docs/sam-gov-checklist.md.
--->
-
-> **Status: draft — registration in progress.** SAM.gov registration is
-> underway. The identifiers marked _[ TO BE ASSIGNED ]_ below will be
-> populated once registration is active.
-
 **Jared Howard** — Sole proprietor, Commonwealth of Virginia. Custom software
 and web development, test automation, and cloud services for commercial and
 government clients.
@@ -42,7 +32,7 @@ government clients.
 
 ## Relevant experience
 
-_Commercial experience to date; federal past performance is being built._
+_Selected commercial experience:_
 
 - **Software Development Engineer in Test, Corpay / Paymerang (2023–present)** —
   lead development of automated test suites (Cypress, Playwright), AWS resource
@@ -62,12 +52,6 @@ See the full [CV](/cv) for detailed history, education, and skills.
 
   <dt>Location</dt>
   <dd>Commonwealth of Virginia, United States</dd>
-
-  <dt>UEI (Unique Entity Identifier)</dt>
-  <dd><em>[ TO BE ASSIGNED — SAM.gov ]</em></dd>
-
-  <dt>CAGE code</dt>
-  <dd><em>[ TO BE ASSIGNED — SAM.gov ]</em></dd>
 
   <dt>Primary NAICS</dt>
   <dd>541511 — Custom Computer Programming Services</dd>

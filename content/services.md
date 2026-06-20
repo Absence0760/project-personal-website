@@ -24,8 +24,7 @@ and kept running:
 
 ## Government & federal IT services
 
-I'm establishing the registrations needed to contract with federal agencies.
-Capability areas:
+Capability areas for public-sector work:
 
 - **Custom application development** (NAICS 541511 — Custom Computer
   Programming Services).
