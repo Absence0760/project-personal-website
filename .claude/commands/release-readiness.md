@@ -6,9 +6,9 @@ Run a pre-tag readiness audit before publishing a GitHub release. Report a green
 
 ## Why this exists
 
-The deploy workflow (`.github/workflows/deploy.yml`) fires on every push to `main`, not on tag, so "releases" here are an operator-driven habit rather than a CI gate. The point of this command is to give the operator a single yes/no before they tag — "is the site currently in a state I'd be happy to call `vX.Y.Z`?"
+The deploy workflow (`.github/workflows/deploy.yml`) is **release-gated** — it fires when a GitHub Release is published (`gh release create vX.Y.Z`), not on push to `main`. So publishing a release *is* the production deploy: this command is the single yes/no before that irreversible step — "is the site currently in a state I'd be happy to call `vX.Y.Z` and push live?"
 
-A failing universal gate (dirty tree, CI red, unpushed commits) almost always means what's deployed differs from what the tag will point at, which is the actual operational footgun this command exists to catch.
+A failing universal gate (dirty tree, CI red, unpushed commits) almost always means what's on `main` differs from what the release tag will point at and deploy, which is the actual operational footgun this command exists to catch.
 
 ## When to use
 

@@ -1,8 +1,15 @@
 name: Deploy to GitHub Pages
 
+# Release-gated: a push to `main` does NOT deploy. The live site only
+# updates when a GitHub Release is published (operator runs
+# `gh release create vX.Y.Z` after `/release-readiness`), or when this
+# workflow is manually dispatched. This decouples "merge work to main"
+# from "publish to production" — main can accumulate unreleased changes
+# without changing the live site. CI (`ci.yml`) still build-checks every
+# PR, so breakage is caught before merge, not at release time.
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:

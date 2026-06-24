@@ -16,7 +16,7 @@ The site also serves as the public business URL for Stripe sign-up. That means t
 - **Templates:** Tera, under `templates/`.
 - **Content:** Markdown with TOML front-matter, under `content/`.
 - **Client JS:** vanilla, under `static/js/`. No bundler, no test framework.
-- **Deploy:** `actions/deploy-pages` on push to `main` (`.github/workflows/deploy.yml`).
+- **Deploy:** `actions/deploy-pages`, **release-gated** — fires on a published GitHub Release (or manual `workflow_dispatch`), **not** on push to `main` (`.github/workflows/deploy.yml`). Pushing to `main` does not change the live site; cut a release to publish.
 - **Local dev:** `pnpm dev` (live reload) / `pnpm build` (outputs to `public/`) / `pnpm check`. The root `package.json` is a thin pnpm wrapper around `zola serve` / `zola build` / `zola check` — declares no dependencies, exists for muscle-memory consistency with the rest of the repos on this workstation. See `docs/run-locally.md`.
 
 ## Repo-wide hard rules
@@ -60,7 +60,7 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 - `docs/sam-gov-checklist.md` — what to obtain (UEI, CAGE, NAICS, certs) to replace the capability-statement placeholders once SAM.gov registration is done.
 - `docs/smooth-transitions.md` — feature note for `static/js/transitions.js` (the one remaining bit of client JS).
 - `.github/workflows/ci.yml` — PR build gate (Zola build).
-- `.github/workflows/deploy.yml` — push-to-main deploy to GitHub Pages.
+- `.github/workflows/deploy.yml` — release-gated deploy to GitHub Pages (publishes on a GitHub Release / manual dispatch, not on push to `main`).
 - `.github/workflows/gitleaks.yml` — secret scanning.
 - `.github/workflows/codeql.yml` — CodeQL static analysis (JS + Actions).
 - `.github/workflows/scorecard.yml` — OSSF Scorecard.
