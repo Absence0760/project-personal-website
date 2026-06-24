@@ -53,7 +53,9 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 
 - `docs/run-locally.md` — `zola serve` / `zola build` quick reference.
 - `docs/domain-setup.md` — how the GitHub Pages + Route 53 + custom domain wiring was set up.
-- `docs/email-setup.md` — email for `@jaredhoward.com` is hosted by **Migadu** (managed IMAP/SMTP; self-hosting was rejected). The MX/SPF/DKIM/DMARC records live in the **manually-managed** `jaredhoward.com` Route 53 zone (this `project-personal-website` account) — no Terraform yet. Read before touching DNS or the contact address.
+- `infra/` — **Terraform for the `jaredhoward.com` Route 53 zone** (the only AWS resource in this account; the site itself is GitHub Pages). `infra/bootstrap` creates the S3 state bucket; `infra/dns` holds the zone + all records, adopted from the live zone by `terraform import`. Applied locally with `AWS_PROFILE=personal-website`. **DNS is no longer hand-edited in the console** — see `infra/README.md`. No `infra-secrets` subdir: a static site with public DNS has nothing to encrypt.
+- `docs/todo.md` — infra/DNS backlog: the **not-yet-applied** `infra/` Terraform (apply runbook + import gate) and the **cross-repo `disag.jaredhoward.com` delegation** that this repo and `project-disag` must keep in sync.
+- `docs/email-setup.md` — email for `@jaredhoward.com` is hosted by **Migadu** (managed IMAP/SMTP; self-hosting was rejected). The MX/SPF/DKIM/DMARC records live in the `jaredhoward.com` Route 53 zone (this `project-personal-website` account), now **codified in `infra/dns`** (Terraform). Read before touching DNS or the contact address.
 - `docs/legal-status.md` — pre-counsel tracker for the four legal pages; **read before editing any of them**.
 - `docs/sam-gov-checklist.md` — what to obtain (UEI, CAGE, NAICS, certs) to replace the capability-statement placeholders once SAM.gov registration is done.
 - `docs/smooth-transitions.md` — feature note for `static/js/transitions.js` (the one remaining bit of client JS).

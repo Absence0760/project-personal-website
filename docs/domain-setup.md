@@ -13,6 +13,15 @@ to be repointed or replaced. The repo's current state is:
 > [`email-setup.md`](./email-setup.md). Those records coexist with the website
 > records below (different record types), so the two setups don't collide.
 
+> **DNS is now Terraform-managed.** The `jaredhoward.com` zone and every record
+> in this doc (website + Migadu mail + the `disag` delegation) are codified in
+> [`infra/dns`](../infra/README.md) and were adopted from the live zone by
+> `terraform import` — nothing was recreated. In steady state, change DNS by
+> editing `infra/dns/records.tf` (or the defaults in `variables.tf`) and running
+> `terraform plan` / `apply` as `AWS_PROFILE=personal-website`. The console
+> recipe below is retained as reference and disaster-recovery; don't hand-edit
+> records in the console anymore, or Terraform will show drift.
+
 If you're following these steps to set up a *different* domain, replace
 every occurrence of `yourdomain.com` below with the real one.
 

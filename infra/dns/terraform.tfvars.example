@@ -1,0 +1,9 @@
+# Every variable in this stack has a working default that matches the
+# live zone, so no tfvars file is REQUIRED to run it. Copy this to
+# terraform.tfvars (gitignored) only if you need to override something,
+# e.g. add an extra tag:
+#
+#   tags = { Owner = "jared" }
+#
+# The DNS-shaping defaults (GitHub Pages IPs, Migadu records, disag NS)
+# live in variables.tf because they are not secret and rarely change.

@@ -29,11 +29,16 @@ lived in the `homelab` repo. That plan has been descoped/deprecated there;
 - The `jaredhoward.com` Route 53 **hosted zone is owned by the
   `project-personal-website` AWS account** (the account ID is recorded in the
   private org docs, not here).
-- The zone is currently **managed manually** (same as the GitHub Pages
-  records in `domain-setup.md`). These email records are added by hand in the
-  Route 53 console for now. When the zone is eventually brought under
-  Terraform (templates Phase 5b, see `templates/docs/personal-org-migration.md`),
-  **these records must be codified too** — don't let the migration drop them.
+- The zone is now **managed by Terraform** in [`infra/dns`](../infra/README.md)
+  (same stack as the GitHub Pages records in `domain-setup.md`). All five email
+  record-sets below — apex TXT (SPF + verify), MX, the three DKIM CNAMEs, and
+  `_dmarc` — are codified in `infra/dns/records.tf` and were adopted from the
+  live zone by `terraform import`. Change them via `terraform plan`/`apply`
+  (`AWS_PROFILE=personal-website`), **not** the Route 53 console. The console
+  values below remain the human-readable reference / source-of-truth check
+  against Migadu's admin panel. (This completes the "codify these records when
+  the zone moves to Terraform" obligation noted under templates Phase 5b,
+  `templates/docs/personal-org-migration.md`.)
 
 ## DNS records to add
 
