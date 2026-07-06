@@ -35,8 +35,8 @@ every apply is load-bearing. Full detail: [`../infra/README.md`](../infra/README
 This repo and **project-disag** are coupled through one DNS hand-off, and both
 sides have to stay conscious of it:
 
-- **Child zone** `disag.jaredhoward.com` lives in **project-disag's** AWS account
-  (`406460434695`), created by the estate baseline (`new-project-account.sh
+- **Child zone** `disag.jaredhoward.com` lives in **project-disag's** AWS account,
+  created by the estate baseline (`new-project-account.sh
   disag`). project-disag *references* it via `data "aws_route53_zone"` — it does
   not create it, and its name servers are assigned by AWS when that zone is made.
 - **Parent NS delegation** lives **here**, in `infra/dns/records.tf`

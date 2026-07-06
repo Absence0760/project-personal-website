@@ -65,7 +65,7 @@ resource "aws_route53_record" "dkim" {
 # ─────────────────── Child-zone delegation ───────────────────
 
 # disag.jaredhoward.com is a separate Route 53 zone in project-disag's
-# own account (406460434695). This NS record is the delegation pointer.
+# own account. This NS record is the delegation pointer.
 resource "aws_route53_record" "disag_ns" {
   zone_id = aws_route53_zone.apex.zone_id
   name    = "disag.${var.apex_domain}"

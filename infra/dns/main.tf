@@ -1,5 +1,5 @@
 # DNS for jaredhoward.com — the apex public hosted zone for this
-# account (136758763748, "Jared"). This zone is the root of the whole
+# account (the "Jared" account). This zone is the root of the whole
 # personal estate's DNS: it serves the GitHub Pages site, carries the
 # Migadu mail records, and delegates disag.jaredhoward.com to
 # project-disag's account.

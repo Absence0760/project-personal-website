@@ -28,7 +28,7 @@ variable "pages_cname_target" {
 }
 
 variable "disag_delegation_ns" {
-  description = "NS records for the disag.jaredhoward.com child zone, delegated to project-disag's own Route 53 zone (account 406460434695). Sourced from that zone's name servers — see docs/domain-setup.md."
+  description = "NS records for the disag.jaredhoward.com child zone, delegated to project-disag's own Route 53 zone. Sourced from that zone's name servers — see docs/domain-setup.md."
   type        = list(string)
   default = [
     "ns-1761.awsdns-28.co.uk",
