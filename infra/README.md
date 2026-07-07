@@ -1,7 +1,7 @@
 # infra/ — Terraform for the jaredhoward.com DNS zone
 
-This account (`136758763748`, the "Jared" account, SSO profile
-`personal-website`) is deliberately tiny: the website itself is served by
+This account (the "Jared" account, SSO profile `personal-website`) is
+deliberately tiny: the website itself is served by
 **GitHub Pages** (no S3/CloudFront/ACM in this account), so the only
 provisioned AWS resource is the **`jaredhoward.com` Route 53 hosted zone**.
 This Terraform adopts that zone so DNS stops being hand-edited in the console.
@@ -74,7 +74,7 @@ losing your laptop is fine — re-`init` elsewhere after `aws sso login`.
 `aws_route53_record.disag_ns` (in `dns/records.tf`, values in
 `dns/variables.tf` → `disag_delegation_ns`) is a **delegation pointer**, not a
 zone we own. The real `disag.jaredhoward.com` zone lives in **project-disag's**
-AWS account (`406460434695`), created by the estate baseline; project-disag only
+AWS account, created by the estate baseline; project-disag only
 *reads* it via `data "aws_route53_zone"`.
 
 **Direction of truth: disag's child-zone name servers → this NS record.** This

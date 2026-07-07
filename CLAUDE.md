@@ -26,6 +26,10 @@ The site also serves as the public business URL for Stripe sign-up. That means t
 - **Legal pages have a maintenance discipline.** `docs/legal-status.md` is the pre-counsel tracker. Don't materially edit `terms.md`, `privacy.md`, `refunds.md`, or `contact.md` without re-running through that tracker — see its "Maintenance rhythm" section.
 - **GitHub-Pages deploy is HTTPS-enforced, custom-domain-locked.** Don't change `static/CNAME` or `base_url` in `config.toml` without following `docs/domain-setup.md`.
 
+## Merging & branch protection
+
+`main` follows the estate "sealed main + CI gate" standard: every change reaches `origin/main` through a PR — **no direct pushes** (enforced on admins, including the owner). Merging requires a green **`CI gate`** status check — the single required check, an aggregator job present in each functional CI workflow that `needs:` that workflow's jobs. There are **0 required approvals** — a green CI is the merge gate, not a human sign-off. Force-pushes, branch deletion, and unresolved conversations are blocked; history is linear. Commit locally per-piece, but land via a CI-gated PR.
+
 ## Every code change updates docs in the same change
 
 There is no test framework here, so the tests-and-docs rule reduces to:

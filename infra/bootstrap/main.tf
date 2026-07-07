@@ -16,8 +16,8 @@
 
 provider "aws" {
   region = var.aws_region
-  # Auth comes from the environment: AWS_PROFILE=personal-website
-  # (account 136758763748), SSO-logged-in.
+  # Auth comes from the environment: AWS_PROFILE=personal-website,
+  # SSO-logged-in.
 }
 
 # ─────────────────── State bucket ───────────────────

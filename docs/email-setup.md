@@ -37,8 +37,8 @@ lived in the `homelab` repo. That plan has been descoped/deprecated there;
   (`AWS_PROFILE=personal-website`), **not** the Route 53 console. The console
   values below remain the human-readable reference / source-of-truth check
   against Migadu's admin panel. (This completes the "codify these records when
-  the zone moves to Terraform" obligation noted under templates Phase 5b,
-  `templates/docs/personal-org-migration.md`.)
+  the zone moves to Terraform" obligation noted under Phase 5b,
+  `project-mgmt/docs/personal-org-migration.md`.)
 
 ## DNS records to add
 
