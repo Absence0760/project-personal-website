@@ -9,6 +9,8 @@ export interface NavLink {
 export interface Project {
 	name: string;
 	repo: string;
+	/** Live site, if the project has a public one. */
+	url?: string;
 	blurb: string;
 	tech: readonly string[];
 }
@@ -41,6 +43,7 @@ export const site = {
 		{
 			name: 'Meryl Green Designs',
 			repo: 'https://github.com/Absence0760/meryl-green-designs',
+			url: 'https://merylgreendesigns.com',
 			blurb:
 				'E-commerce site for a design studio — gallery, PayFast checkout, and an owner-managed CMS. Serverless on AWS, provisioned end-to-end with Terraform.',
 			tech: ['SvelteKit', 'Hono', 'AWS Lambda', 'Sanity CMS', 'Terraform']
@@ -58,6 +61,14 @@ export const site = {
 			blurb:
 				'Running, gym, and nutrition app — Flutter on iOS and Android with native Apple Watch and Wear OS companions, a SvelteKit web app, and a Supabase backend.',
 			tech: ['Flutter', 'SwiftUI', 'SvelteKit', 'Supabase']
+		},
+		{
+			name: 'disag',
+			repo: 'https://github.com/Absence0760/project-disag',
+			url: 'https://disag.jaredhoward.com',
+			blurb:
+				'Disaggregates monthly streamflow into daily flows — a Python port of a legacy Delphi/Pascal hydrology model, with a SvelteKit web app and cross-platform CLI.',
+			tech: ['Python', 'SvelteKit', 'Terraform']
 		},
 		{
 			name: 'Going Dark',

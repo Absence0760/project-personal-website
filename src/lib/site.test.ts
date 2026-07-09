@@ -42,6 +42,9 @@ describe('site metadata', () => {
 			expect(project.repo).toMatch(/^https:\/\/github\.com\//);
 			expect(project.blurb.length).toBeGreaterThan(0);
 			expect(project.tech.length).toBeGreaterThan(0);
+			if (project.url !== undefined) {
+				expect(project.url).toMatch(/^https:\/\//);
+			}
 		}
 	});
 });
