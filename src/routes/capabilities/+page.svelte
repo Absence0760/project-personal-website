@@ -61,9 +61,9 @@
 		<p><em>Selected commercial experience:</em></p>
 		<ul>
 			<li>
-				<strong>Software Development Engineer in Test, Corpay / Paymerang (2023–present)</strong> —
-				lead development of automated test suites (Cypress, Playwright), AWS resource monitoring via
-				CloudWatch, and frontend/backend contributions across teams.
+				<strong>Senior SDET → QA Software Engineer, Paymerang &amp; enChoice, Inc. (2023–present)</strong>
+				— lead development of automated test suites (Cypress, Playwright), AWS resource monitoring
+				via CloudWatch, and frontend/backend contributions across teams.
 			</li>
 			<li>
 				<strong>QA Engineer, enChoice (2022–2023)</strong> — feature testing, automated test-suite

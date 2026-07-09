@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { site } from '$lib/site';
+	import ProjectCarousel from '$lib/components/ProjectCarousel.svelte';
 </script>
 
 <svelte:head>
@@ -8,13 +9,14 @@
 </svelte:head>
 
 <section class="hero">
+	<p class="hero-eyebrow">Software Engineer · Virginia</p>
 	<h1 class="hero-title">Software and web development for businesses and government.</h1>
 	<p class="hero-lead">
 		I'm Jared Howard, a software engineer. I build custom web applications, internal tools, and
 		automated test suites — and I keep them running after launch.
 	</p>
 	<div class="hero-cta">
-		<a class="btn btn-primary" href="/contact/">Start a project</a>
+		<a class="btn btn-primary btn-arrow" href="/contact/">Start a project</a>
 		<a class="btn btn-secondary" href="/capabilities/">Capabilities</a>
 	</div>
 </section>
@@ -23,6 +25,7 @@
 	<h2>What I do</h2>
 	<div class="stream-grid">
 		<div class="stream-card">
+			<span class="stream-tag">Commercial</span>
 			<h3>For small businesses</h3>
 			<p>
 				Custom web apps, SaaS dashboards, e-commerce storefronts, and internal tools — designed,
@@ -30,6 +33,7 @@
 			</p>
 		</div>
 		<div class="stream-card">
+			<span class="stream-tag">Public sector</span>
 			<h3>For government</h3>
 			<p>
 				Application development, systems integration, and test automation for public-sector work,
@@ -40,23 +44,16 @@
 	</div>
 </section>
 
-<section class="capabilities-strip">
-	<h2>Tools I work with</h2>
-	<ul class="tech-tags">
-		<li>JavaScript / TypeScript</li>
-		<li>Python</li>
-		<li>Cypress &amp; Playwright</li>
-		<li>AWS</li>
-		<li>Terraform</li>
-		<li>CI/CD</li>
-	</ul>
+<section class="work">
+	<h2>Selected work</h2>
+	<ProjectCarousel projects={site.projects} />
 </section>
 
 <section class="home-about">
 	<h2>About</h2>
 	<p>
-		I'm based in Virginia and work as a software development engineer in test at Corpay, building
-		and maintaining automated test suites. Alongside that I run an independent development practice.
+		I'm based in Virginia and work as a QA software engineer at enChoice, Inc., building and
+		maintaining automated test suites. Alongside that I run an independent development practice.
 		My <a href="/cv/">CV</a> has the full background, and my code is on
 		<a href="https://github.com/Absence0760" rel="noopener">GitHub</a>.
 	</p>

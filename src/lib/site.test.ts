@@ -6,6 +6,10 @@ describe('site metadata', () => {
 		expect(site.url).toBe('https://jaredhoward.com');
 	});
 
+	it('exposes a role for the sidebar identity rail', () => {
+		expect(site.role.length).toBeGreaterThan(0);
+	});
+
 	it('lists routes as absolute, trailing-slash paths (home excepted)', () => {
 		for (const route of site.routes) {
 			expect(route.startsWith('/')).toBe(true);
@@ -28,6 +32,16 @@ describe('site metadata', () => {
 	it('every footer link target is a known route', () => {
 		for (const link of site.footer) {
 			expect(site.routes).toContain(link.href);
+		}
+	});
+
+	it('every project links to an https GitHub repo and lists a tech stack', () => {
+		expect(site.projects.length).toBeGreaterThan(0);
+		for (const project of site.projects) {
+			expect(project.name.length).toBeGreaterThan(0);
+			expect(project.repo).toMatch(/^https:\/\/github\.com\//);
+			expect(project.blurb.length).toBeGreaterThan(0);
+			expect(project.tech.length).toBeGreaterThan(0);
 		}
 	});
 });
