@@ -1,11 +1,12 @@
 name: CI
 
-# PR-only build check. Runs `zola build` against the PR head to catch broken
-# templates, dead internal links, or invalid front-matter before merge. Deploy
-# is release-gated (`deploy.yml` fires on a published Release, not on push to
-# main), so this PR check is the build signal that gates merges into main —
-# breakage is caught here, well before a release is cut (especially dependabot's
-# action bumps — auto-merge waits on this job before landing them).
+# PR-only build check. Installs deps and runs the SvelteKit build + checks
+# against the PR head to catch type errors, broken components, or a failing
+# build before merge. Deploy is release-gated (`deploy.yml` fires on a
+# published Release, not on push to main), so this PR check is the build signal
+# that gates merges into main — breakage is caught here, well before a release
+# is cut (especially dependabot's bumps — auto-merge waits on this job before
+# landing them).
 
 on:
   pull_request:
@@ -24,22 +25,34 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - name: Install Zola
-        uses: taiki-e/install-action@c7eb1735f09259a5035e8e5d44b1406b1cddc0fb # v2.83.0
+      - name: Install pnpm
+        # Version comes from the `packageManager` field in package.json.
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          # Pinned to match deploy.yml — keeping the build version in lockstep
-          # avoids the PR going green on a different Zola than the one that
-          # will eventually deploy.
-          tool: zola@0.19.2
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check (types + svelte-check + script guard)
+        run: |
+          pnpm run check
+          pnpm run test:scripts
+
+      - name: Test
+        run: pnpm test
 
       - name: Build site
-        # `--drafts` is intentionally not set — drafts shouldn't gate CI.
-        run: zola build
+        run: pnpm build
 
   ci-gate:
     name: CI gate
