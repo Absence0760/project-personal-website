@@ -160,7 +160,7 @@ we decline, we will tell you why.
 
 Send a request by email to:
 
-**[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)**
+**[contact@jaredhoward.com](mailto:contact@jaredhoward.com)**
 
 Use the subject line **"Privacy request"**. In the body, please tell us:
 
@@ -261,6 +261,6 @@ For privacy questions, to exercise a right, or to file a complaint about
 our handling of personal information:
 
 **Jared Howard**
-[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)
+[contact@jaredhoward.com](mailto:contact@jaredhoward.com)
 Subject line: **"Privacy request"** (or **"Privacy question"** for general
 inquiries).

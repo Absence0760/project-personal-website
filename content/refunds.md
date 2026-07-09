@@ -24,7 +24,7 @@ times, be **at least as easy to use as the method you used to sign up**.
   email.
 - **By email.** Until in-product cancellation is available, you can
   cancel by emailing us at
-  [jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com) with the
+  [contact@jaredhoward.com](mailto:contact@jaredhoward.com) with the
   subject line **"Cancel subscription"** and the email address on your
   account. **An email cancellation takes effect on the day we receive
   it.** We will confirm receipt and processing promptly; if you have not
@@ -117,7 +117,7 @@ Section 4, please contact us **before** initiating a chargeback with your
 card issuer. Most disputes are resolved within a day or two when we hear
 about them directly.
 
-**[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)** — subject
+**[contact@jaredhoward.com](mailto:contact@jaredhoward.com)** — subject
 line **"Billing dispute"**.
 
 **If a chargeback is filed.** We respond to chargebacks through Stripe's
@@ -136,7 +136,7 @@ chargeback for a charge that is properly owed under these Terms.
 For cancellations, refund requests, billing errors, or disputes:
 
 **Jared Howard**
-[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)
+[contact@jaredhoward.com](mailto:contact@jaredhoward.com)
 
 See our [Terms of Service](/terms/) and [Privacy Policy](/privacy/) for
 the broader terms that govern your use of the services.

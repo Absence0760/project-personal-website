@@ -68,7 +68,7 @@ See the full [CV](/cv) for detailed history, education, and skills.
   <dd>Small Business. Other set-aside eligibility under evaluation.</dd>
 
   <dt>Point of contact</dt>
-  <dd>Jared Howard — <a href="mailto:jaredhoward0912@gmail.com">jaredhoward0912@gmail.com</a></dd>
+  <dd>Jared Howard — <a href="mailto:contact@jaredhoward.com">contact@jaredhoward.com</a></dd>
 </dl>
 
 ---
