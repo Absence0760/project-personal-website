@@ -416,4 +416,4 @@ Questions about these Terms, requests to cancel a subscription, or any
 notice required by these Terms should be sent to:
 
 **Jared Howard**
-[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)
+[contact@jaredhoward.com](mailto:contact@jaredhoward.com)

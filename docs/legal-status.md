@@ -215,11 +215,14 @@ remove the future-tense commitment:
 When the custom domain is registered and pointed at the site (see
 `docs/domain-setup.md`), do these as part of the cutover:
 
-- [ ] **Move the published legal-notice address to a domain-controlled
-  forwarder** (e.g. `legal@<domain>` or `contact@<domain>`, forwarding
-  to the Gmail inbox). Reduces the risk that a Gmail suspension nukes
-  every customer-facing legal-notice channel at once. Update Terms §16,
-  Privacy §11, Refunds §6, and Contact page accordingly.
+- [x] **Move the published legal-notice address to a domain-controlled
+  forwarder.** Done — every customer-facing address now reads
+  `contact@jaredhoward.com` (Migadu-hosted, catch-all lands in the
+  mailbox; see `docs/email-setup.md`), replacing the old Gmail address.
+  Updated across the Contact page, Capability Statement, Terms §16,
+  Privacy §11, Refunds §6, and `SECURITY.md`. Reduces the risk that a
+  Gmail suspension nukes every customer-facing legal-notice channel at
+  once.
 - [ ] **Re-publish with the custom domain in `base_url`** (per
   `docs/domain-setup.md`) and then re-run the `us-legal-doc-reviewer`
   to catch any references to the old GitHub-Pages URL.

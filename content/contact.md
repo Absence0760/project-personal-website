@@ -10,7 +10,7 @@ of Virginia — the same legal entity referred to as "we" / "us" in our
 
 The best way to reach me is by email:
 
-**[jaredhoward0912@gmail.com](mailto:jaredhoward0912@gmail.com)**
+**[contact@jaredhoward.com](mailto:contact@jaredhoward.com)**
 
 Use a subject line that matches your reason for writing — it routes faster
 and gets a more useful reply:
