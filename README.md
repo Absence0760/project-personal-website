@@ -7,19 +7,21 @@ for Stripe sign-up.
 
 ### Built with
 
- - [Zola](https://www.getzola.org/documentation/getting-started/overview/) (static site generator)
- - Vanilla JS
- - HTML
- - CSS
+ - [SvelteKit](https://svelte.dev/docs/kit) (Svelte 5) with `@sveltejs/adapter-static` — fully prerendered
+ - TypeScript
+ - Vite (build) + Vitest (unit tests)
 
-No backend, no database, no dependencies. Deployed to GitHub Pages.
+No backend, no database. Prerendered to static HTML/CSS/JS and deployed to
+GitHub Pages.
 
 ### Local development
 
 ```
-pnpm dev      # live-reload server (zola serve)
-pnpm build    # build to public/ (zola build)
-pnpm check    # validate links (zola check)
+pnpm install  # first time only
+pnpm dev      # Vite dev server, live reload (http://localhost:7777)
+pnpm build    # prerender to ./build
+pnpm check    # svelte-check (types + component diagnostics)
+pnpm test     # Vitest unit suite
 ```
 
 See `docs/run-locally.md` for details and `CLAUDE.md` for repo conventions.

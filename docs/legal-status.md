@@ -223,8 +223,8 @@ When the custom domain is registered and pointed at the site (see
   Privacy §11, Refunds §6, and `SECURITY.md`. Reduces the risk that a
   Gmail suspension nukes every customer-facing legal-notice channel at
   once.
-- [ ] **Re-publish with the custom domain in `base_url`** (per
-  `docs/domain-setup.md`) and then re-run the `us-legal-doc-reviewer`
+- [ ] **Re-publish with the custom domain in the site `url`** (`src/lib/site.ts`,
+  per `docs/domain-setup.md`) and then re-run the `us-legal-doc-reviewer`
   to catch any references to the old GitHub-Pages URL.
 
 ## Maintenance rhythm
