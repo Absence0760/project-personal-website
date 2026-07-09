@@ -11,12 +11,12 @@ This is a static site with **no application secrets**. The committed working tre
 ## What to check
 
 1. **`.gitignore` covers known plaintext-secret paths.**
-   - The current `.gitignore` is a single line: `public/*`. That's correct for Zola's build output. If anyone ever adds a `.env` or a `*.sops` file to this repo, `.gitignore` should be updated to cover the plaintext sibling — flag a missing entry as Medium.
+   - The current `.gitignore` ignores `build/` and `.svelte-kit/` (the SvelteKit prerender output and generated dir). That's correct. If anyone ever adds a `.env` or a `*.sops` file to this repo, `.gitignore` should be updated to cover the plaintext sibling — flag a missing entry as Medium.
 
 2. **Working tree has no secret-shaped files.**
    - `find . -name '*.env*' -not -path './.git/*' 2>/dev/null` should return nothing.
    - `find . -name '*.pem' -o -name '*.key' -o -name 'id_rsa*' -o -name '*.p12' -not -path './.git/*' 2>/dev/null` should return nothing.
-   - `grep -rE 'sk_live_|sk_test_|rk_live_|rk_test_|AIza|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|github_pat_' . --include='*.{md,html,js,css,toml,yml,yaml}' 2>/dev/null` should return nothing. Anything matching is at least High; a `_live_` key shape is Critical.
+   - `grep -rE 'sk_live_|sk_test_|rk_live_|rk_test_|AIza|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|github_pat_' . --include='*.{md,html,svelte,ts,js,css,json,yml,yaml}' 2>/dev/null` should return nothing. Anything matching is at least High; a `_live_` key shape is Critical.
 
 3. **Git history pickaxe.**
    - `git log --all -S 'sk_live_' -S 'AKIA' -S 'github_pat_' -S '-----BEGIN PRIVATE KEY' -S '-----BEGIN OPENSSH' --pretty=fuller`
@@ -32,8 +32,8 @@ This is a static site with **no application secrets**. The committed working tre
    - Search `static/` for any file containing key shapes — `sk_`, `rk_`, `AIza`, `Bearer `, hex strings ≥ 32 chars in JS / CSS source.
    - `static/cv.pdf` should not contain the operator's home address, phone number, or any private identifier the operator hasn't already chosen to publish. Skim the rendered PDF (not in scope for an automated audit — flag as a manual-review item).
 
-6. **Content + template files.**
-   - `templates/` and `content/` are rendered to HTML and served. Walk every file for hardcoded credentials, internal-only URLs, or private email addresses that aren't the published contact address. The published contact channel is in `content/contact.md` — anything in any other file is suspicious.
+6. **Component + page files.**
+   - `src/` files are prerendered to HTML and served. Walk every file for hardcoded credentials, internal-only URLs, or private email addresses that aren't the published contact address. The published contact channel is in `src/routes/contact/+page.svelte` — anything in any other file is suspicious.
 
 ## Expected finding state
 

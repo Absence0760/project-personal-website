@@ -10,8 +10,8 @@ GDPR Art 17 (right to erasure) requires a service to delete personal data on req
 
 The legal pages reflect this:
 
-- `content/terms.md` §4.4 commits to a future in-product cancellation control once a paid subscription product ships.
-- `content/refunds.md` §1 commits to the same.
+- `src/routes/terms/+page.svelte` §4.4 commits to a future in-product cancellation control once a paid subscription product ships.
+- `src/routes/refunds/+page.svelte` §1 commits to the same.
 - `docs/legal-status.md` "Launch gates" lists both as hard blockers before the first paying subscriber.
 
 Under that posture, there is no `delete-account` handler to audit. The audit confirms that posture still holds — that no surface in this repo has quietly grown an account system or a user-state store.
@@ -19,11 +19,11 @@ Under that posture, there is no `delete-account` handler to audit. The audit con
 ## What to check
 
 1. **No account system exists yet.**
-   - No backend code (the root `package.json` is a script-only pnpm wrapper around the `zola` CLI; no Lambda, no Worker, no server-side rendering).
-   - No third-party auth (Auth0 / Clerk / Supabase Auth / Firebase Auth) loaded in any template.
+   - No backend code (the site is a fully-prerendered SvelteKit build via `adapter-static`; no Lambda, no Worker, no server-side rendering).
+   - No third-party auth (Auth0 / Clerk / Supabase Auth / Firebase Auth) loaded in any component.
    - No newsletter / subscription form (Substack widget, ConvertKit form, Mailchimp embed) that would create an addressable user record.
 
-2. **Privacy policy still reflects "no accounts".** Read `content/privacy.md`. Confirm it does not promise a delete-account UI that doesn't exist. If it now claims "delete your account from Settings", that's a Critical — the policy promises what the product doesn't have.
+2. **Privacy policy still reflects "no accounts".** Read `src/routes/privacy/+page.svelte`. Confirm it does not promise a delete-account UI that doesn't exist. If it now claims "delete your account from Settings", that's a Critical — the policy promises what the product doesn't have.
 
 3. **Launch gates still flagged in `docs/legal-status.md`.** The tracker should still list:
    - "In-product cancellation control" as not yet built.
@@ -33,7 +33,7 @@ Under that posture, there is no `delete-account` handler to audit. The audit con
 
    If any of these have been ticked off without the corresponding product surface landing in this repo, that's a finding — the tracker drifted ahead of reality.
 
-4. **No identifier writes in client JS.** Walk `static/js/`. Confirm no `localStorage` / `sessionStorage` / cookie set creates a stable identifier the operator would have to delete on request.
+4. **No identifier writes in client code.** Walk the `.svelte` files and `src/lib/`. Confirm no `localStorage` / `sessionStorage` / cookie set creates a stable identifier the operator would have to delete on request.
 
 ## Expected finding state
 

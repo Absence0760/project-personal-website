@@ -6,10 +6,10 @@ Audit infrastructure-as-code for this repo.
 
 ## What this is
 
-This repo has **no infra-as-code**. The site is a Zola build deployed to GitHub Pages via `.github/workflows/deploy.yml` using the official `actions/deploy-pages` action. There is no Terraform, no CloudFormation, no Pulumi, no Helm, no Kustomize. The only "infra" controls are:
+This repo has **no infra-as-code**. The site is a SvelteKit static build deployed to GitHub Pages via `.github/workflows/deploy.yml` using the official `actions/deploy-pages` action. There is no Terraform, no CloudFormation, no Pulumi, no Helm, no Kustomize. The only "infra" controls are:
 
 - **GitHub repo settings** — branch protection, "Allow auto-merge", "Allow GitHub Actions to create and approve pull requests", required CI checks. These cannot be audited from inside the repo; they live in the repo's `Settings → Branches` and `Settings → Actions → General` pages.
-- **Custom-domain wiring** — DNS in Route 53 (managed in a separate AWS account per the user's monorepo conventions; see `~/.claude/CLAUDE.md` notes on the multi-account setup), plus the `static/CNAME` file and `base_url` in `config.toml`. `docs/domain-setup.md` is the operator-facing record.
+- **Custom-domain wiring** — DNS in Route 53 (managed in a separate AWS account per the user's monorepo conventions; see `~/.claude/CLAUDE.md` notes on the multi-account setup), plus the `static/CNAME` file and the `url` in `src/lib/site.ts`. `docs/domain-setup.md` is the operator-facing record.
 
 There is nothing in-tree to audit.
 

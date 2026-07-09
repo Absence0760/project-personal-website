@@ -5,7 +5,7 @@ tools: Bash, Read
 model: sonnet
 ---
 
-You implement the "Every code change updates docs in the same change" rule from `CLAUDE.md`. This is a static Zola site with no test framework, so the discipline reduces to keeping `docs/` and the legal-status tracker honest. You make that check mechanical.
+You implement the "Every code change updates docs in the same change" rule from `CLAUDE.md`. This is a static SvelteKit site, so the discipline reduces to keeping `docs/` and the legal-status tracker honest. You make that check mechanical.
 
 ## Procedure
 
@@ -26,16 +26,16 @@ Trivial diffs don't get audited. Bail with `trivial — skipping` if the diff is
 - Typo / comment-only edits
 - Dependency-version bumps with no source change (Dependabot Action bumps)
 - Doc-only edits already under `docs/` or a root `*.md`
-- Pure CSS tweaks under `static/css/` or in `<style>` blocks inside `templates/`
+- Pure CSS tweaks in `src/app.css` or in `<style>` blocks inside Svelte components
 
 ### 3. Classify the change
 
 Pick zero or more from this list — a single change can hit several:
 
-- **Feature / behaviour change** — a new page, a new template, new client JS behaviour (filtering, transitions, infinite scroll).
-- **Site config / build change** — `config.toml`, `static/CNAME`, `base_url`, Zola version pin in CI/deploy.
+- **Feature / behaviour change** — a new page, a new route or component, new client behaviour (the View Transitions cross-fade).
+- **Site config / build change** — `src/lib/site.ts`, `static/CNAME`, `site.url`, SvelteKit/Vite version pin in CI/deploy.
 - **CI / tooling change** — workflow under `.github/workflows/`, `dependabot.yml`, `.pre-commit-config.yaml`, anything under `.claude/`.
-- **Legal-page change** — a material edit to `content/terms.md`, `content/privacy.md`, `content/refunds.md`, or `content/contact.md`.
+- **Legal-page change** — a material edit to `src/routes/terms/+page.svelte`, `src/routes/privacy/+page.svelte`, `src/routes/refunds/+page.svelte`, or `src/routes/contact/+page.svelte`.
 - **Privacy posture change** — a new third-party script, font, pixel, fetch, or any other external network touch added to a template or to `static/`.
 - **Convention / house rule** — a new pattern that should apply to future code.
 - **Non-obvious decision / trade-off** — a deliberate choice with a reason worth recording.
@@ -46,11 +46,11 @@ For each classification, list the docs that the rule says to touch:
 
 | Classification | Doc(s) to consider |
 |---|---|
-| Feature / behaviour | The relevant note under `docs/` (`docs/infinite-scroll.md`, `docs/smooth-transitions.md`, `docs/tag-filtering.md`), or a new doc if the feature is large enough |
-| Site config / build | `docs/run-locally.md`, `docs/domain-setup.md` (for CNAME / `base_url`), `CLAUDE.md` (Stack at a glance) |
+| Feature / behaviour | The relevant note under `docs/` (`docs/smooth-transitions.md`), or a new doc if the feature is large enough |
+| Site config / build | `docs/run-locally.md`, `docs/domain-setup.md` (for CNAME / `site.url`), `CLAUDE.md` (Stack at a glance) |
 | CI / tooling | `CLAUDE.md` (Where to look), `.claude/README.md` if the change touches the agents / commands |
 | Legal-page change | `docs/legal-status.md` is *mandatory* — bump the relevant section's status, add to the round-N items list if it's a substantive draft change, update "Last reviewed" on the affected page itself |
-| Privacy posture | `content/privacy.md` §4 (sub-processors) and §8 (analytics statement) are mandatory — see also the privacy commitments tracked in `docs/legal-status.md` |
+| Privacy posture | `src/routes/privacy/+page.svelte` §4 (sub-processors) and §8 (analytics statement) are mandatory — see also the privacy commitments tracked in `docs/legal-status.md` |
 | Convention | `CLAUDE.md` (or the relevant `.claude/agents/*.md` if it's a review-time rule) |
 | Decision / trade-off | A short note added to the relevant `docs/<feature>.md`, or a new file under `docs/` if it's cross-cutting |
 

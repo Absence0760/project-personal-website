@@ -1,14 +1,12 @@
 ---
-description: Dependency audit — GitHub Actions pinning, Dependabot coverage, action-version drift. This repo has no language deps, only Actions.
+description: Dependency audit — GitHub Actions pinning, Dependabot coverage, action-version drift, plus the npm dependency tree (SvelteKit / Vite / Svelte + Vitest) and its lockfile.
 ---
 
 Sweep dependencies for known CVEs and version drift; verify Dependabot covers everything and CI workflow pins aren't a supply-chain risk.
 
 ## What this is
 
-This repo has a root `package.json`, but it declares **no `dependencies` and no `devDependencies`** — it only exposes `pnpm dev` / `pnpm build` / `pnpm check` as thin wrappers around the `zola` CLI. No `Cargo.toml`, no `go.mod`, no `pyproject.toml`. There are **no language-package dependencies to update**, so Dependabot's npm ecosystem is intentionally not configured here. The only thing Dependabot tracks is GitHub Actions referenced in `.github/workflows/`. Several of those workflows have elevated permissions (`id-token: write` on `deploy.yml`, `contents: write` + `pull-requests: write` on `claude.yml` and `dependabot-auto-merge.yml`), so an un-pinned action ref on those is a supply-chain risk worth the same severity treatment a runtime CVE would get on a typical Node project.
-
-If the root `package.json` ever grows a real `dependencies` / `devDependencies` block, this audit needs an `npm`-ecosystem Dependabot entry (and a `pnpm audit` pass) added back.
+This repo has a real npm dependency tree in `package.json` (SvelteKit / Vite / Svelte + Vitest `devDependencies`), pinned by `pnpm-lock.yaml`; `pnpm install --frozen-lockfile` runs in CI. There is no `Cargo.toml`, no `go.mod`, no `pyproject.toml`. So this audit has **two supply-chain surfaces**: the npm packages (run a `pnpm audit` pass and confirm Dependabot's `npm` ecosystem is monitoring them) and the GitHub Actions referenced in `.github/workflows/`. Several of those workflows have elevated permissions (`id-token: write` on `deploy.yml`, `contents: write` + `pull-requests: write` on `claude.yml` and `dependabot-auto-merge.yml`), so an un-pinned action ref on those is a supply-chain risk worth the same severity treatment a runtime CVE gets.
 
 ## What to check
 
@@ -19,7 +17,9 @@ If the root `package.json` ever grows a real `dependencies` / `devDependencies` 
    - Commit-message prefix `chore(ci)` with scope — matches repo style.
    - Flag anything missing or anything that would create excessive PR churn.
 
-2. **No language-package ecosystem accidentally enabled.** Confirm `.github/dependabot.yml` does NOT list `npm`, `cargo`, `pip`, `gomod`, etc. — adding `npm` while the root `package.json` still has no dependencies would just create empty noise; adding the others without a matching manifest would generate "no manifest found" errors. (None currently — flag if added.)
+2. **npm ecosystem coverage.** Confirm `.github/dependabot.yml` includes a `package-ecosystem: "npm"` entry (`directory: "/"`) so SvelteKit / Vite / Svelte / Vitest bumps get filed. If it's missing, the dependency tree is unmonitored — flag as High. `cargo` / `pip` / `gomod` remain out of scope (no matching manifest) — flag if added, since they would generate "no manifest found" errors.
+
+   Also run `pnpm audit` and surface any advisory at Medium+ severity, with the recommended upgrade.
 
 3. **GitHub Actions pinning.** Grep `.github/workflows/` for `uses: <action>@<ref>`.
    - SHA pins (`@<40-hex-chars>`) are the safer default for any workflow that touches `${{ secrets.* }}` or `id-token: write`. Scorecard's `Pinned-Dependencies` check enforces this.
@@ -60,6 +60,6 @@ For each finding: action name + current ref + recommended ref + the file:line to
 
 ## Delegate to
 
-Use the `repo-security-auditor` agent: `"Audit GitHub Actions dependency hygiene — pinning, Dependabot coverage, auto-merge guardrails. This repo has no language-package dependencies."`
+Use the `repo-security-auditor` agent: `"Audit dependency hygiene — GitHub Actions pinning, Dependabot coverage (Actions + npm), auto-merge guardrails, and a pnpm audit of the npm dependency tree (SvelteKit / Vite / Svelte + Vitest)."`
 
 Read-only audit. Recommend upgrades; don't apply them without instruction.

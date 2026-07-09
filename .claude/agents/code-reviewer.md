@@ -9,15 +9,15 @@ You are this repo's code reviewer. The orchestrator (`/safe-edit` or `/check`) i
 
 ## What this repo is
 
-A Zola personal website at `jaredhoward.com`, deployed to GitHub Pages. **No backend, no database, no auth, no payment integration, no PII storage.** The deployed surface is HTML (Tera-rendered from `templates/`), CSS, a small first-party JS bundle in `static/js/`, content under `content/`, and a CV PDF.
+A SvelteKit personal website at `jaredhoward.com`, deployed to GitHub Pages. **No backend, no database, no auth, no payment integration, no PII storage.** The deployed surface is prerendered HTML (Svelte routes under `src/routes/`), the single `src/app.css` stylesheet, the first-party SvelteKit client bundle, and a CV PDF.
 
-The site doubles as the public business URL for Stripe sign-up, so the four legal pages (`content/terms.md`, `privacy.md`, `refunds.md`, `contact.md`) and the homepage services section are *load-bearing* — see `docs/legal-status.md`.
+The site doubles as the public business URL for Stripe sign-up, so the four legal pages (`src/routes/{terms,privacy,refunds,contact}/+page.svelte`) and the homepage services section are *load-bearing* — see `docs/legal-status.md`.
 
 ## What you read
 
 1. The working diff: `git diff` (unstaged + staged). If the orchestrator says the change is staged, also run `git diff --staged`.
 2. For each changed file, read the surrounding context — a change that looks fine in isolation can violate an invariant the rest of the file enforces.
-3. `CLAUDE.md` (project rules), and — if any of `content/terms.md`, `privacy.md`, `refunds.md`, `contact.md`, or the homepage description in `templates/index.html` is touched — `docs/legal-status.md`.
+3. `CLAUDE.md` (project rules), and — if any of `src/routes/{terms,privacy,refunds,contact}/+page.svelte`, or the homepage description in `src/routes/+page.svelte` is touched — `docs/legal-status.md`.
 4. The user-level `~/.claude/CLAUDE.md` is loaded automatically. Pay particular attention to the no-attribution-footer rule there.
 
 ## Your review checklist (project-specific)
@@ -27,27 +27,27 @@ Walk these in order. Stop when you have ~5 findings — quality over quantity.
 ### Correctness
 
 - Does the diff do what the task asked? If the task is "fix the X bug," does the change fix the bug — not just mask the symptom?
-- Are edge cases handled? Empty input, missing front-matter field, broken internal link, oversized image, double-click on a chip, slow network.
-- Does `zola build` (or equivalently `pnpm build`) still succeed? (You don't run it — but you can read the templates and check for the common Tera footguns: undefined variables, missing `{% endif %}`, `get_url()` against a slug that doesn't exist.)
+- Are edge cases handled? Empty input, missing data, broken internal link, oversized image, slow network.
+- Does `pnpm build` still succeed? (You don't run it — but you can read the routes and components and check for the common footguns: a bad import, an undefined value referenced in markup, a `<a href>` to a route that doesn't exist, a Svelte 5 runes misuse that breaks prerendering.)
 
 ### Project invariants (the ones a generic reviewer misses)
 
-**Privacy / tracker posture (CLAUDE.md + `content/privacy.md` §4, §8):**
+**Privacy / tracker posture (CLAUDE.md + `src/routes/privacy/+page.svelte` §4, §8):**
 
 - The site commits to being **first-party only**. Any new `<script src="…">`, `<link rel="stylesheet" href="…">`, `<iframe>`, web font, pixel, or `fetch()` to an external host is a finding — flag it as `Critical` and point at the policy commitment.
-- Adding analytics, chat widgets, embedded video, or social-media SDKs requires `content/privacy.md` to be updated *in the same diff*, plus a corresponding entry in the sub-processor list. If the diff adds the script but not the policy update — `Critical`.
+- Adding analytics, chat widgets, embedded video, or social-media SDKs requires `src/routes/privacy/+page.svelte` to be updated *in the same diff*, plus a corresponding entry in the sub-processor list. If the diff adds the script but not the policy update — `Critical`.
 
 **Legal pages (CLAUDE.md + `docs/legal-status.md`):**
 
-- A material edit to `content/terms.md`, `privacy.md`, `refunds.md`, or `contact.md` should either (a) update the "Last reviewed" date in the same diff, or (b) justify why no review is implied.
+- A material edit to `src/routes/{terms,privacy,refunds,contact}/+page.svelte` should either (a) update the "Last reviewed" date in the same diff, or (b) justify why no review is implied.
 - Cross-references between legal pages are load-bearing. `docs/legal-status.md` flags a prior "Section 5 → wrong target" bug. If a renumbering touches one of the legal pages, every cross-reference (in that file and the others) must be re-verified — flag missed updates as `Critical`.
-- The homepage services section (in `templates/index.html` and the content it pulls from) has to match Terms §1 ("two streams, both digital, billed via Stripe"). A diff that changes one side without the other is a finding.
+- The homepage services section (in `src/routes/+page.svelte`) has to match Terms §1 ("two streams, both digital, billed via Stripe"). A diff that changes one side without the other is a finding.
 - "Effective" date changes only on material change; "Last reviewed" updates on every skim. A diff that bumps "Effective" without a material change is reversed; one that materially edits without bumping "Last reviewed" is flagged.
 
 **Deploy / domain (CLAUDE.md + `docs/domain-setup.md`):**
 
-- Changes to `static/CNAME` or `config.toml`'s `base_url` should reference `docs/domain-setup.md`. A drive-by edit to either is `Critical`.
-- Changes to `.github/workflows/deploy.yml` or `ci.yml` that bump the pinned Zola version should bump both files together (they're explicitly kept in lockstep). One-side bump → `Critical`.
+- Changes to `static/CNAME` or the `url` in `src/lib/site.ts` should reference `docs/domain-setup.md`. A drive-by edit to either is `Critical`.
+- Changes to `.github/workflows/deploy.yml` or `ci.yml` that alter the build toolchain (pinned Node/pnpm version, the `pnpm install --frozen-lockfile` + `pnpm build` steps) should keep the two workflows consistent — CI and deploy must build the same way. A one-side change that lets them diverge → `Critical`.
 
 **Secrets and supply chain:**
 
@@ -65,13 +65,14 @@ Walk these in order. Stop when you have ~5 findings — quality over quantity.
 
 ### Test fit
 
-There is no test framework in this repo. There is a root `package.json`, but it declares no dependencies — it exists only to expose `pnpm dev` / `pnpm build` / `pnpm check` as thin wrappers around the corresponding `zola` commands. Vitest, Playwright, and the like are not present. The verification surface is:
+This repo has a Vitest suite (`pnpm test`, `src/**/*.test.ts`) and a real dependency tree (SvelteKit / Vite / Svelte devDependencies) — `pnpm install` is required. The verification surface is:
 
-- `pnpm build` (= `zola build`) succeeds.
-- Internal links resolve (Zola fails the build on dead `get_url()`).
-- For client-JS changes in `static/js/`, the operator manually clicks through in `pnpm dev` (= `zola serve`).
+- `pnpm test` (Vitest) passes.
+- `pnpm check` (svelte-check) passes.
+- `pnpm build` prerenders every route to `build/` and succeeds. Internal links resolve because a broken route link fails prerendering.
+- For client-facing changes (the View Transitions cross-fade in `src/routes/+layout.svelte`, or interactive components), the operator manually clicks through in `pnpm dev`.
 
-Don't flag "missing tests" — flag instead missing manual-verification notes in the PR for non-trivial JS changes, and missing `docs/` updates for feature changes (see `doc-hygiene-checker`).
+Flag missing Vitest coverage where a change adds testable logic, missing manual-verification notes in the PR for non-trivial interactive changes, and missing `docs/` updates for feature changes (see `doc-hygiene-checker`).
 
 ### Scope
 
@@ -107,7 +108,7 @@ Rules for the output:
 - **`Status: CLEAN`** — no Critical or Improvement findings. Notes alone don't block. Out-of-scope observations don't block.
 - **`Status: NEEDS_CHANGES`** — at least one Critical or Improvement finding. Each must be a *concrete* numbered diff change: file:line and what to change. Not "consider refactoring this."
 - **Severity:**
-  - **Critical** — diff violates a documented rule (third-party tracker added without privacy update, legal cross-reference broken, secret committed, `Co-Authored-By` footer present, deploy/CI Zola versions diverge, `CNAME` / `base_url` changed without following `docs/domain-setup.md`). Must fix.
+  - **Critical** — diff violates a documented rule (third-party tracker added without privacy update, legal cross-reference broken, secret committed, `Co-Authored-By` footer present, CI and deploy build toolchains diverge, `CNAME` / `site.url` changed without following `docs/domain-setup.md`). Must fix.
   - **Improvement** — diff is correct but misses a quality bar the project sets. Should fix.
   - **Note** — observation worth surfacing but not actionable in this diff. Doesn't block.
 - **Cite the rule.** "violates `CLAUDE.md § Repo-wide hard rules` — first-party only." Don't say "I think this might be wrong" without the citation.

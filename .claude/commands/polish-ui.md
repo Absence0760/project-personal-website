@@ -1,6 +1,6 @@
 ---
-description: Polish the UI/UX of a single template, content page, or stylesheet to this site's quality bar — sidebar + page-content layout, footer legal links, mobile-first stacking, the single style.css. Delegates to the `ui-polisher` agent.
-argument-hint: <route, template path, or content path>
+description: Polish the UI/UX of a single Svelte page/component or the stylesheet to this site's quality bar — sidebar + page-content layout, footer legal links, mobile-first stacking, the single app.css. Delegates to the `ui-polisher` agent.
+argument-hint: <route or file path>
 ---
 
 Polish the UI/UX of `$ARGUMENTS` using the `ui-polisher` agent.
@@ -10,30 +10,27 @@ Polish the UI/UX of `$ARGUMENTS` using the `ui-polisher` agent.
 **Right fit:**
 
 - A page where the hierarchy is muddled — the most important thing isn't at the top, or chrome / boilerplate competes with content for the first viewport.
-- A long-form content page (notes, legal pages) where the body needs typographic rhythm work — heading spacing, line length, `<dl>`-style structured disclosures for legal-entity / contact blocks.
+- A long-form content page (the legal pages, capability statement) where the body needs typographic rhythm work — heading spacing, line length, `<dl>`-style structured disclosures for legal-entity / contact blocks.
 - A page that doesn't collapse cleanly on mobile — the sidebar should stack, touch targets should be reasonable, the legal pages should remain readable at narrow widths.
-- A template leaking raw ISO dates, arbitrary hex colors that should be CSS variables in `style.css`, arbitrary `rem` spacing that breaks rhythm.
+- A component leaking arbitrary hex colors that should be CSS variables in `app.css`, or arbitrary `rem` spacing that breaks rhythm.
 
 **Wrong fit — tell the user and stop:**
 
-- A legal page (`content/terms.md`, `privacy.md`, `refunds.md`, `contact.md`) where the requested polish would renumber sections or change clause wording. That's a `/safe-edit` task, not a polish — refer the user, per `docs/legal-status.md`.
-- A request that's really a feature, not a polish — "add a search bar to the notes list" needs a content / functionality plan, not the polish agent.
+- A legal page (`src/routes/terms/`, `privacy/`, `refunds/`, `contact/`) where the requested polish would renumber sections or change clause wording. That's a `/safe-edit` task, not a polish — refer the user, per `docs/legal-status.md`.
+- A request that's really a feature, not a polish — "add a contact form" needs a functionality plan, not the polish agent.
 - An asks-for-everything sweep ("polish all the pages"). Pick one and tell the user to invoke this command again for the next.
-- A polish that would add a third-party network call (CDN, font, tracker, form-handler). That's a policy change — surface, refuse, and refer the user to `content/privacy.md`.
+- A polish that would add a third-party network call (CDN, font, tracker, form-handler). That's a policy change — surface, refuse, and refer the user to the Privacy page (`src/routes/privacy/`).
 
 ## Resolving the target
 
 `$ARGUMENTS` can be:
 
-- A **route slug** (`/`, `/notes/`, `/cv/`, `/contact/`, `/terms/`, `/privacy/`, `/refunds/`, `/tags/`):
-  - `/` → `templates/index.html`
-  - `/notes/` → `templates/section.html` (notes list with chip filter)
-  - `/notes/<slug>/` → `templates/page.html` plus the relevant `content/notes/*.md`
-  - `/cv/` → `templates/cv/section.html`
-  - `/tags/`, `/tags/<tag>/` → `templates/taxonomy_list.html`, `templates/taxonomy_single.html`
-  - `/contact/`, `/terms/`, `/privacy/`, `/refunds/` → the matching file in `content/` (rendered via `templates/page.html`)
-- A **file path** (`templates/base.html`, `static/css/style.css`, `content/notes/<slug>.md`) — used as-is.
-- A **`style.css` polish** — use `static/css/style.css` directly.
+- A **route slug** — resolves to the `+page.svelte` under `src/routes/`:
+  - `/` → `src/routes/+page.svelte`
+  - `/services/`, `/capabilities/`, `/cv/`, `/contact/`, `/terms/`, `/privacy/`, `/refunds/` → `src/routes/<slug>/+page.svelte`
+  - the shared shell (sidebar + footer) → `src/routes/+layout.svelte`, `src/lib/components/Sidebar.svelte`, `src/lib/components/Footer.svelte`
+- A **file path** (`src/routes/+layout.svelte`, `src/app.css`, `src/routes/cv/+page.svelte`) — used as-is.
+- A **stylesheet polish** — use `src/app.css` directly.
 
 If the argument is empty or "audit", list the candidate pages with a one-line "why this one matters most right now" and ask the user to pick. Don't blanket-sweep.
 
@@ -59,7 +56,7 @@ If the argument is empty or "audit", list the candidate pages with a one-line "w
 
 4. **Wait for the user's call on the commit.** Do not pre-stage or pre-commit. When the user says yes:
 
-   - Stage the changed files explicitly (don't `git add -A` — risks pulling in `public/` output from `pnpm build`).
+   - Stage the changed files explicitly (don't `git add -A` — risks pulling in `build/` output from `pnpm build`).
    - Commit message follows the repo's recent style seen in `git log --oneline` — `feat(scope):` for new surface, `chore(scope):` for tooling, `fix(scope):` for correctness. **No `Co-Authored-By` / "Generated with Claude Code" / robot-emoji footers** — the user-level rule in `~/.claude/CLAUDE.md` wins.
 
 ## Cost reality
