@@ -45,8 +45,10 @@ collapses to one column and the nav becomes a horizontal row.
   headline, muted lead, and a `.btn` row. `.btn-arrow` adds the nudging arrow.
 - **`.stream-card`** — elevated card, `.stream-tag` mono pill label, hover-lift.
 - **Selected work** — `Sidebar`'s sibling `ProjectCarousel.svelte` renders
-  `site.projects` (each a `Project` linking to its GitHub repo) as an
-  auto-rotating slideshow of `.project-card`s: prev/next arrows, dot
+  `site.projects` (each a `Project` with a GitHub `repo` and an optional live
+  `url`) as an auto-rotating slideshow of `.project-card`s. Each card carries a
+  `.project-links` footer — a GitHub link plus a `.project-link-live` "Visit
+  site" link when the project has a `url`. Controls: prev/next arrows, dot
   indicators, pause on hover/focus, arrow-key nav, and `inert` on off-screen
   slides. It is **progressive enhancement**: the single-slide track is the
   default layout so the first paint already looks like the carousel (no flash
