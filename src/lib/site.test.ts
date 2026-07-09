@@ -6,8 +6,7 @@ describe('site metadata', () => {
 		expect(site.url).toBe('https://jaredhoward.com');
 	});
 
-	it('exposes brand fields for the sidebar identity rail', () => {
-		expect(site.initials).toMatch(/^[A-Z]{1,3}$/);
+	it('exposes a role for the sidebar identity rail', () => {
 		expect(site.role.length).toBeGreaterThan(0);
 	});
 

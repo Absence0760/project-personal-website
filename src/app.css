@@ -117,15 +117,14 @@ footer {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  display: grid;
-  place-items: center;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-  color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   box-shadow: var(--shadow-sm);
+}
+
+.sidebar-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .sidebar-brand-text {
@@ -759,7 +758,6 @@ footer {
     --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.55);
   }
 
-  .sidebar-mark { color: #16161e; }
   .btn-primary { color: #16161e; }
   .btn-primary:hover { color: #16161e; }
 

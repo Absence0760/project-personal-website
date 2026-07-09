@@ -15,7 +15,6 @@ export interface Project {
 
 export const site = {
 	title: 'Jared Howard',
-	initials: 'JH',
 	role: 'Software Engineer',
 	description:
 		'Custom web and software development for small businesses and government agencies.',

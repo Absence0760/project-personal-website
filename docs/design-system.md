@@ -60,6 +60,32 @@ collapses to one column and the nav becomes a horizontal row.
   label/value data sheet.
 - **`.cv`** — résumé layout reusing the mono section-heading pattern.
 
+## Brand assets
+
+The identity is a **JH ligature** — the J's stem is shared with the H's left
+post and hooks underneath — in white on the blue→cyan brand gradient, matching
+`--accent`/`--accent-2`. The same mark appears in the browser tab, the sidebar
+rail (inlined as an SVG glyph in `Sidebar.svelte`), and the logo lockup, so the
+brand reads consistently everywhere.
+
+All assets are hand-authored SVG rendered locally with Inkscape + ImageMagick
+(no web icon services), and live in `static/`:
+
+- `favicon.svg` — scalable mark (rounded squircle), the primary tab icon.
+- `icon-maskable.svg` — full-bleed variant for iOS/PWA (the platform masks the
+  corners); source for the raster icons below.
+- `favicon.ico` (16/32/48), `favicon-96x96.png`, `apple-touch-icon.png` (180),
+  `icon-192.png` / `icon-512.png` (maskable, referenced by
+  `manifest.webmanifest`).
+- `logo.svg` / `logo-light.svg` — horizontal lockup (mark + "Jared Howard" in
+  Montserrat ExtraBold, converted to paths so the file is self-contained + a
+  mono-spaced "SOFTWARE ENGINEER" line) for dark-on-light and light-on-dark use.
+
+The `<head>` links plus `<meta name="theme-color">` are wired in `app.html`. To
+regenerate the rasters after editing an SVG, re-run the Inkscape/ImageMagick
+export steps (Inkscape `--export-type=png --export-width=N`; `magick` to build
+the multi-res `.ico`).
+
 ## Accessibility
 
 - Global `:focus-visible` ring (keyboard only).
