@@ -19,12 +19,11 @@
 
 	<h3>QA Software Engineer at enChoice, Inc. — May 2025–Present</h3>
 	<ul>
-		<li>Leading the development of a suite of automated tests using Cypress.</li>
-		<li>
-			Helped maintain proper visibility into our AWS resources using CloudWatch, while also
-			shadowing a SRE.
-		</li>
-		<li>Contributed to scrums and sprint planning on a daily/weekly basis.</li>
+		<li>Contributing to the test-automation suite using Cypress.</li>
+		<li>Building security automation with OWASP ZAP.</li>
+		<li>Creating Bitbucket Pipelines to run the automated tests in CI.</li>
+		<li>Reviewing and triaging the reports from automated test runs.</li>
+		<li>Contributing to scrums and sprint planning on a daily/weekly basis.</li>
 	</ul>
 
 	<h3>Senior SDET at Paymerang — April 2023–April 2025</h3>

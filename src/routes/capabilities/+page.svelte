@@ -62,8 +62,9 @@
 		<ul>
 			<li>
 				<strong>Senior SDET → QA Software Engineer, Paymerang &amp; enChoice, Inc. (2023–present)</strong>
-				— lead development of automated test suites (Cypress, Playwright), AWS resource monitoring
-				via CloudWatch, and frontend/backend contributions across teams.
+				— build and maintain automated test suites (Cypress, Playwright), security automation with
+				OWASP ZAP, CI pipelines (Bitbucket) for the test suites, and frontend/backend contributions
+				across teams.
 			</li>
 			<li>
 				<strong>QA Engineer, enChoice (2022–2023)</strong> — feature testing, automated test-suite
