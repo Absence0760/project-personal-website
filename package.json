@@ -1,16 +1,39 @@
 {
   "name": "project-personal-website",
   "private": true,
-  "description": "Personal website at jaredhoward.com — Zola static site deployed to GitHub Pages.",
+  "type": "module",
+  "description": "Personal website at jaredhoward.com — SvelteKit static site deployed to GitHub Pages.",
   "scripts": {
-    "dev": "zola serve",
-    "build": "zola build",
-    "check": "zola check",
-    "test": "zola build",
-    "preview": "zola serve --base-url http://localhost"
+    "//-- dev --": "SvelteKit dev server (http://localhost:7777) and a static preview (http://localhost:8888) of the built site.",
+    "dev": "vite dev --port 7777",
+    "preview": "vite preview --port 8888",
+
+    "//-- build --": "Production static build → ./build (adapter-static, full prerender). This is exactly what deploy.yml uploads to GitHub Pages.",
+    "build": "vite build",
+
+    "//-- check --": "Type + Svelte diagnostics. svelte-kit sync first so generated types (.svelte-kit/) exist.",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+
+    "//-- test --": "Vitest unit suite; test:scripts validates this file's script layout (scripts/check_root_scripts.mjs).",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:scripts": "node scripts/check_root_scripts.mjs"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "3.0.10",
+    "@sveltejs/kit": "2.61.1",
+    "@sveltejs/vite-plugin-svelte": "4.0.4",
+    "@types/node": "22.10.2",
+    "svelte": "5.56.4",
+    "svelte-check": "4.4.8",
+    "typescript": "5.5.4",
+    "vite": "5.4.0",
+    "vitest": "2.1.9"
   },
   "engines": {
-    "pnpm": ">=9"
+    "node": ">=22",
+    "pnpm": ">=10"
   },
   "packageManager": "pnpm@10.33.2"
 }
