@@ -6,6 +6,11 @@ describe('site metadata', () => {
 		expect(site.url).toBe('https://jaredhoward.com');
 	});
 
+	it('exposes brand fields for the sidebar identity rail', () => {
+		expect(site.initials).toMatch(/^[A-Z]{1,3}$/);
+		expect(site.role.length).toBeGreaterThan(0);
+	});
+
 	it('lists routes as absolute, trailing-slash paths (home excepted)', () => {
 		for (const route of site.routes) {
 			expect(route.startsWith('/')).toBe(true);

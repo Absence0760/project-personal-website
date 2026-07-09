@@ -4,15 +4,23 @@
 </script>
 
 <aside class="sidebar">
-	<div class="sidebar-bio">
-		<h1>{site.title}</h1>
-		<p>{site.description}</p>
-	</div>
-	<nav class="sidebar-nav">
+	<a class="sidebar-brand" href="/" aria-label="{site.title} — home">
+		<span class="sidebar-mark" aria-hidden="true">{site.initials}</span>
+		<span class="sidebar-brand-text">
+			<span class="sidebar-name">{site.title}</span>
+			<span class="sidebar-role">{site.role}</span>
+		</span>
+	</a>
+	<p class="sidebar-bio">{site.description}</p>
+	<nav class="sidebar-nav" aria-label="Primary">
 		<ul>
 			{#each site.nav as item (item.href)}
 				<li>
-					<a href={item.href} class:active={$page.url.pathname === item.href}>
+					<a
+						href={item.href}
+						class:active={$page.url.pathname === item.href}
+						aria-current={$page.url.pathname === item.href ? 'page' : undefined}
+					>
 						{item.label}
 					</a>
 				</li>

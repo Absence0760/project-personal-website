@@ -65,7 +65,8 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 ## Where to look
 
 - `docs/run-locally.md` — `pnpm dev` / `pnpm build` / `pnpm check` / `pnpm test` quick reference.
-- `src/lib/site.ts` — site metadata (title, description, `url` for canonical/sitemap, sidebar + footer nav). The old `config.toml` lives here now.
+- `docs/design-system.md` — the visual language (tokens, layout, component vocabulary, a11y) that lives in the single `src/app.css`. Read before restyling; **system fonts only** — no external font/script (Privacy rule).
+- `src/lib/site.ts` — site metadata (title, `initials`/`role` for the sidebar identity rail, description, `url` for canonical/sitemap, sidebar + footer nav). The old `config.toml` lives here now.
 - `docs/domain-setup.md` — how the GitHub Pages + Route 53 + custom domain wiring was set up.
 - `infra/` — **Terraform for the `jaredhoward.com` Route 53 zone** (the only AWS resource in this account; the site itself is GitHub Pages). `infra/bootstrap` creates the S3 state bucket; `infra/dns` holds the zone + all records, adopted from the live zone by `terraform import`. Applied locally with `AWS_PROFILE=personal-website`. **DNS is no longer hand-edited in the console** — see `infra/README.md`. No `infra-secrets` subdir: a static site with public DNS has nothing to encrypt.
 - `docs/todo.md` — infra/DNS backlog: the **not-yet-applied** `infra/` Terraform (apply runbook + import gate) and the **cross-repo `disag.jaredhoward.com` delegation** that this repo and `project-disag` must keep in sync.
