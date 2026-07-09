@@ -48,11 +48,12 @@ collapses to one column and the nav becomes a horizontal row.
   `site.projects` (each a `Project` linking to its GitHub repo) as an
   auto-rotating slideshow of `.project-card`s: prev/next arrows, dot
   indicators, pause on hover/focus, arrow-key nav, and `inert` on off-screen
-  slides. It is **progressive enhancement** — the server prerenders every card
-  as a grid (`.carousel:not(.is-live)`), and the `.is-live` class (set on
-  mount) swaps it for the one-at-a-time track, so no-JS visitors still get the
-  full list. Auto-rotation and the slide transition are disabled under
-  `prefers-reduced-motion`.
+  slides. It is **progressive enhancement**: the single-slide track is the
+  default layout so the first paint already looks like the carousel (no flash
+  of a grid before hydration), and the arrow/dot controls render on mount. A
+  `<noscript>` block in `app.html` restores a stacked grid of every card for
+  visitors without JavaScript. Auto-rotation and the slide transition are
+  disabled under `prefers-reduced-motion`.
 - **`.page-content h2`** — mono uppercase section eyebrow (shared by all pages).
 - **`.prose` / `.post-content`** — sans-serif long-form for Services,
   Capabilities, and the legal pages. `.capability-data` is a two-column

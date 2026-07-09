@@ -383,34 +383,28 @@ footer {
 /* ── Home: selected work (project carousel) ────────────────── */
 .carousel { position: relative; }
 
-/* No-JS / pre-hydration fallback: the server renders every card, laid out as
-   a grid so the section is fully usable without JavaScript. */
-.carousel-track {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.carousel-slide { display: flex; }
-.carousel-slide > .project-card { flex: 1; }
-
-/* Hydrated slideshow: one full-width slide at a time; the track slides. */
-.carousel.is-live {
+/* The slideshow layout is the DEFAULT, so the first server-rendered paint
+   already looks like the carousel — no flash of the grid before hydration.
+   Visitors without JavaScript get the full grid back via the <noscript> block
+   in app.html (the arrow/dot controls need JS and are rendered on mount). */
+.carousel {
   overflow: hidden;
   border-radius: var(--radius-lg);
 }
 
-.carousel.is-live .carousel-track {
+.carousel-track {
   display: flex;
-  gap: 0;
   transition: transform 0.5s ease;
   will-change: transform;
 }
 
-.carousel.is-live .carousel-slide {
+.carousel-slide {
   flex: 0 0 100%;
   min-width: 0;
+  display: flex;
 }
+
+.carousel-slide > .project-card { flex: 1; }
 
 .carousel-controls {
   display: flex;
@@ -793,7 +787,7 @@ footer {
   .project-card:hover .project-gh,
   .carousel-arrow:hover,
   .carousel-dot.active { transform: none; }
-  .carousel.is-live .carousel-track { transition: none; }
+  .carousel-track { transition: none; }
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
@@ -814,8 +808,6 @@ footer {
   }
 
   .stream-grid { grid-template-columns: 1fr; }
-
-  .carousel-track { grid-template-columns: 1fr; }
 
   .capability-data { grid-template-columns: 1fr; }
 
