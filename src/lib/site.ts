@@ -6,6 +6,13 @@ export interface NavLink {
 	label: string;
 }
 
+export interface Project {
+	name: string;
+	repo: string;
+	blurb: string;
+	tech: string[];
+}
+
 export const site = {
 	title: 'Jared Howard',
 	initials: 'JH',
@@ -22,6 +29,38 @@ export const site = {
 		{ href: '/cv/', label: 'CV' },
 		{ href: '/contact/', label: 'Contact' }
 	] satisfies NavLink[],
+
+	// Selected public work shown on the home page (each links to its GitHub repo).
+	projects: [
+		{
+			name: 'Flakey',
+			repo: 'https://github.com/Absence0760/project-flakey',
+			blurb:
+				'Self-hosted, CI-agnostic test-reporting dashboard — ingests Cypress, Playwright, Jest, and pytest results with flaky-test detection and multi-tenant Postgres row-level security.',
+			tech: ['SvelteKit', 'TypeScript', 'Node', 'PostgreSQL', 'Docker']
+		},
+		{
+			name: 'Meryl Green Designs',
+			repo: 'https://github.com/Absence0760/meryl-green-designs',
+			blurb:
+				'E-commerce site for a design studio — gallery, PayFast checkout, and an owner-managed CMS. Serverless on AWS, provisioned end-to-end with Terraform.',
+			tech: ['SvelteKit', 'Hono', 'AWS Lambda', 'Sanity CMS', 'Terraform']
+		},
+		{
+			name: 'Account Payables',
+			repo: 'https://github.com/Absence0760/project-account-payables',
+			blurb:
+				'Full-stack accounts-payable app — multi-tenant invoice intake and approvals behind a Python API and a SvelteKit front end.',
+			tech: ['SvelteKit', 'FastAPI', 'Python', 'PostgreSQL']
+		},
+		{
+			name: 'Cross-platform fitness app',
+			repo: 'https://github.com/Absence0760/project-running',
+			blurb:
+				'Running, gym, and nutrition app — Flutter on iOS and Android with native Apple Watch and Wear OS companions, a SvelteKit web app, and a Supabase backend.',
+			tech: ['Flutter', 'SwiftUI', 'SvelteKit', 'Supabase']
+		}
+	] satisfies Project[],
 
 	// Footer legal/contact links.
 	footer: [

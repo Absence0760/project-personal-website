@@ -35,4 +35,14 @@ describe('site metadata', () => {
 			expect(site.routes).toContain(link.href);
 		}
 	});
+
+	it('every project links to an https GitHub repo and lists a tech stack', () => {
+		expect(site.projects.length).toBeGreaterThan(0);
+		for (const project of site.projects) {
+			expect(project.name.length).toBeGreaterThan(0);
+			expect(project.repo).toMatch(/^https:\/\/github\.com\//);
+			expect(project.blurb.length).toBeGreaterThan(0);
+			expect(project.tech.length).toBeGreaterThan(0);
+		}
+	});
 });
