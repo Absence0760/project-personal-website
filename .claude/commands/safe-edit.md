@@ -9,20 +9,20 @@ Implement the task `$ARGUMENTS` with the project-specific `code-reviewer` agent 
 
 **Right fit:**
 
-- Edits to the four legal pages — `content/terms.md`, `content/privacy.md`, `content/refunds.md`, `content/contact.md` — or to `docs/legal-status.md`. These pages are pre-counsel-reviewed and have cross-reference invariants that a casual edit can break.
-- Changes that add, remove, or alter a third-party network call — even something as innocuous as an embedded video or a hosted font. These break the first-party commitment in `content/privacy.md` §4 and §8 and need explicit policy edits in the same diff.
-- Changes to `templates/base.html` (every page renders through it) or to the homepage services section in `templates/index.html` (it has to stay aligned with Terms §1).
-- Changes to `static/CNAME`, `base_url` in `config.toml`, or the Zola version pinned in `.github/workflows/ci.yml` / `deploy.yml`.
+- Edits to the four legal-page routes — `src/routes/terms/`, `src/routes/privacy/`, `src/routes/refunds/`, `src/routes/contact/` — or to `docs/legal-status.md`. These pages are pre-counsel-reviewed and have cross-reference invariants that a casual edit can break.
+- Changes that add, remove, or alter a third-party network call — even something as innocuous as an embedded video or a hosted font. These break the first-party commitment in the Privacy page (`src/routes/privacy/`) §4 and §8 and need explicit policy edits in the same diff.
+- Changes to `src/routes/+layout.svelte` (every page renders through it) or to the homepage services section in `src/routes/+page.svelte` (it has to stay aligned with Terms §1).
+- Changes to `static/CNAME`, the site `url` in `src/lib/site.ts`, or the toolchain/action pins in `.github/workflows/ci.yml` / `deploy.yml`.
 - CI workflow changes — anything under `.github/workflows/` that touches `id-token`, `pull_request_target`, or the Claude Code allowlist.
 - Anything you want a second pair of eyes on before commit.
 
 **Wrong fit — refuse and tell the user to edit directly:**
 
 - Typos and one-line doc corrections.
-- Comment edits in JS / templates.
-- Single-property CSS tweaks in `static/css/style.css`.
-- Dependency-version bumps (Dependabot Action PRs).
-- New entries in a `content/notes/` post or other non-legal content.
+- Comment edits in components / config.
+- Single-property CSS tweaks in `src/app.css`.
+- Dependency-version bumps (Dependabot npm / Action PRs).
+- Copy tweaks to a non-legal content page (home, services, capabilities, CV).
 - Anything where the diff is < ~10 lines and touches no project invariant listed above.
 
 The cost of this loop is real (~2-3x tokens, ~30-60s extra latency, one or two `code-reviewer` agent runs). Don't burn it on changes that don't warrant it. **If the task is trivial, abort and tell the user to just edit it normally.**

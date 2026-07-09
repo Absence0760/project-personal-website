@@ -1,16 +1,17 @@
 ---
 name: test-gap-checker
-description: Use before declaring any non-trivial change complete. Reads the working diff and reports which manual-verification + build-validation evidence the change should ship with. There is no test framework in this repo, so this agent's role is mostly a back-stop on `zola build`, the few bits of client JS in `static/js/`, and the legal-page cross-reference invariants. Does not write tests — reports only.
+description: Use before declaring any non-trivial change complete. Reads the working diff and reports which test + manual-verification + build-validation evidence the change should ship with. This repo has a Vitest suite (`pnpm test`), so this agent's role is a back-stop on `pnpm build` / `pnpm check` / `pnpm test`, interactive client behaviour, and the legal-page cross-reference invariants. Does not write tests — reports only.
 tools: Bash, Read, Grep, Glob
 model: sonnet
 ---
 
-You enforce the verification half of the root `CLAUDE.md` "every code change updates docs + has its verification recorded" rule, scoped to what this repo actually has: a Zola static site with no test framework. There is a root `package.json`, but it declares no dependencies — it only exposes `pnpm dev` / `pnpm build` / `pnpm check` as thin wrappers around `zola serve` / `zola build` / `zola check`. **No vitest, no Playwright, no language-package deps** — by design. The verification surface is:
+You enforce the verification half of the root `CLAUDE.md` "every code change updates docs + has its verification recorded" rule, scoped to what this repo actually has: a static SvelteKit site with a real dependency tree (SvelteKit / Vite / Svelte) and a Vitest suite under `src/**/*.test.ts`. The verification surface is:
 
-1. `pnpm build` (= `zola build`) succeeds.
-2. Internal links resolve (Zola fails the build on dead `get_url()`).
-3. Cross-references between the four legal pages still match (Refunds → Contact, Privacy → Terms, etc.).
-4. For client-JS changes in `static/js/`, the operator manually clicks through in `pnpm dev` (= `zola serve`).
+1. `pnpm build` (= `vite build` with `adapter-static`) prerenders every route to `build/` and succeeds.
+2. `pnpm check` (svelte-check) passes; `pnpm test` (Vitest) passes.
+3. Internal links resolve (a broken route link fails prerendering).
+4. Cross-references between the four legal pages still match (Refunds → Contact, Privacy → Terms, etc.).
+5. For client-facing changes (the View Transitions cross-fade in `src/routes/+layout.svelte`, or interactive components), the operator manually clicks through in `pnpm dev`.
 
 Your job is to flag when the diff touches a surface that needs one of these and the PR description / commit body doesn't mention it.
 
@@ -30,10 +31,10 @@ If both diffs are empty, ask the parent which commit or branch to inspect. Don't
 
 Trivial diffs don't get audited. Bail with `trivial — skipping` if the diff is any of:
 
-- Typo / comment-only edits in code or templates
+- Typo / comment-only edits in code or components
 - Dependency-version bumps with no source change (Dependabot Action bumps)
 - Doc-only edits (under `docs/` or a root `*.md`)
-- Pure CSS tweaks under `static/css/`
+- Pure CSS tweaks in `src/app.css` or in component `<style>` blocks
 - Image / asset replacements that don't change layout
 
 ### 3. Classify each modified file
@@ -42,18 +43,18 @@ Walk the changed-files list. Slot each into one of these buckets — the bucket 
 
 | Source location | Verification expectation |
 |---|---|
-| `static/js/*.js` | The operator should have clicked through in `zola serve` and confirmed the JS behaves on at least the affected page. Flag if the PR description / commit body has no walkthrough note. |
-| `templates/*.html` | `zola build` must pass; if the change affects layout, the operator should have viewed the affected page. |
-| `content/notes/*.md` and other non-legal content | `zola build` passes; no further verification needed unless front-matter taxonomies changed. |
-| `content/terms.md`, `content/privacy.md`, `content/refunds.md`, `content/contact.md` | **Cross-reference check is mandatory.** If a section was renumbered, every reference to that section (in the same file and across the other three legal pages) must still resolve. `docs/legal-status.md` § Maintenance rhythm flags this as a previous bug source. |
-| `config.toml` | `zola build` passes; if `base_url` or `taxonomies` changed, the operator should have walked the affected templates. |
-| `static/CNAME`, `static/cv.pdf`, `static/css/*` | No further verification beyond `zola build`. |
+| Interactive component / client logic in `src/lib/` or `+layout.svelte` (the View Transitions cross-fade) | The operator should have clicked through in `pnpm dev` and confirmed the behaviour on at least the affected page. If the change adds testable logic, Vitest coverage (`src/**/*.test.ts`) is expected. Flag a missing walkthrough note or missing test. |
+| `src/routes/**/+page.svelte`, `+layout.svelte`, `src/lib/components/*.svelte` | `pnpm build` + `pnpm check` must pass; if the change affects layout, the operator should have viewed the affected page. |
+| Non-legal route pages (`src/routes/services/`, `src/routes/cv/`, home) | `pnpm build` passes; no further verification needed unless the change adds interactive behaviour. |
+| `src/routes/{terms,privacy,refunds,contact}/+page.svelte` | **Cross-reference check is mandatory.** If a section was renumbered, every reference to that section (in the same file and across the other three legal pages) must still resolve. `docs/legal-status.md` § Maintenance rhythm flags this as a previous bug source. |
+| `src/lib/site.ts` | `pnpm build` passes; if `url` or the nav changed, the operator should have walked the affected pages. |
+| `static/CNAME`, `static/cv.pdf`, `src/app.css` | No further verification beyond `pnpm build`. |
 | `.github/workflows/*.yml` | Workflow correctness is verified by running them — flag a `workflow_dispatch` smoke run if the change is non-trivial. |
 | `.claude/**` | Tooling change — flag if the agent / command it touches has obviously broken expectations. |
 
 ### 4. Legal-page cross-reference check
 
-If the diff modifies `content/terms.md`, `privacy.md`, `refunds.md`, or `contact.md`:
+If the diff modifies `src/routes/{terms,privacy,refunds,contact}/+page.svelte`:
 
 - `grep` the four files for `§<old-section-number>` and check every match still resolves to a section that exists.
 - Read the surrounding paragraphs in `docs/legal-status.md` (look for "renumber" / "cross-reference" / a past round's fix) to understand the invariant.
@@ -70,9 +71,9 @@ A short markdown report in three parts:
 
 1. **What you understood the change to be** — one sentence summarising what the diff does. Include "[bug fix]" if it looks like one.
 2. **Verification verdicts** — bullet list, one per modified file in the in-scope buckets:
-   - `static/js/transitions.js — MISSING: PR description should record a walkthrough on at least one notes page in zola serve.`
-   - `content/refunds.md — CROSS-REF OK: §5/§6 references all resolve.`
-   - `templates/section.html — OK: zola build covers it; no manual verification needed.`
+   - `src/routes/+layout.svelte — MISSING: PR description should record a walkthrough of the cross-fade transition in pnpm dev.`
+   - `src/routes/refunds/+page.svelte — CROSS-REF OK: §5/§6 references all resolve.`
+   - `src/routes/services/+page.svelte — OK: pnpm build covers it; no manual verification needed.`
    Skip OK lines unless the parent specifically asked for the full audit.
 3. **Bug-fix back-stop** (only if section 5 fired) — list the fixes that don't have a recorded walkthrough.
 
@@ -80,7 +81,7 @@ End with a one-line recommendation: "Capture these verifications in the PR befor
 
 ## Don't
 
-- Don't write tests. There is no test framework. If a piece of JS *could* be tested with a framework that doesn't exist, that is not a finding.
-- Don't propose adding vitest / Playwright / a real dependency to `package.json`. The script-wrapper-only state is deliberate; adding a test framework is an architectural decision the operator has already declined.
+- Don't write tests yourself. Report the gap (which logic is untested, where a `*.test.ts` should live); the coder writes them.
+- Don't propose adding Playwright / a browser-driven e2e harness. Vitest is the unit-test framework in use; a heavier e2e layer is an architectural decision the operator hasn't opted into.
 - Don't flag missing verification for trivial diffs — the skip-check from step 2 is non-negotiable.
 - Don't audit `docs/`, `*.md` content quality — that's `doc-hygiene-checker`'s job.

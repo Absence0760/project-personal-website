@@ -6,13 +6,13 @@ Audit data-export completeness for this site.
 
 ## Goal
 
-GDPR Art 20 (portability) and CCPA right-to-know require a complete, machine-readable export of all personal data a service holds about the user. This site holds none — there is no account system, no database, no contact-form POST endpoint, no comment / kudos / feedback system. The Contact page is a `mailto:` link; once a visitor sends an email, the operator's Gmail inbox holds it, but that's outside this codebase and falls under Google's own DSAR process (which the operator surfaces to in `content/privacy.md` §11).
+GDPR Art 20 (portability) and CCPA right-to-know require a complete, machine-readable export of all personal data a service holds about the user. This site holds none — there is no account system, no database, no contact-form POST endpoint, no comment / kudos / feedback system. The Contact page is a `mailto:` link; once a visitor sends an email, the operator's Gmail inbox holds it, but that's outside this codebase and falls under Google's own DSAR process (which the operator surfaces to in `src/routes/privacy/+page.svelte` §11).
 
 Under that posture, there is no exporter to audit. The audit confirms that posture still holds — that no surface in this repo has quietly grown into something that processes or stores personal data.
 
 ## What to check
 
-1. **Privacy policy still states "no exporter".** Read `content/privacy.md` sections covering data subject rights. Confirm the policy still says (in substance):
+1. **Privacy policy still states "no exporter".** Read `src/routes/privacy/+page.svelte` sections covering data subject rights. Confirm the policy still says (in substance):
    - The site does not store personal data on the operator's systems.
    - Statutory rights (access, deletion, correction, etc.) are exercised by contacting the operator at the address in §11.
    - There is no automated export endpoint because there is nothing to export from this site.
@@ -20,11 +20,11 @@ Under that posture, there is no exporter to audit. The audit confirms that postu
    If the policy now promises an export endpoint that doesn't exist, that's a Critical — the policy commits to something product won't deliver.
 
 2. **No data-collection endpoints have crept in.** This means:
-   - No backend code in this repo (the root `package.json` is a script-only pnpm wrapper around the `zola` CLI; no Lambda, no Worker, no server-side rendering).
-   - No third-party form-handler (Formspree, Tally, Typeform, Netlify Forms) in `templates/` or `content/`. Grep for `action="https`, `data-netlify`, `formspree.io`, `tally.so`, `typeform.com`.
+   - No backend code in this repo (the site is a fully-prerendered SvelteKit build via `adapter-static`; no Lambda, no Worker, no server-side rendering).
+   - No third-party form-handler (Formspree, Tally, Typeform, Netlify Forms) in `src/`. Grep for `action="https`, `data-netlify`, `formspree.io`, `tally.so`, `typeform.com`.
    - No analytics / session-recording / CRM that would accumulate visitor data over time (out of scope of this audit, but mention).
 
-3. **No localStorage / sessionStorage / cookie writes** that would constitute "data we hold about the user". Walk `static/js/`. None should write any identifier.
+3. **No localStorage / sessionStorage / cookie writes** that would constitute "data we hold about the user". Walk the `.svelte` files and `src/lib/`. None should write any identifier.
 
 4. **`docs/legal-status.md` tracker still reflects "no exporter needed".** Confirm the tracker hasn't been edited toward a "we promised an export" state without a matching policy or product change.
 

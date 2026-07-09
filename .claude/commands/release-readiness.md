@@ -37,7 +37,7 @@ For each, mark **green** / **red** and capture a one-line reason for any red.
 git status --porcelain
 ```
 
-Empty → green. Anything → red ("uncommitted changes in: <files>"). There are no SOPS plaintext siblings to worry about in this repo — but flag any unexpected `public/` output that didn't get gitignored.
+Empty → green. Anything → red ("uncommitted changes in: <files>"). There are no SOPS plaintext siblings to worry about in this repo — but flag any unexpected `build/` or `.svelte-kit/` output that didn't get gitignored.
 
 #### 2b. main is up to date with origin
 
@@ -88,8 +88,8 @@ git diff --name-only <last-tag>..HEAD | awk -F/ '{print $1}' | sort -u
 
 Report:
 - **Commits since:** count + one-line summaries
-- **Top-level paths touched:** `content/`, `templates/`, `static/`, `docs/`, `.github/`, `.claude/`, root (single-line summary per)
-- **Legal-page changes:** explicit yes/no on `content/{terms,privacy,refunds,contact}.md` and `docs/legal-status.md`. If yes, surface as amber — the operator should re-skim `docs/legal-status.md` "Maintenance rhythm" before tagging.
+- **Top-level paths touched:** `src/`, `static/`, `docs/`, `.github/`, `.claude/`, root (single-line summary per)
+- **Legal-page changes:** explicit yes/no on `src/routes/{terms,privacy,refunds,contact}/+page.svelte` and `docs/legal-status.md`. If yes, surface as amber — the operator should re-skim `docs/legal-status.md` "Maintenance rhythm" before tagging.
 
 If `Commits since` is `0`, flag as red — there's nothing to release.
 
