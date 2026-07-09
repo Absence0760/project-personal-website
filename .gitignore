@@ -1,2 +1,22 @@
-public/*
+# Dependencies
 node_modules/
+.pnpm-store/
+
+# SvelteKit build output + generated types
+build/
+.svelte-kit/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Test / coverage
+coverage/
