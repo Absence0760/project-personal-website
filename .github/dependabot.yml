@@ -1,16 +1,32 @@
 # Dependabot configuration
 # https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 #
-# This is a Zola static site — no npm/cargo/terraform deps to track. The only
-# dependency surface we have is the GitHub Actions referenced in
-# `.github/workflows/`. Keeping those current closes the most common
-# supply-chain gap on a small repo.
+# This is a SvelteKit static site. Two dependency surfaces to track: the npm
+# packages that build the site (SvelteKit / Vite / Svelte toolchain, all
+# devDependencies) and the GitHub Actions referenced in `.github/workflows/`.
+# Keeping both current closes the most common supply-chain gaps on a small repo.
 #
 # Bumps are auto-merged for minor/patch via dependabot-auto-merge.yml; major
 # bumps stay manual.
 
 version: 2
 updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      svelte-toolchain:
+        patterns:
+          - "*"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

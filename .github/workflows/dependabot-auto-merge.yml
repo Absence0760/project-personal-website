@@ -1,9 +1,9 @@
 name: Dependabot auto-merge
 
 # Automatically squash-merges minor + patch Dependabot PRs once CI is green.
-# Dependabot only opens GitHub Actions bumps here (see ../dependabot.yml) —
-# without auto-merge, every weekly action-version bump would need manual
-# review for no real signal.
+# Dependabot opens npm (Svelte toolchain) and GitHub Actions bumps here (see
+# ../dependabot.yml) — without auto-merge, every weekly minor/patch bump would
+# need manual review for no real signal.
 #
 # Major bumps stay manual. Major version jumps on actions have occasionally
 # required matching changes (rename of inputs, new permission scopes); auto-
@@ -14,10 +14,10 @@ name: Dependabot auto-merge
 # returns an error and the workflow no-ops; PRs sit waiting for a human
 # like before, so worst case is degenerate, not destructive.
 #
-# CI gating: the squash merge waits on the `Build` job in `ci.yml` (and any
-# other required checks configured in branch protection) before landing.
-# A red CI run keeps the PR queued indefinitely until either a human
-# intervenes or the PR is closed.
+# CI gating: the squash merge waits on the required `CI gate` check in
+# `ci.yml` (which aggregates the `Build` job, and any other required checks
+# configured in branch protection) before landing. A red CI run keeps the PR
+# queued indefinitely until either a human intervenes or the PR is closed.
 
 on:
   pull_request_target:

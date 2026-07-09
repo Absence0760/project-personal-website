@@ -11,10 +11,10 @@
 
 ## Surface touched
 
-- [ ] Site content (`content/`) — including the legal pages
-- [ ] Templates (`templates/`)
-- [ ] Static assets (`static/` — CSS, JS, images, `CNAME`, `cv.pdf`)
-- [ ] Site config (`config.toml`)
+- [ ] Pages / components (`src/routes/`, `src/lib/`) — including the legal pages
+- [ ] Styles / site metadata (`src/app.css`, `src/lib/site.ts`)
+- [ ] Build config (`svelte.config.js`, `vite.config.ts`, `tsconfig.json`, `package.json`)
+- [ ] Static assets (`static/` — `CNAME`, `cv.pdf`, `robots.txt`, `404.html`)
 - [ ] CI / GitHub Actions (`.github/`)
 - [ ] Project docs (`docs/`, `CLAUDE.md`, `README.md`, etc.)
 - [ ] `.claude/` tooling
@@ -25,19 +25,19 @@
      don't delete the row — so the next reviewer can see you considered
      it. -->
 
-- [ ] No third-party script / font / pixel / iframe added without a matching update to `content/privacy.md` (§4 and §8 commit the site to staying first-party only)
+- [ ] No third-party script / font / pixel / iframe added without a matching update to the Privacy page (`src/routes/privacy/`) (§4 and §8 commit the site to staying first-party only)
 - [ ] No tracker / analytics / chat widget loaded on page load (consent gate or first-party only)
-- [ ] No secret, API token, or private email address committed in HTML/JS/CSS or front-matter
+- [ ] No secret, API token, or private email address committed in components, styles, or config
 - [ ] Legal-page edits run through `docs/legal-status.md` (Effective / Last reviewed updated where required; cross-references still resolve)
-- [ ] Internal links still resolve (`zola build` exits 0; no dead anchors to `/terms/`, `/privacy/`, `/refunds/`, `/contact/`)
-- [ ] If `static/CNAME` or `base_url` changed, `docs/domain-setup.md` was followed and re-verified
+- [ ] `pnpm build` prerenders all routes; internal links still resolve (no dead anchors to `/terms/`, `/privacy/`, `/refunds/`, `/contact/`)
+- [ ] If `static/CNAME` or the site `url` (`src/lib/site.ts`) changed, `docs/domain-setup.md` was followed and re-verified
 
 ## Test plan
 
 <!-- How this was verified. Delete rows that don't apply. -->
 
-- [ ] `zola build` passes locally
-- [ ] `zola serve` walkthrough on the affected pages
-- [ ] CI build job is green
+- [ ] `pnpm check` + `pnpm test` pass locally
+- [ ] `pnpm build` passes locally (all routes prerender)
+- [ ] CI `CI gate` check is green
 
 <!-- Walkthrough notes: -->

@@ -2,28 +2,32 @@
 # `changed-files` list is the set of glob patterns that, if matched by any
 # changed file, applies the label.
 #
-# These globs reflect this repo's actual layout — a Zola static site with
-# no `frontend/` / `backend/` / `infra/` split.
+# These globs reflect this repo's actual layout — a SvelteKit static site
+# (single flat package, no `frontend/` / `backend/` / `infra/` split).
 
 "area:content":
   - changed-files:
       - any-glob-to-any-file:
-          - content/**
+          - src/routes/**
 
 "area:legal":
   - changed-files:
       - any-glob-to-any-file:
-          - content/terms.md
-          - content/privacy.md
-          - content/refunds.md
-          - content/contact.md
+          - src/routes/terms/**
+          - src/routes/privacy/**
+          - src/routes/refunds/**
+          - src/routes/contact/**
           - docs/legal-status.md
 
-"area:templates":
+"area:app":
   - changed-files:
       - any-glob-to-any-file:
-          - templates/**
-          - config.toml
+          - src/**
+          - svelte.config.js
+          - vite.config.ts
+          - vitest.config.ts
+          - tsconfig.json
+          - package.json
 
 "area:static":
   - changed-files:
