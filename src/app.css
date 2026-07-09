@@ -380,11 +380,88 @@ footer {
   color: var(--muted);
 }
 
-/* ── Home: selected work (project cards) ───────────────────── */
-.project-grid {
+/* ── Home: selected work (project carousel) ────────────────── */
+.carousel { position: relative; }
+
+/* No-JS / pre-hydration fallback: the server renders every card, laid out as
+   a grid so the section is fully usable without JavaScript. */
+.carousel-track {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.25rem;
+}
+
+.carousel-slide { display: flex; }
+.carousel-slide > .project-card { flex: 1; }
+
+/* Hydrated slideshow: one full-width slide at a time; the track slides. */
+.carousel.is-live {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.carousel.is-live .carousel-track {
+  display: flex;
+  gap: 0;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+
+.carousel.is-live .carousel-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.carousel-arrow {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s, color 0.15s, transform 0.15s;
+}
+
+.carousel-arrow:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--border-strong);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.carousel-dot:hover { background: var(--muted); }
+
+.carousel-dot.active {
+  background: var(--accent);
+  transform: scale(1.35);
 }
 
 .project-card {
@@ -713,7 +790,10 @@ footer {
   .btn:hover,
   .stream-card:hover,
   .project-card:hover,
-  .project-card:hover .project-gh { transform: none; }
+  .project-card:hover .project-gh,
+  .carousel-arrow:hover,
+  .carousel-dot.active { transform: none; }
+  .carousel.is-live .carousel-track { transition: none; }
 }
 
 /* ── Responsive ────────────────────────────────────────────── */
@@ -735,7 +815,7 @@ footer {
 
   .stream-grid { grid-template-columns: 1fr; }
 
-  .project-grid { grid-template-columns: 1fr; }
+  .carousel-track { grid-template-columns: 1fr; }
 
   .capability-data { grid-template-columns: 1fr; }
 

@@ -10,7 +10,7 @@ export interface Project {
 	name: string;
 	repo: string;
 	blurb: string;
-	tech: string[];
+	tech: readonly string[];
 }
 
 export const site = {
@@ -59,6 +59,13 @@ export const site = {
 			blurb:
 				'Running, gym, and nutrition app — Flutter on iOS and Android with native Apple Watch and Wear OS companions, a SvelteKit web app, and a Supabase backend.',
 			tech: ['Flutter', 'SwiftUI', 'SvelteKit', 'Supabase']
+		},
+		{
+			name: 'Going Dark',
+			repo: 'https://github.com/Absence0760/project-gonedark',
+			blurb:
+				'Mobile-first RTS/FPS hybrid — command camps, then possess a single unit and go dark. Pre-production design plus a custom Rust game engine.',
+			tech: ['Rust', 'WGSL', 'Kotlin']
 		}
 	] satisfies Project[],
 

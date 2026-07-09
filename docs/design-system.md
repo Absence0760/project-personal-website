@@ -44,7 +44,15 @@ collapses to one column and the nav becomes a horizontal row.
 - **`.hero`** — gradient panel with a mono `.hero-eyebrow`, oversized tight
   headline, muted lead, and a `.btn` row. `.btn-arrow` adds the nudging arrow.
 - **`.stream-card`** — elevated card, `.stream-tag` mono pill label, hover-lift.
-- **`.tech-tags`** — mono chips with a hover accent border.
+- **Selected work** — `Sidebar`'s sibling `ProjectCarousel.svelte` renders
+  `site.projects` (each a `Project` linking to its GitHub repo) as an
+  auto-rotating slideshow of `.project-card`s: prev/next arrows, dot
+  indicators, pause on hover/focus, arrow-key nav, and `inert` on off-screen
+  slides. It is **progressive enhancement** — the server prerenders every card
+  as a grid (`.carousel:not(.is-live)`), and the `.is-live` class (set on
+  mount) swaps it for the one-at-a-time track, so no-JS visitors still get the
+  full list. Auto-rotation and the slide transition are disabled under
+  `prefers-reduced-motion`.
 - **`.page-content h2`** — mono uppercase section eyebrow (shared by all pages).
 - **`.prose` / `.post-content`** — sans-serif long-form for Services,
   Capabilities, and the legal pages. `.capability-data` is a two-column

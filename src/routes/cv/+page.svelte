@@ -9,19 +9,15 @@
 <div class="cv">
 	<h2>Summary</h2>
 	<p>
-		Software engineer working as a Software Development Engineer in Test (SDET) at Corpay, where I
-		lead the development and maintenance of automated Cypress and Playwright test suites. Alongside
-		the day job I run an independent practice building and maintaining custom web applications for
-		small-business clients.
+		Software engineer working as a QA Software Engineer at enChoice, Inc., with a background
+		leading the development and maintenance of automated Cypress and Playwright test suites.
+		Alongside the day job I run an independent practice building and maintaining custom web
+		applications for small-business clients.
 	</p>
 
 	<h2>Experience</h2>
 
-	<h3>SDET at Corpay — July 2024–Current</h3>
-	<p>
-		As part of an acquisition with Paymerang, LLC. I was appointed as a Software Development Engineer
-		in Test at Corpay, Inc.
-	</p>
+	<h3>QA Software Engineer at enChoice, Inc. — May 2025–Present</h3>
 	<ul>
 		<li>Leading the development of a suite of automated tests using Cypress.</li>
 		<li>
@@ -31,11 +27,7 @@
 		<li>Contributed to scrums and sprint planning on a daily/weekly basis.</li>
 	</ul>
 
-	<h3>SDET at Paymerang — April 2023–July 2024</h3>
-	<p>
-		As part of an acquisition with enChoice, Inc. I was appointed as a Software Development Engineer
-		in Test at Paymerang, LLC.
-	</p>
+	<h3>Senior SDET at Paymerang — April 2023–April 2025</h3>
 	<ul>
 		<li>
 			Leading the development of several automation projects, employing tools such as Cypress and
