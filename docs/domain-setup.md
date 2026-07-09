@@ -5,7 +5,7 @@ what was done for `jaredhoward.com` and as a recipe if the domain ever needs
 to be repointed or replaced. The repo's current state is:
 
 - `static/CNAME` contains `jaredhoward.com`
-- `config.toml` has `base_url = "https://jaredhoward.com"`
+- `src/lib/site.ts` has `url: 'https://jaredhoward.com'` (canonical links + sitemap origin)
 - DNS lives in Route 53 with the records described below
 
 > **Email** for `@jaredhoward.com` is hosted separately by Migadu and adds its
@@ -28,7 +28,7 @@ every occurrence of `yourdomain.com` below with the real one.
 ## 1. Add a `CNAME` file to the site root
 
 GitHub Pages reads `/CNAME` from the deployed site to lock in the custom
-domain. Zola copies `static/*` to the deploy root, so:
+domain. `adapter-static` copies `static/*` to the build root, so:
 
 ```bash
 echo "yourdomain.com" > static/CNAME
@@ -38,11 +38,11 @@ Use the apex domain (`yourdomain.com`), not `www.yourdomain.com`, unless you
 specifically want to serve from the `www` subdomain. Pages will issue a
 redirect from the other variant either way.
 
-## 2. Update `base_url` in `config.toml`
+## 2. Update the site `url` in `src/lib/site.ts`
 
-Replace the existing `base_url` with `https://yourdomain.com` (no trailing
-slash). This is what Zola uses for canonical URLs, RSS, and `get_url(...)`
-calls inside templates.
+Replace the existing `url` with `https://yourdomain.com` (no trailing slash).
+This is what the layout uses for `<link rel="canonical">` and what the
+`sitemap.xml` endpoint uses as the origin for every `<loc>`.
 
 ## 3. DNS records in Route 53
 

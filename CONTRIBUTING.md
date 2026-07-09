@@ -32,22 +32,24 @@ chore(scope): bump dependency Z
 docs(scope): clarify the setup steps for X
 ```
 
-Scope is the area you're touching (e.g. `templates`, `content`, `static`, `ci`, `docs`, `legal`, etc.). Keep the subject line under 70 characters; put rationale in the body if the change isn't self-evident.
+Scope is the area you're touching (e.g. `routes`, `content`, `static`, `ci`, `docs`, `legal`, etc.). Keep the subject line under 70 characters; put rationale in the body if the change isn't self-evident.
 
-## Docs are part of the change
+## Docs (and tests) are part of the change
 
-Per the rule in `CLAUDE.md`: every PR that touches non-trivial code also updates the relevant doc in the same diff. There is no test framework here (no `package.json`, no vitest, no Playwright); the discipline reduces to keeping `docs/` and — for changes that touch legal pages — `docs/legal-status.md` honest.
+Per the rule in `CLAUDE.md`: every PR that touches non-trivial code also updates the relevant doc in the same diff, and adds/updates a Vitest `*.test.ts` when the change has a testable unit (e.g. `src/lib/` logic). The discipline reduces to keeping `docs/` and — for changes that touch legal pages — `docs/legal-status.md` honest.
 
 ## Running the checks locally
 
 ```
-pnpm build                 # builds into ./public, fails on broken templates / dead links
-pnpm dev                   # local dev server with live reload
-pnpm check                 # zola check (link + template validation)
+pnpm install               # first time only (the site has a real dep tree now)
+pnpm build                 # prerenders into ./build; fails on build/type errors
+pnpm dev                   # Vite dev server with live reload (:7777)
+pnpm check                 # svelte-check (types + component diagnostics)
+pnpm test                  # Vitest unit suite
 pre-commit run --all-files # gitleaks + the other hygiene hooks
 ```
 
-These are pnpm script wrappers around the underlying `zola build` / `zola serve` / `zola check` commands — see the root `package.json`. You can call `zola` directly if you prefer; the package.json declares no dependencies and is purely an interface convenience.
+CI runs `pnpm install --frozen-lockfile` then `pnpm check`, `pnpm test`, and `pnpm build`, aggregated by the required `CI gate` check.
 
 If Claude Code is available, `/check` runs the diff-review / doc-hygiene / test-gap agents in parallel and reports — see `.claude/commands/check.md`.
 
@@ -60,7 +62,7 @@ If Claude Code is available, `/check` runs the diff-review / doc-hygiene / test-
 
 ## Reviewing a PR
 
-- Pull the branch locally, run `zola build` (and `zola serve` if the change is visible), and click through the affected pages.
+- Pull the branch locally, run `pnpm install && pnpm build` (and `pnpm dev` if the change is visible), and click through the affected pages.
 - `/check` (or `/safe-edit` for security- or legal-page-adjacent changes) invokes the `code-reviewer` agent for a first-pass review. Use it as a starting point, not a substitute for human eyes.
 
 ## Security findings

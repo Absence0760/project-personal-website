@@ -1,6 +1,6 @@
 # SAM.gov registration checklist
 
-The [Capability Statement](../content/capabilities.md) ships with placeholders
+The [Capability Statement](../src/routes/capabilities/+page.svelte) ships with placeholders
 marked `[ TO BE ASSIGNED ]` for the federal identifiers that only exist once the
 business is registered in **SAM.gov**. This doc is the to-do list for obtaining
 them and the steps to replace the placeholders afterward.
@@ -41,7 +41,7 @@ The public pages deliberately say nothing about registration status — they
 describe the work, not the back-office process. So the only edit needed once
 you're registered is to **add the identifiers** to the corporate-data block.
 
-In `content/capabilities.md`, add two rows near the top of the
+In `src/routes/capabilities/+page.svelte`, add two rows near the top of the
 `<dl class="capability-data">` block (under "Location"):
 
 ```html
