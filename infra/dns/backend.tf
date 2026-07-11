@@ -4,7 +4,7 @@
 # bootstrap/variables.tf `state_bucket_name`.
 terraform {
   backend "s3" {
-    bucket       = "personal-website-tfstate"
+    bucket       = "personal-website-tfstate-136758763748"
     key          = "dns/terraform.tfstate"
     region       = "us-east-1"
     use_lockfile = true

@@ -5,9 +5,9 @@
 # project-disag's account.
 #
 # The zone + every record below pre-existed this Terraform and were
-# manually managed. They are ADOPTED by import (see imports.tf), not
-# recreated — a clean `terraform plan` after import must show NO
-# changes before the first apply. Getting a record definition wrong
+# manually managed. They were ADOPTED by import (one-shot import
+# blocks, since retired) on 2026-07-10, not recreated — the live zone
+# is now fully Terraform-managed. Getting a record definition wrong
 # here breaks the live site, email, OR the disag delegation, so treat
 # every apply as load-bearing (see docs/domain-setup.md).
 
@@ -20,6 +20,11 @@ provider "aws" {
 
 resource "aws_route53_zone" "apex" {
   name = var.apex_domain
+
+  # Matches the live zone (created by Route 53 Registrar at domain
+  # purchase). The provider otherwise defaults this to "Managed by
+  # Terraform", which would show as a change on the adoption plan.
+  comment = "HostedZone created by Route53 Registrar"
 
   tags = merge(
     {
