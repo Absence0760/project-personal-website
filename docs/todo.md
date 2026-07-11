@@ -4,31 +4,27 @@ Operational follow-ups for this repo's Terraform (`infra/`) and the cross-accoun
 DNS it manages. Product/content work doesn't belong here — this is the infra
 backlog. Tick items off as they land.
 
-## 1. Apply the DNS Terraform — NOT YET APPLIED
+## 1. Apply the DNS Terraform — DONE (2026-07-10)
 
-`infra/` is authored, `terraform validate`-clean, and committed, but has **never
-been `terraform apply`-ed**. The live `jaredhoward.com` zone is adopted only on
-paper; until this runs, DNS is still effectively console-managed and the
-Terraform is aspirational.
+The one-time adoption ran on 2026-07-10. Notes from the run (details in
+[`../infra/README.md`](../infra/README.md)):
 
-Run once, as `AWS_PROFILE=personal-website` (SSO-logged-in):
+- The state bucket is **`personal-website-tfstate-136758763748`** — the bare
+  `personal-website-tfstate` name was already taken globally by an unrelated
+  AWS account, so it's account-ID-suffixed per the estate
+  `<slug>-tfstate-<account-id>` convention.
+- The import count is **10** (1 zone + 9 records), not the 11 previously
+  written here — apex NS/SOA are managed implicitly and never imported.
+- The zone `comment` had to be pinned to the live value and the zone tags
+  pre-applied via the CLI so the plan could be gated on zero changes.
 
-```
-export AWS_PROFILE=personal-website
-cd infra/bootstrap && terraform init && terraform apply     # creates state bucket personal-website-tfstate
-cd ../dns          && terraform init && terraform plan       # GATE: must be "11 to import, 0 to add, 0 to change, 0 to destroy"
-                      terraform apply                         # imports only
-rm imports.tf      && terraform plan                          # must be "No changes", then commit the deletion
-```
+- [x] `bootstrap` applied (state bucket exists)
+- [x] `dns` plan was a clean 10-import, no changes
+- [x] `dns` applied; `imports.tf` removed; follow-up plan is "No changes"
 
-**Gate:** if the `dns` plan shows *any* add/change/destroy, a record in
-`records.tf` has drifted from live DNS — fix the config, do **not** apply. This
-zone serves the live site, the Migadu mail records, and the disag delegation;
-every apply is load-bearing. Full detail: [`../infra/README.md`](../infra/README.md).
-
-- [ ] `bootstrap` applied (state bucket exists)
-- [ ] `dns` plan is a clean 11-import, no changes
-- [ ] `dns` applied; `imports.tf` removed; follow-up plan is "No changes"
+Steady state from here: edit `records.tf`, `terraform plan`, read the diff,
+`terraform apply` — every apply is still load-bearing (live site, Migadu mail,
+disag delegation).
 
 ## 2. Keep the `disag.jaredhoward.com` delegation in sync — CROSS-REPO
 
@@ -53,9 +49,11 @@ be freely recreated without updating this record.
 - [x] Mirror this coupling note into project-disag — done in its
       `web/infra/route53.tf` (commit `7cf4b3f`, on `main`), where the zone is
       referenced, so the disag side is warned before recreating its zone.
-- [ ] When section 1's apply runs, re-verify `disag_delegation_ns` still matches
+- [x] When section 1's apply runs, re-verify `disag_delegation_ns` still matches
       disag's live child-zone name servers (query disag's account, or
-      `dig NS disag.jaredhoward.com +short`) before applying.
+      `dig NS disag.jaredhoward.com +short`) before applying — verified
+      2026-07-10 against the child zone's authoritative delegation set
+      (`Z0902104SIJBX05AR40E` in the disag account); all four NS match.
 
 ## 3. (Future) consider whether DNS apply should move to CI
 

@@ -25,49 +25,39 @@ S3-native locking (`use_lockfile = true`, Terraform ≥ 1.10 — no DynamoDB), o
 KMS-free state bucket per account. There is **no `infra-secrets` subdir for this
 project** — a static GitHub-Pages site with public DNS has nothing to encrypt.
 
-## First-time setup (run once)
+## First-time setup — DONE (2026-07-10)
 
-All commands require `AWS_PROFILE=personal-website` and a live SSO session:
+The one-time adoption has been run: `bootstrap` is applied (state bucket
+exists), the live zone + records were imported (`10 to import, 0 to add,
+0 to change, 0 to destroy` — 1 zone + 9 records; apex NS/SOA are managed
+implicitly and never imported), the one-shot import blocks were retired,
+and the follow-up plan is "No changes". Two live-side details from that
+run, for the record:
 
-```
-aws sso login --profile personal-website
-export AWS_PROFILE=personal-website
-```
+- The zone `comment` is pinned in `dns/main.tf` to the live value
+  ("HostedZone created by Route53 Registrar") — the provider would
+  otherwise default it to "Managed by Terraform" and diff forever.
+- The three zone tags in `dns/main.tf` were applied to the live zone via
+  `aws route53 change-tags-for-resource` *before* the import plan, so the
+  adoption plan could be gated on strictly zero changes.
 
-**1. Create the state bucket (local state):**
-
-```
-cd infra/bootstrap && terraform init && terraform apply
-```
-
-**2. Adopt the live zone (remote state + import):**
-
-```
-cd ../dns && terraform init && terraform plan
-```
-
-The plan **must** read `11 to import, 0 to add, 0 to change, 0 to destroy`
-(1 zone + 10 records). Any add/change/destroy means a definition in
-`records.tf` drifted from live DNS — fix it and re-plan; **do not apply**.
-
-```
-terraform apply          # performs the imports only
-```
-
-**3. Retire the import blocks:**
-
-```
-rm imports.tf && terraform plan   # must say "No changes"
-git add -A && git commit
-```
+To re-run from scratch (new account, lost state), follow the same shape:
+`bootstrap` apply with local state → `dns` `terraform init` + import
+blocks → plan gated on **zero add/change/destroy** → apply → retire the
+import blocks and confirm "No changes". All commands require
+`AWS_PROFILE=personal-website` and a live SSO session
+(`aws sso login --profile personal-website`).
 
 ## Steady state
 
 Edit `records.tf` (or the defaults in `variables.tf`), `terraform plan`, read
 the diff, `terraform apply`. Applied locally by the operator — there is no CI
 deploy role for DNS (the website deploys separately via GitHub Pages /
-`actions/deploy-pages`). State lives in the `personal-website-tfstate` bucket;
-losing your laptop is fine — re-`init` elsewhere after `aws sso login`.
+`actions/deploy-pages`). State lives in the
+`personal-website-tfstate-136758763748` bucket (account-ID-suffixed per the
+estate `<slug>-tfstate-<account-id>` convention — the bare name was already
+taken globally); losing your laptop is fine — re-`init` elsewhere after
+`aws sso login`.
 
 ## Cross-repo coupling: the disag.jaredhoward.com delegation
 
