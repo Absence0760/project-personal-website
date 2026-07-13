@@ -58,6 +58,7 @@ export const site = {
 		{
 			name: 'Cross-platform fitness app',
 			repo: 'https://github.com/Absence0760/project-running',
+			url: 'https://threkir.com',
 			blurb:
 				'Running, gym, and nutrition app — Flutter on iOS and Android with native Apple Watch and Wear OS companions, a SvelteKit web app, and a Supabase backend.',
 			tech: ['Flutter', 'SwiftUI', 'SvelteKit', 'Supabase']
