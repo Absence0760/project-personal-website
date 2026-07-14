@@ -4,7 +4,7 @@ Guidance for Claude Code working in this repository. Keep this file short — it
 
 ## What this repo is
 
-A **professional services website** at [jaredhoward.com](https://jaredhoward.com), built with [SvelteKit](https://svelte.dev/docs/kit) (static, `adapter-static`) and deployed to GitHub Pages. It markets Jared Howard's custom web/software-development practice to two audiences: small-business clients and federal buyers via SAM.gov. There is **no backend, no database, no payment integration in this codebase, and no PII storage** — the whole site is prerendered to static HTML/CSS/JS plus a CV PDF.
+A **professional services website** at [jaredhoward.com](https://jaredhoward.com), built with [SvelteKit](https://svelte.dev/docs/kit) (static, `adapter-static`) and deployed to GitHub Pages. It markets Jared Howard's custom web/software-development practice to two audiences: small-business clients and federal buyers via SAM.gov. There is **no backend, no database, no payment integration in this codebase, and no PII storage** — the whole site is prerendered to static HTML/CSS/JS plus a CV PDF (`build/cv.pdf`, generated from the `/cv/` page at build time by `pnpm build:pdf` — not a committed file).
 
 Content pages, each a hand-written Svelte component under `src/routes/`: **Home** (`src/routes/+page.svelte`), **Services** (`src/routes/services/`), **Capability Statement** (`src/routes/capabilities/` — the federal one-pager; UEI/CAGE rows are added to its `<dl class="capability-data">` block once SAM.gov registration completes, see `docs/sam-gov-checklist.md`), **CV** (`src/routes/cv/`), plus the legal pages. Every page shares the `src/routes/+layout.svelte` shell (sidebar + footer); marketing/legal pages use the `.prose` layout.
 
@@ -17,7 +17,7 @@ The site also serves as the public business URL for Stripe sign-up. That means t
 - **Styling:** a single global stylesheet `src/app.css` (design tokens + light/dark via `prefers-color-scheme`), imported once in the layout.
 - **Build tooling:** Vite; Vitest for unit tests; `svelte-check` for types. pnpm workspace of one.
 - **Deploy:** `actions/deploy-pages`, **release-gated** — fires on a published GitHub Release (or manual `workflow_dispatch`), **not** on push to `main` (`.github/workflows/deploy.yml`). Pushing to `main` does not change the live site; cut a release to publish.
-- **Local dev:** `pnpm install` then `pnpm dev` (Vite dev server, live reload) / `pnpm build` (prerenders to `build/`) / `pnpm check` (svelte-check) / `pnpm test` (Vitest). See `docs/run-locally.md`.
+- **Local dev:** `pnpm install` then `pnpm dev` (Vite dev server, live reload) / `pnpm build` (prerenders to `build/`) / `pnpm build:pdf` (renders `build/cv.pdf` from the built CV page; needs `pnpm exec playwright install chromium` once) / `pnpm check` (svelte-check) / `pnpm test` (Vitest). See `docs/run-locally.md`.
 
 ## Repo-wide hard rules
 

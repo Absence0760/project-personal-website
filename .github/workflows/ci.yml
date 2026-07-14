@@ -54,6 +54,14 @@ jobs:
       - name: Build site
         run: pnpm build
 
+      # Same PDF step deploy.yml runs at release time — catch breakage
+      # (print CSS, Playwright bump, script error) at PR time instead.
+      - name: Install Playwright Chromium (for the CV PDF)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Generate cv.pdf from the built /cv/ page
+        run: pnpm build:pdf
+
   ci-gate:
     name: CI gate
     runs-on: ubuntu-latest

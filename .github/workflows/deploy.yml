@@ -43,6 +43,12 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Install Playwright Chromium (for the CV PDF)
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Generate cv.pdf from the built /cv/ page
+        run: pnpm build:pdf
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
