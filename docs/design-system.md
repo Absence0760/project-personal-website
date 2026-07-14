@@ -60,7 +60,14 @@ collapses to one column and the nav becomes a horizontal row.
 - **`.prose` / `.post-content`** — sans-serif long-form for Services,
   Capabilities, and the legal pages. `.capability-data` is a two-column
   label/value data sheet.
-- **`.cv`** — résumé layout reusing the mono section-heading pattern.
+- **`.cv`** — résumé layout reusing the mono section-heading pattern. Opens
+  with a `.cv-actions` row holding a `.btn btn-primary` download link to
+  `/cv.pdf`. That PDF is **generated from this page at build time**
+  (`pnpm build:pdf` → `scripts/generate_cv_pdf.mjs` prints the prerendered
+  `/cv/` with headless Chromium), so page and PDF can't drift. The
+  `@media print` block at the end of `app.css` is what the PDF renders:
+  sidebar/footer/button hidden, and the screen-hidden `.cv-print-header`
+  (name · role · email · site) shown in their place.
 
 ## Brand assets
 

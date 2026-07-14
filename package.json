@@ -7,14 +7,12 @@
     "//-- dev --": "SvelteKit dev server (http://localhost:7777) and a static preview (http://localhost:8888) of the built site.",
     "dev": "vite dev --port 7777",
     "preview": "vite preview --port 8888",
-
-    "//-- build --": "Production static build → ./build (adapter-static, full prerender). This is exactly what deploy.yml uploads to GitHub Pages.",
+    "//-- build --": "Production static build → ./build (adapter-static, full prerender), then build:pdf renders build/cv.pdf from the built /cv/ page (needs `pnpm exec playwright install chromium` once). deploy.yml runs both before uploading to GitHub Pages.",
     "build": "vite build",
-
+    "build:pdf": "node scripts/generate_cv_pdf.mjs",
     "//-- check --": "Type + Svelte diagnostics. svelte-kit sync first so generated types (.svelte-kit/) exist.",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-
     "//-- test --": "Vitest unit suite; test:scripts validates this file's script layout (scripts/check_root_scripts.mjs).",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -25,6 +23,7 @@
     "@sveltejs/kit": "2.69.2",
     "@sveltejs/vite-plugin-svelte": "7.2.0",
     "@types/node": "26.1.1",
+    "playwright": "1.61.1",
     "svelte": "5.56.4",
     "svelte-check": "4.7.2",
     "typescript": "5.9.3",

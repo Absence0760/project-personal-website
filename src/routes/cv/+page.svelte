@@ -1,3 +1,7 @@
+<script lang="ts">
+	import { site } from '$lib/site';
+</script>
+
 <svelte:head>
 	<title>CV | Jared Howard</title>
 	<meta
@@ -7,6 +11,24 @@
 </svelte:head>
 
 <div class="cv">
+	<div class="cv-actions">
+		<!-- rel="external": build/cv.pdf is generated AFTER `vite build` (by
+		     build:pdf), so the prerender crawler must not follow this link. -->
+		<a class="btn btn-primary" href="/cv.pdf" download="jared-howard-cv.pdf" rel="external">
+			Download CV (PDF)
+		</a>
+	</div>
+
+	<!-- Print-only: the PDF is generated from this page (scripts/generate_cv_pdf.mjs)
+	     with the sidebar hidden, so the identity line must live here. -->
+	<header class="cv-print-header">
+		<h1>{site.title}</h1>
+		<p>
+			{site.role} · <a href="mailto:contact@jaredhoward.com">contact@jaredhoward.com</a> ·
+			<a href={site.url}>jaredhoward.com</a>
+		</p>
+	</header>
+
 	<h2>Summary</h2>
 	<p>
 		Software engineer working as a QA Software Engineer at enChoice, Inc., with a background
