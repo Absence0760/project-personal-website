@@ -267,6 +267,10 @@ PDF. Verify with `emulateMedia('print')` after touching either.
 dot is the *only* current-page marker once it measures itself, since `.has-dot`
 retires the CSS fallback, so it is hidden outright on routes outside `site.nav`
 rather than parked on "Home") ·
+`.cv-screen-header` (the CV's on-screen title — distinct from the print-only
+`.cv-print-header`, which carries the identity line into the generated PDF and
+is the *only* h1 the page used to have, leaving the screen outline starting at
+h2; the screen one is hidden under `@media print` so the PDF has one title) ·
 `.sheet` (the full-screen nav overlay: its own `.sheet-close` button — the
 masthead trigger is *covered* by the open sheet, so it cannot double as the
 close control — plus a focus trap, Escape, `inert` on the page behind, and
@@ -294,6 +298,23 @@ script in `app.html` and disarmed by a 2s watchdog unless the layout has set
 `data-hydrated`. That covers the "JS enabled but the bundle never ran" case — a
 dropped chunk or a blocking extension — which would otherwise leave a
 prerendered page present in the DOM but blank on screen.
+
+**Porting a ribbon value between schemes: carry the ratio, not the number.**
+Both defects this graphic has shipped were a dark-scheme alpha reused on a
+ground with different headroom — the round-2 specular crest, then the round-3
+occlusion, where `--rb-shade: 0.70` put the deepest shadow at 2.57:1 against the
+page while the arc beside it measured 1.63:1. A shadow that out-contrasts its
+own object gets promoted to figure, so the hero read as two interleaved ribbons,
+one blue and one grey. Light now runs `--rb-shade: 0.30` / `--rb-occlusion:
+#2f4b86` (composite alpha 0.211, ≈1.40:1 vs ground against a 4.55:1 arc),
+holding dark's relationship of shadow ≈ ⅓ the arc's contrast step.
+
+**Scroll-reveal does not run inside the horizontal work rail.** The shared
+observer insets only its bottom edge, which assumes vertical runway. Below 720px
+the work cards live in a snap-scroller that has none — they are clipped by the
+rail, so vertical scrolling never intersects them at all and they sat blank
+indefinitely. `RevealOptions.staticBelow` marks them revealed outright at those
+widths; the rail's affordance is the peeking next card and the progress track.
 
 `WorkThumb.svelte` draws the preview panels. They are **abstractions, not
 screenshots** — nothing on the page purports to show a real client site, and the

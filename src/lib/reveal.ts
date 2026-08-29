@@ -31,6 +31,21 @@ export interface RevealOptions {
 	 * never exceed 140ms however many items it holds.
 	 */
 	index?: number;
+	/**
+	 * Below this viewport width, mark the element revealed immediately instead
+	 * of observing it.
+	 *
+	 * For content that sits inside a horizontal snap-scroller. The shared
+	 * observer insets only the bottom edge, which assumes vertical runway — an
+	 * element approaches gradually and the fade plays *during* the approach. A
+	 * card clipped by its rail has no runway: it is not intersecting at all
+	 * until it is swiped in, so vertical scrolling alone never reveals it (it
+	 * sits blank indefinitely) and a swipe reveals it only *after* it has
+	 * arrived, which reads as slow loading rather than as an entrance. The rail
+	 * already has an affordance — the peeking next card and the progress track
+	 * — so it does not need an entrance too.
+	 */
+	staticBelow?: number;
 }
 
 /** Stagger step, in seconds. Kept in sync with --reveal-step in app.css. */
@@ -41,12 +56,18 @@ export function reveal(node: HTMLElement, options: RevealOptions = {}) {
 	if (step) node.style.setProperty('--reveal-delay', `${step.toFixed(2)}s`);
 
 	const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+	// 0.02 below the breakpoint, so this and the `max-width: 719px` rules in
+	// app.css switch at the same place rather than one pixel apart.
+	const narrow = options.staticBelow
+		? window.matchMedia(`(max-width: ${options.staticBelow - 0.02}px)`)
+		: null;
 
 	// Reduced motion removes the transition outright rather than shortening it;
-	// the element is simply marked revealed. Subscribed to `change` so toggling
-	// the OS setting mid-session takes effect without a reload.
+	// the element is simply marked revealed. Same for a viewport below
+	// `staticBelow`. Both are subscribed to `change`, so toggling the OS setting
+	// or crossing the breakpoint takes effect without a reload.
 	function sync() {
-		if (calm.matches) {
+		if (calm.matches || narrow?.matches) {
 			node.classList.add('is-in');
 			observer?.unobserve(node);
 		} else if (!node.classList.contains('is-in')) {
@@ -56,10 +77,12 @@ export function reveal(node: HTMLElement, options: RevealOptions = {}) {
 
 	sync();
 	calm.addEventListener('change', sync);
+	narrow?.addEventListener('change', sync);
 
 	return {
 		destroy() {
 			calm.removeEventListener('change', sync);
+			narrow?.removeEventListener('change', sync);
 			observer?.unobserve(node);
 		}
 	};

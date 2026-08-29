@@ -73,7 +73,10 @@
 	>
 	<ul class="work-track" use:spotlight={'.work-card'}>
 		{#each projects as project, i (project.repo)}
-			<li class="work-item" data-reveal use:reveal={{ index: i }}>
+			<!-- staticBelow: below 720px these cards live in the horizontal snap
+			     rail, where a scroll-reveal tuned for vertical runway leaves them
+			     permanently blank. See RevealOptions.staticBelow. -->
+			<li class="work-item" data-reveal use:reveal={{ index: i, staticBelow: 720 }}>
 				<article class="work-card">
 					<div class="work-preview">
 						<WorkThumb thumb={project.thumb} />

@@ -314,7 +314,10 @@ main.page {
   .masthead,
   .sheet,
   .landing-footer,
-  .cv-actions {
+  .cv-actions,
+  /* The PDF gets its identity from .cv-print-header instead — two titles would
+     stack at the top of page 1. */
+  .cv-screen-header {
     display: none !important;
   }
 
@@ -456,7 +459,11 @@ main.page {
      against the page and the crest only 1.60:1. That is why --rb-shade and
      --rb-rim-alpha are per-scheme rather than shared. Chrome reads on white
      paper because the highlight is ringed by very dark tone, not because the
-     highlight is bright. */
+     highlight is bright.
+     When porting any ribbon value between schemes, carry the RATIO across, not
+     the number — both defects this graphic has shipped (the round-2 specular
+     crest, the round-3 occlusion) were a dark-scheme alpha reused on a ground
+     with different headroom. */
 
 :root {
   /* Ground */
@@ -494,8 +501,17 @@ main.page {
   --rb-crest: #9fc4fb;
   --rb-4: #2d569f;
   --rb-5: #132a63;
-  --rb-occlusion: #172a58;
-  --rb-shade: 0.70;
+  /* Derived from the RATIO the dark scheme uses, not from its alpha. The four
+     .rb-o* passes composite to alpha 0.443 at --rb-shade: 0.70 — on a near-white
+     ground that put the deepest shadow at 2.57:1 vs the page while the arc
+     beside it measured 1.63:1. A shadow that out-contrasts its own object gets
+     promoted to figure, so the hero read as two interleaved ribbons, one blue
+     and one grey. 0.30 drops the composite to 0.211 (~1.45:1), holding dark's
+     relationship of shadow ≈ ⅓ the arc's contrast step. The hue moves with it:
+     #172a58 composited to a near-neutral rgb(130,144,176); a real shadow on a
+     blue-white ground keeps the ground's hue. */
+  --rb-occlusion: #2f4b86;
+  --rb-shade: 0.30;
   --rb-rim: #ffffff;
   --rb-rim-alpha: 0.25;
   --rb-bloom: #6d9af0;

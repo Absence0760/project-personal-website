@@ -11,6 +11,15 @@
 </svelte:head>
 
 <div class="cv">
+	<!-- Screen title. Every other route opens with a display h1 on the fading
+	     rule; without this one the CV opened on a blue download button with no
+	     subject attached to it, and the document's only h1 was the print-only
+	     one below — display:none, so the screen outline started at h2. The
+	     masthead says "Jared Howard / Software Engineer", not what this page is. -->
+	<header class="prose-header cv-screen-header">
+		<h1>Curriculum Vitae</h1>
+	</header>
+
 	<div class="cv-actions">
 		<!-- rel="external": build/cv.pdf is generated AFTER `vite build` (by
 		     build:pdf), so the prerender crawler must not follow this link. -->
