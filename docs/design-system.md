@@ -141,6 +141,10 @@ backgrounded, and stops entirely under reduced motion.
   script** in `app.html`'s `<head>` before first paint, so no-JS visitors never
   have anything hidden and nobody sees a visible→hidden flash.
 - In/out transitions are deliberately **asymmetric** (≈180ms in, ≈240ms out).
+- Card rows carry a **pointer spotlight** (`src/lib/spotlight.ts`) — one
+  delegated, rAF-throttled listener per row writing `--mx`/`--my`. The highlight
+  is a background gradient, so it costs no compositor layer; it simply never
+  paints for coarse pointers or under reduced motion.
 - `prefers-reduced-motion` **removes** motion rather than shortening it, and the
   ribbon's pointer listener is never attached — re-evaluated on `change`, so
   toggling the OS setting takes effect without a reload.

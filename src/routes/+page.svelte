@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { site } from '$lib/site';
 	import { reveal } from '$lib/reveal';
+	import { spotlight } from '$lib/spotlight';
 	import SiteHeader from '$lib/components/SiteHeader.svelte';
 	import LandingFooter from '$lib/components/LandingFooter.svelte';
 	import HeroRibbon from '$lib/components/HeroRibbon.svelte';
@@ -58,7 +59,7 @@
 			<span class="band-rule" aria-hidden="true"></span>
 		</div>
 
-		<div class="stream-row">
+		<div class="stream-row" use:spotlight={'.stream-card'}>
 			<article class="stream-card" data-reveal use:reveal={{ index: 0 }}>
 				<span class="stream-icon" aria-hidden="true"><Icon name="business" size={26} /></span>
 				<div class="stream-text">

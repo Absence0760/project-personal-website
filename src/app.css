@@ -1370,22 +1370,26 @@ main.landing {
   color: var(--l-fg-dim);
 }
 
-/* ── Landing: what I do ────────────────────────────────────
-   The pointer spotlight is a background-image, so it costs no layer and no
-   layout. One delegated listener would be needed to drive --mx/--my; without
-   it the gradient simply rests at the card's centre, which still reads. */
+/* ── Landing: what I do ──────────────────────────────────── */
 .stream-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--gutter);
 }
 
+/* The spotlight is a background-image driven by --mx/--my (src/lib/spotlight.ts,
+   one delegated listener per row). It costs no compositor layer and triggers no
+   layout, and it simply never paints when the listener isn't attached — coarse
+   pointers, or reduced motion. */
 .stream-card,
 .work-card {
   display: flex;
   flex-direction: column;
   border-radius: var(--r-xl);
-  background: var(--l-ink-800);
+  background:
+    radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px),
+      var(--l-accent-soft), transparent 62%),
+    var(--l-ink-800);
   box-shadow: var(--e1);
   transition: box-shadow 240ms var(--ease-out-quart), transform 240ms var(--ease-spring);
 }

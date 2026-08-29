@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import type { Project } from '$lib/site';
 	import { reveal } from '$lib/reveal';
+	import { spotlight } from '$lib/spotlight';
 	import WorkThumb from './WorkThumb.svelte';
 	import Icon from './Icon.svelte';
 
@@ -65,7 +66,7 @@
 		role={scrollable ? 'region' : undefined}
 		aria-label={scrollable ? 'Selected work, horizontally scrollable' : undefined}
 	>
-	<ul class="work-track">
+	<ul class="work-track" use:spotlight={'.work-card'}>
 		{#each projects as project, i (project.repo)}
 			<li class="work-item" data-reveal use:reveal={{ index: i }}>
 				<article class="work-card">
