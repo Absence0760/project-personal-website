@@ -1897,6 +1897,14 @@ main.landing {
    ragged-breaking mid-phrase. */
 @media (max-width: 399px) {
   .eyebrow { flex-wrap: wrap; row-gap: var(--s-1); }
+
+  /* At 320px the lockup and the social pair together exceed the footer card's
+     inner width, which broke "Jared Howard" and "SOFTWARE ENGINEER" across
+     lines. One column, three rows. */
+  .landing-footer-top { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  .landing-footer-top > .lockup { grid-column: 1; grid-row: 1; }
+  .landing-footer-social { grid-column: 1; grid-row: 2; }
+  .landing-footer-links { grid-column: 1; grid-row: 3; }
 }
 
 /* ═══ Landing: motion, contrast and forced-colours ═════════ */
