@@ -31,12 +31,17 @@
 	let dotX = $state(0);
 	let dotReady = $state(false);
 
+	let dotFrame = 0;
 	function moveDot(index: number) {
-		const link = rail?.querySelectorAll<HTMLElement>('.masthead-rail a')[index];
-		if (!link || !rail) return;
-		const box = link.getBoundingClientRect();
-		dotX = box.left - rail.getBoundingClientRect().left + box.width / 2;
-		dotReady = true;
+		if (dotFrame) cancelAnimationFrame(dotFrame);
+		dotFrame = requestAnimationFrame(() => {
+			dotFrame = 0;
+			const link = rail?.querySelectorAll<HTMLElement>('.masthead-rail a')[index];
+			if (!link || !rail) return;
+			const box = link.getBoundingClientRect();
+			dotX = box.left - rail.getBoundingClientRect().left + box.width / 2;
+			dotReady = true;
+		});
 	}
 
 	$effect(() => {
@@ -47,7 +52,10 @@
 		settle();
 		const resize = new ResizeObserver(settle);
 		resize.observe(node);
-		return () => resize.disconnect();
+		return () => {
+			resize.disconnect();
+			if (dotFrame) cancelAnimationFrame(dotFrame);
+		};
 	});
 
 	function close() {
@@ -73,7 +81,7 @@
 		if (!open) return;
 
 		const behind = Array.from(
-			document.querySelectorAll<HTMLElement>('.landing, .landing-footer')
+			document.querySelectorAll<HTMLElement>('main, .landing-footer')
 		);
 		for (const element of behind) element.inert = true;
 
@@ -154,6 +162,7 @@
 		class:has-dot={dotReady}
 		aria-label="Primary"
 		onpointerleave={() => moveDot(activeIndex)}
+		onfocusout={() => moveDot(activeIndex)}
 	>
 		<ul>
 			{#each site.nav as item, i (item.href)}
@@ -163,6 +172,7 @@
 						class:is-active={current === item.href}
 						aria-current={current === item.href ? 'page' : undefined}
 						onpointerenter={() => moveDot(i)}
+						onfocus={() => moveDot(i)}
 					>
 						<span>{item.label}</span>
 					</a>

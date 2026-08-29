@@ -227,6 +227,33 @@ When the custom domain is registered and pointed at the site (see
   per `docs/domain-setup.md`) and then re-run the `us-legal-doc-reviewer`
   to catch any references to the old GitHub-Pages URL.
 
+## Change log — site redesign, 2026-08-28
+
+The site was restyled (new masthead, landing page, footer card, single token
+layer). **No legal-page wording changed** — `terms/`, `privacy/`, `refunds/`
+and `contact/` kept their markup verbatim; only the shell around them and the
+typography did. What was re-verified against this tracker at the time:
+
+- All four footer links (Contact · Terms · Privacy · Refunds) render on **every**
+  built page, now from `LandingFooter` rather than the old `Footer` component.
+  Verified against `build/**/index.html`, 4/4 distinct targets on all 8 routes.
+- The homepage service description still matches **Terms §1**: two streams,
+  browser-based only, no physical goods, no downloadable installers, billed as
+  project fees / retainers / subscriptions. The Stripe-readiness checkbox above
+  therefore still holds.
+- **Privacy §8** ("all client-side JavaScript on the marketing site is
+  first-party code we wrote ourselves; there are no embedded third-party
+  scripts and no remote-loaded tracking tags") still holds. The redesign added
+  one inline `<script>` to `src/app.html` — first-party, no `src`, four
+  statements, sets a `js` class before first paint — plus first-party modules
+  under `src/lib/`. No cookies, no `localStorage`, no third-party host: the
+  built output's only off-origin references are `href` links to github.com and
+  merylgreendesigns.com. Nothing in §4's sub-processor list changed.
+
+Because no commitment moved, this did not trigger the `us-legal-doc-reviewer`
+re-run below. If a future redesign changes any legal page's *wording* — not
+just its styling — that re-run is required.
+
 ## Maintenance rhythm
 
 - After any material site change → re-run the `us-legal-doc-reviewer`

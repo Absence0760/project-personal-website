@@ -2,8 +2,6 @@
 	import { site } from '$lib/site';
 	import { reveal } from '$lib/reveal';
 	import { spotlight } from '$lib/spotlight';
-	import SiteHeader from '$lib/components/SiteHeader.svelte';
-	import LandingFooter from '$lib/components/LandingFooter.svelte';
 	import HeroRibbon from '$lib/components/HeroRibbon.svelte';
 	import WorkRow from '$lib/components/WorkRow.svelte';
 	import Icon from '$lib/components/Icon.svelte';
@@ -15,8 +13,6 @@
 	<title>{site.title} — {site.role}</title>
 	<meta name="description" content={site.description} />
 </svelte:head>
-
-<SiteHeader />
 
 <main class="landing">
 	<!-- ── Hero ─────────────────────────────────────────────────
@@ -125,5 +121,3 @@
 		</p>
 	</section>
 </main>
-
-<LandingFooter />

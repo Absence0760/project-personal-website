@@ -1,51 +1,22 @@
 /* ── Reset & base ──────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  /* Surfaces & lines */
-  --bg:            #f5f7fa;
-  --surface:       #ffffff;
-  --surface-2:     #fbfcfe;
-  --border:        #e4e8ee;
-  --border-strong: #d2d9e2;
+/* The whole site runs on the --l-* token layer defined under the LANDING PAGE
+   banner below (ground, lines, text, accent, spacing, radii, type, easing).
+   There is no second palette: the masthead, the landing bands, the reading
+   column and the CV all draw from the same one, which is why a colour change
+   is a one-place change. */
 
-  /* Text */
-  --text:          #0f172a;
-  --muted:         #566072;
-
-  /* Accent */
-  --accent:        #2563eb;
-  --accent-hover:  #1d4ed8;
-  --accent-2:      #38bdf8;
-  --accent-soft:   rgba(37, 99, 235, 0.09);
-  --accent-line:   linear-gradient(90deg, var(--accent), var(--accent-2));
-
-  /* Depth */
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 6px 16px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(15, 23, 42, 0.05);
-  --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.12);
-
-  /* Geometry */
-  --sidebar-w:  240px;
-  --radius:     8px;
-  --radius-lg:  16px;
-
-  /* Type */
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
-
-  /* Site-wide: lets scrollbars and form controls follow the OS scheme, which
-     the palette below already does. Print is unaffected — the @media print
-     block sets an explicit white ground. */
-  color-scheme: light dark;
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  scrollbar-color: var(--l-line-hover) var(--l-ink-950);
 }
-
-html { font-size: 16px; scroll-behavior: smooth; }
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text);
+  background: var(--l-ink-950);
+  color: var(--l-fg);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -54,219 +25,55 @@ body {
   flex-direction: column;
 }
 
-a { color: var(--accent); text-decoration: none; }
-a:hover { color: var(--accent-hover); text-decoration: underline; }
+a { color: var(--l-accent-text); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-/* Keyboard focus — visible, consistent, never on mouse click. */
+::selection { background: var(--l-accent); color: var(--l-on-accent); }
+
+/* Focus is a designed element, not a browser default: a --l-focus halo held
+   2px clear of the control, so its adjacency is always the page or card field
+   (11.4:1 / 10.1:1 dark, 6.0:1 / 6.6:1 light) and never a blue button fill.
+   No border-radius here — that would reshape the element itself. */
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--l-focus);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
-/* ── Main wrapper ──────────────────────────────────────────── */
-main {
+/* ── Reading column (every route except the landing page) ──── */
+main.page {
   flex: 1;
-  max-width: 1040px;
   width: 100%;
-  margin: 0 auto;
-  padding: 3rem 2rem;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding: var(--s-12) var(--page-margin) var(--s-14);
 }
 
-/* ── Footer ────────────────────────────────────────────────── */
-footer {
-  border-top: 1px solid var(--border);
-  text-align: center;
-  padding: 1.5rem 2rem;
-  font-size: 0.8rem;
-  color: var(--muted);
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.25rem;
-  margin-bottom: 0.6rem;
-}
-
-.footer-links a { color: var(--muted); }
-.footer-links a:hover { color: var(--accent); }
-
-/* ── App layout (sidebar rail + content, shared by all pages) ── */
-.home-layout {
-  display: grid;
-  grid-template-columns: var(--sidebar-w) 1fr;
-  gap: 3.5rem;
-  align-items: start;
-}
-
-/* ── Sidebar / identity rail ───────────────────────────────── */
-.sidebar {
-  position: sticky;
-  top: 2rem;
-}
-
-.sidebar-brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  color: var(--text);
-  margin-bottom: 1.1rem;
-}
-.sidebar-brand:hover { text-decoration: none; color: var(--text); }
-
-.sidebar-mark {
-  flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: var(--shadow-sm);
-}
-
-.sidebar-mark svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.sidebar-brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.sidebar-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.sidebar-role {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-top: 0.15rem;
-}
-
-.sidebar-bio {
-  font-size: 0.85rem;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 1.75rem;
-}
-
-.sidebar-nav ul {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.sidebar-nav a {
-  display: block;
-  position: relative;
-  padding: 0.45rem 0.7rem;
-  border-radius: var(--radius);
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--muted);
-  transition: background 0.15s, color 0.15s;
-}
-
-.sidebar-nav a:hover {
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-  text-decoration: none;
-  color: var(--text);
-}
-
-.sidebar-nav a.active {
-  background: var(--accent-soft);
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.sidebar-nav a.active::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 1.1em;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--accent);
-}
-
-/* ── Page content: shared section headings ─────────────────── */
-.page-content section { margin-bottom: 3rem; }
-
-.page-content h2 {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-/* ── Buttons ───────────────────────────────────────────────── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  padding: 0.65rem 1.3rem;
-  border-radius: var(--radius);
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s,
-    transform 0.15s, box-shadow 0.15s;
-}
-
-.btn:hover { text-decoration: none; }
-
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-  box-shadow: var(--shadow-sm);
-}
-.btn-primary:hover {
-  background: var(--accent-hover);
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
-}
-
-/* ── Prose page (services, capabilities, legal, contact) ───── */
-.prose { max-width: 720px; }
+/* ── Prose page (services, capabilities, legal, contact, error) ── */
+.prose { max-width: 68ch; }
 
 .prose-header {
-  margin-bottom: 2.25rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--s-8);
+  padding-bottom: var(--s-6);
+  /* The same fading hairline the landing page's band labels sit on, so a
+     reading page opens in the same voice the home page closes in. */
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, var(--l-line-strong) 0%, var(--l-line) 55%, transparent 100%) 1;
 }
 
 .prose-header h1 {
-  font-size: 2.1rem;
-  font-weight: 800;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(2.25rem, 1.6rem + 2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  text-indent: -0.022em;
+  text-wrap: balance;
 }
 
 .post-content {
-  font-size: 1.02rem;
+  font-size: var(--fs-lead);
   line-height: 1.75;
+  color: var(--l-fg-muted);
+  text-wrap: pretty;
 }
 
 .post-content h2,
@@ -274,77 +81,91 @@ footer {
 .post-content h4 {
   font-family: var(--font-sans);
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.3;
-  margin: 2.25rem 0 0.75rem;
+  letter-spacing: -0.016em;
+  line-height: 1.25;
+  color: var(--l-fg);
+  margin: var(--s-11) 0 var(--s-4);
+  text-wrap: balance;
 }
 
-.post-content h2 { font-size: 1.35rem; }
-.post-content h3 { font-size: 1.12rem; }
+.post-content h2 { font-size: 1.5rem; }
+.post-content h3 { font-size: 1.1875rem; }
+.post-content h4 { font-size: 1.0625rem; }
 
-.post-content p { margin-bottom: 1.2rem; }
+.post-content > :first-child { margin-top: 0; }
+
+.post-content p { margin-bottom: var(--s-5); }
+
+.post-content strong { color: var(--l-fg); font-weight: 650; }
 
 .post-content ul,
 .post-content ol {
-  padding-left: 1.35rem;
-  margin-bottom: 1.2rem;
+  padding-left: var(--s-6);
+  margin-bottom: var(--s-5);
 }
 
-.post-content li { margin-bottom: 0.4rem; }
+.post-content li { margin-bottom: var(--s-2); }
+.post-content li::marker { color: var(--l-line-interactive); }
+
+.post-content a {
+  color: var(--l-accent-text);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--l-accent-text) 35%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 240ms var(--ease-out-quart);
+}
+.post-content a:hover { text-decoration-color: var(--l-accent-text); transition-duration: 120ms; }
 
 .post-content code {
   font-family: var(--font-mono);
   font-size: 0.85em;
-  background: var(--accent-soft);
-  color: var(--accent-hover);
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
+  background: var(--l-ink-700);
+  border: 1px solid var(--l-line);
+  color: var(--l-fg);
+  padding: 0.1em 0.4em;
+  border-radius: var(--r-xs);
 }
 
 .post-content pre {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 1.25rem;
-  border-radius: var(--radius);
+  background: var(--l-ink-800);
+  border: 1px solid var(--l-line-strong);
+  color: var(--l-fg);
+  padding: var(--s-5);
+  border-radius: var(--r-md);
   overflow-x: auto;
-  margin-bottom: 1.2rem;
-  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--s-5);
+  font-size: var(--fs-body);
 }
 
-.post-content pre code {
-  background: none;
-  padding: 0;
-  color: inherit;
-}
+.post-content pre code { background: none; border: none; padding: 0; color: inherit; }
 
 .post-content blockquote {
-  border-left: 3px solid var(--accent);
-  background: var(--accent-soft);
-  border-radius: 0 var(--radius) var(--radius) 0;
-  margin: 1.5rem 0;
-  padding: 0.75rem 1.25rem;
-  color: var(--muted);
+  border-left: 2px solid var(--l-accent-text);
+  background: var(--l-accent-soft);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  margin: var(--s-6) 0;
+  padding: var(--s-3) var(--s-5);
 }
 
 /* Tables (e.g. the Privacy data-category matrix). */
 .post-content .table-scroll {
   overflow-x: auto;
-  margin: 1.5rem 0;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  margin: var(--s-6) 0;
+  border-radius: var(--r-md);
+  border: 1px solid var(--l-line-strong);
 }
 
 .post-content table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 0.85rem;
-  line-height: 1.5;
+  font-size: var(--fs-body);
+  line-height: 1.55;
 }
 
 .post-content th,
 .post-content td {
-  border-bottom: 1px solid var(--border);
-  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--l-line);
+  padding: var(--s-3) var(--s-4);
   text-align: left;
   vertical-align: top;
 }
@@ -353,130 +174,112 @@ footer {
 
 .post-content th {
   font-weight: 600;
-  background: var(--surface-2);
-  color: var(--text);
+  background: var(--l-ink-800);
+  color: var(--l-fg);
 }
 
 /* ── CV ────────────────────────────────────────────────────── */
-.cv { max-width: 720px; }
+.cv { max-width: 68ch; }
 
-.cv-actions { margin-bottom: 0.5rem; }
+.cv-actions { margin-bottom: var(--s-10); }
 
-/* Print-only identity line — hidden on screen, where the sidebar carries it.
+.cv h2:first-of-type { margin-top: 0; }
+
+/* Print-only identity line — hidden on screen, where the masthead carries it.
    The downloadable cv.pdf is printed from this page (scripts/generate_cv_pdf.mjs). */
 .cv-print-header { display: none; }
 
 .cv hr {
   border: none;
-  border-top: 1px solid var(--border);
-  margin: 2rem 0;
+  border-top: 1px solid var(--l-line);
+  margin: var(--s-8) 0;
 }
 
 .cv h1 {
-  font-size: 2.1rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 0.25rem;
+  font-size: clamp(2.25rem, 1.6rem + 2vw, 3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  margin-bottom: var(--s-2);
 }
 
+/* Mono uppercase section eyebrow on a fading rule — the same one the landing
+   page's bands use. */
 .cv h2 {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  margin-top: 2.25rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.16em;
+  padding-right: 0.16em;
+  color: var(--l-fg-muted);
+  margin-top: var(--s-11);
+  margin-bottom: var(--s-6);
+  padding-bottom: var(--s-3);
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(90deg, var(--l-line-strong) 0%, var(--l-line) 55%, transparent 100%) 1;
 }
 
 .cv h3 {
-  font-size: 1.05rem;
+  font-size: 1.0625rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  margin-top: 1.5rem;
-  margin-bottom: 0.25rem;
+  letter-spacing: -0.012em;
+  color: var(--l-fg);
+  margin-top: var(--s-6);
+  margin-bottom: var(--s-2);
 }
 
 .cv p {
-  margin-bottom: 0.5rem;
-  line-height: 1.7;
-  font-size: 0.96rem;
+  margin-bottom: var(--s-3);
+  line-height: 1.72;
+  font-size: var(--fs-body);
+  color: var(--l-fg-muted);
 }
 
-.cv p strong { font-weight: 600; }
+.cv p strong { color: var(--l-fg); font-weight: 600; }
 
 .cv ul {
-  padding-left: 1.25rem;
-  margin-bottom: 0.75rem;
+  padding-left: var(--s-5);
+  margin-bottom: var(--s-4);
 }
 
 .cv ul li {
-  font-size: 0.96rem;
-  line-height: 1.7;
-  margin-bottom: 0.25rem;
-  color: var(--text);
+  font-size: var(--fs-body);
+  line-height: 1.72;
+  margin-bottom: var(--s-2);
+  color: var(--l-fg-muted);
 }
+.cv ul li::marker { color: var(--l-line-interactive); }
 
 /* ── Capability statement: corporate data block ────────────── */
 .capability-data {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow: var(--shadow-sm);
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  font-size: 0.95rem;
+  border-radius: var(--r-xl);
+  background: var(--l-ink-800);
+  box-shadow: var(--e1);
+  padding: var(--s-6);
+  margin: var(--s-6) 0;
+  font-size: var(--fs-body);
   display: grid;
   grid-template-columns: minmax(9rem, auto) 1fr;
   align-items: start;
-  gap: 0.9rem 1.5rem;
+  gap: var(--s-4) var(--s-6);
 }
 
 .capability-data dt {
   font-family: var(--font-mono);
   font-weight: 600;
-  font-size: 0.66rem;
+  font-size: var(--fs-badge);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
+  letter-spacing: 0.14em;
+  padding-right: 0.14em;
+  color: var(--l-fg-muted);
 }
 
 .capability-data dd {
-  margin: 0.15rem 0 0;
+  margin: 0;
   line-height: 1.5;
   font-weight: 500;
-}
-
-/* ── Dark mode (Tokyo Night, contrast-tuned) ───────────────── */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:            #16161e;
-    --surface:       #1f2335;
-    --surface-2:     #24283b;
-    --border:        #2c3050;
-    --border-strong: #3b4261;
-
-    --text:          #c0caf5;
-    --muted:         #8189b3;
-
-    --accent:        #7aa2f7;
-    --accent-hover:  #9ec0ff;
-    --accent-2:      #7dcfff;
-    --accent-soft:   rgba(122, 162, 247, 0.14);
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.45);
-    --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.55);
-  }
-
-  .btn-primary { color: #16161e; }
-  .btn-primary:hover { color: #16161e; }
-
-  .post-content code { color: var(--accent-2); }
-  .post-content pre { background: #11121a; }
+  color: var(--l-fg);
 }
 
 /* ── Cross-fade page transitions (View Transitions API) ────── */
@@ -493,29 +296,14 @@ footer {
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
   html { scroll-behavior: auto; }
-  .btn:hover { transform: none; }
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
-@media (max-width: 760px) {
-  .home-layout {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .sidebar { position: static; }
-
-  .sidebar-bio { display: none; }
-
-  .sidebar-nav ul {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .capability-data { grid-template-columns: 1fr; }
-
-  main { padding: 1.75rem 1.15rem; }
+/* ── Reading column: compact ───────────────────────────────── */
+@media (max-width: 719px) {
+  main.page { padding-block: var(--s-9) var(--s-12); }
+  .capability-data { grid-template-columns: 1fr; gap: var(--s-2) 0; }
+  .capability-data dd { margin-bottom: var(--s-3); }
+  .post-content h2 { font-size: 1.3125rem; }
 }
 
 /* ── Print (drives the generated cv.pdf) ───────────────────── */
@@ -523,14 +311,14 @@ footer {
    the page into a plain single-column résumé. Page size + margins are set
    by the script, not @page. */
 @media print {
-  .sidebar,
-  footer,
+  .masthead,
+  .sheet,
+  .landing-footer,
   .cv-actions {
-    display: none;
+    display: none !important;
   }
 
-  main,
-  .home-layout {
+  main.page {
     display: block;
     max-width: none;
     padding: 0;
@@ -540,15 +328,30 @@ footer {
   body {
     background: #fff;
     color: #111;
+    display: block;
   }
 
   .cv { max-width: none; }
+
+  .cv h1,
+  .cv h3,
+  .cv p strong { color: #111; }
+
+  .cv p,
+  .cv ul li { color: #222; }
+
+  .cv h2 {
+    color: #444;
+    border-image: none;
+    border-bottom: 1px solid #bbb;
+    margin-top: 1.4rem;
+  }
 
   .cv-print-header {
     display: block;
     margin-bottom: 0.25rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border-strong);
+    border-bottom: 1px solid #bbb;
   }
 
   .cv-print-header h1 {
@@ -561,7 +364,7 @@ footer {
   .cv-print-header p {
     margin: 0;
     font-size: 0.85rem;
-    color: var(--muted);
+    color: #444;
   }
 
   .cv-print-header a {
@@ -583,47 +386,50 @@ footer {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   LANDING PAGE
+   DESIGN TOKENS + LANDING PAGE
    ═══════════════════════════════════════════════════════════════════════════
-   The landing page is its own composition. It opts out of the sidebar shell
-   (see the `isLanding` branch in +layout.svelte) and owns a masthead, a hero,
-   four bands and a footer card. Everything below is namespaced `--l-*` /
-   `.landing` / `.masthead` / `.sheet` / `.landing-footer`, so it can hold a
-   deeper, more saturated palette than the rest of the site without leaking
-   into the prose pages, the CV, or the print stylesheet.
+   The token block below is the site's ONLY palette — the masthead, the landing
+   bands, the reading column, the CV and the footer card all draw from it, and
+   the reading-column rules at the top of this file consume it too. Nothing here
+   is scoped to the landing page; see the naming note in the token block.
 
-   Two full compositions ship, split at 720px and 1080px — not one layout at
-   three sizes. See "Compact composition" near the bottom for what actually
-   changes structurally (nav mechanism, hero-graphic role, work interaction
-   model, card anatomy, CTA layout, footer layout).
+   Everything after the token block IS landing-specific. Two full compositions
+   ship, split at 720px and 1080px — not one layout at three sizes. See
+   "Compact composition" near the bottom for what changes structurally (nav
+   mechanism, hero-graphic role, work interaction model, card anatomy, CTA
+   layout, footer layout).
    ─────────────────────────────────────────────────────────────────────────── */
 
-/* ── Landing tokens ─────────────────────────────────────────
-   Contrast, recomputed against the surfaces that actually render. The hero
-   paints two *transparent* gradients over the page ground, so hero copy sits
-   on --l-ink-950, not on --l-ink-900; --l-ink-900 is only ever a fill inside
-   the work thumbs and the badge. Chips, icon tiles and preview panels sit on
+/* ── Design tokens ──────────────────────────────────────────
+   Contrast, computed directly from the hex values below (WCAG 2.x relative
+   luminance) against the surfaces that actually render. The hero paints two
+   *transparent* gradients over the page ground, so hero copy sits on
+   --l-ink-950, not on --l-ink-900; --l-ink-900 is only ever a fill inside the
+   work thumbs and the badge. Chips, icon tiles and preview panels sit on
    --l-ink-700; the footer card and the nav sheet sit on --l-ink-850.
 
+   To regenerate rather than trust this table, recompute from the hex — every
+   row is reproducible from the values immediately below it.
+
                                     DARK     LIGHT    min
-     --l-fg           on ink-950   16.72     15.94    4.5
-     --l-fg           on ink-800   14.72     17.57    4.5
-     --l-fg           on ink-850   14.98     17.28    4.5
-     --l-fg-muted     on ink-950    8.30      7.28    4.5   ← body copy, ≥7
-     --l-fg-muted     on ink-800    7.31      8.02    4.5
-     --l-fg-muted     on ink-700    6.73      7.01    4.5
-     --l-fg-muted     on ink-850    7.44      7.89    4.5   ← sheet nav
-     --l-fg-dim       on ink-700    5.24      4.85    4.5   ← tech chips
-     --l-fg-dim       on ink-850    5.80      5.46    4.5   ← sheet index, ©
-     --l-fg-dim       on ink-950    6.47      5.03    4.5
-     --l-accent-text  on ink-950    7.79      6.02    4.5
-     --l-accent-text  on ink-800    6.86      6.64    4.5
-     --l-accent-text  on ink-850    6.98      6.53    4.5
-     #fff             on accent     5.17      5.17    4.5
-     #fff             on accent-hov 4.81      6.60    4.5   ← do not lighten dark
-     --l-line-inter.  on ink-950    3.84      3.33    3.0   ← SC 1.4.11 borders
-     --l-focus        on ink-950   11.44      6.02    3.0
-     --l-focus        on ink-800   10.07      6.64    3.0
+     --l-fg           on ink-950    16.72    16.08    4.5
+     --l-fg           on ink-800    14.69    17.73    4.5
+     --l-fg           on ink-850    15.11    17.44    4.5
+     --l-fg-muted     on ink-950     8.30     7.28    4.5   ← body copy, ≥7
+     --l-fg-muted     on ink-800     7.30     8.02    4.5
+     --l-fg-muted     on ink-700     6.72     7.01    4.5
+     --l-fg-muted     on ink-850     7.50     7.89    4.5   ← sheet nav
+     --l-fg-dim       on ink-700     5.24     4.85    4.5   ← tech chips
+     --l-fg-dim       on ink-850     5.85     5.46    4.5   ← sheet index, ©
+     --l-fg-dim       on ink-950     6.47     5.04    4.5
+     --l-accent-text  on ink-950     7.79     6.02    4.5
+     --l-accent-text  on ink-800     6.85     6.64    4.5
+     --l-accent-text  on ink-850     7.04     6.53    4.5
+     --l-line-inter.  on ink-950     3.83     3.33    3.0   ← SC 1.4.11 borders
+     --l-focus        on ink-950    11.44     6.02    3.0
+     --l-focus        on ink-800    10.05     6.64    3.0
+     #fff             on accent      5.17     5.17    4.5
+     #fff             on accent-hov  4.81     6.60    4.5   ← do not lighten dark
 
    Two rules follow, and neither is negotiable:
    · --l-accent is a FILL, never a text colour. #2563EB on the navy ground is
@@ -632,13 +438,25 @@ footer {
      sheet's row indices and the copyright line only. Its tightest pairing is
      4.85:1, and that margin is the reason it is scoped that narrowly.
 
-   Note on naming: these tokens are *prefixed*, not scoped. They live on :root
-   because four sibling subtrees (.landing, .masthead, .sheet, .landing-footer)
-   need them, and the --l-/--rb- prefixes are what keeps them from colliding
-   with the prose-page palette above. The unprefixed scales below (--s-*,
-   --fs-*, --r-*, --e1..3, --ease-*, --page-*, --band-gap) are likewise global;
-   nothing outside the landing page consumes them today, but they are not
-   fenced off, so check before reusing a name. */
+   Naming: these tokens are *prefixed*, not scoped. They live on :root because
+   every subtree on the site needs them, and the --l-/--rb- prefixes exist to
+   keep them legible as a set, not to fence them off. The unprefixed scales
+   (--s-*, --fs-*, --r-*, --e1..3, --ease-*, --page-*, --band-gap, --font-*)
+   are global for the same reason. There is no second palette to collide with.
+
+   The two schemes are the same design in two lights, not one recipe rescaled.
+   Where they deliberately diverge, and why:
+   · Elevation — dark builds depth from border luminance and an inset top
+     highlight; a drop shadow on a near-black field is decoration that does
+     nothing. Light uses a conventional shadow ladder.
+   · The ribbon — on a dark ground the RIM carries depth and the specular crest
+     is the brightest thing on screen (10.75:1 vs ground). On a near-white
+     ground there is no headroom above the ground for a crest, so gloss is
+     carried by a DARK core instead: the light ramp's deepest stop runs 11.22:1
+     against the page and the crest only 1.60:1. That is why --rb-shade and
+     --rb-rim-alpha are per-scheme rather than shared. Chrome reads on white
+     paper because the highlight is ringed by very dark tone, not because the
+     highlight is bright. */
 
 :root {
   /* Ground */
@@ -669,15 +487,15 @@ footer {
 
   /* Hero-graphic ramp (see HeroRibbon.svelte — var() is not honoured inside
      SVG presentation attributes, so the ribbon is coloured by class from here). */
-  --rb-0: #2e56a8;
-  --rb-1: #3a6bc8;
-  --rb-2: #4a82e4;
-  --rb-3: #79a9f7;
-  --rb-crest: #dbe9ff;
-  --rb-4: #3d6fd0;
-  --rb-5: #2a4e9e;
+  --rb-0: #16306e;
+  --rb-1: #2a4e9c;
+  --rb-2: #3b6bcb;
+  --rb-3: #6b9df2;
+  --rb-crest: #9fc4fb;
+  --rb-4: #2d569f;
+  --rb-5: #132a63;
   --rb-occlusion: #172a58;
-  --rb-shade: 0.45;
+  --rb-shade: 0.70;
   --rb-rim: #ffffff;
   --rb-rim-alpha: 0.25;
   --rb-bloom: #6d9af0;
@@ -707,7 +525,18 @@ footer {
   --ease-spring:    cubic-bezier(0.34, 1.40, 0.64, 1); /* hover lift, press  */
   --ease-ambient:   cubic-bezier(0.37, 0, 0.63, 1);    /* looping breathe    */
 
-  /* Type — six roles, plus the small utility roles the masthead needs. */
+  /* Type. System stacks only — the Privacy Policy commits the site to loading
+     no third-party font (see CLAUDE.md), so this is a policy boundary, not a
+     preference. */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Site-wide: lets scrollbars and form controls follow the OS scheme, which
+     the palette already does. Print is unaffected — the @media print block
+     sets an explicit white ground. */
+  color-scheme: light dark;
+
+  /* Six roles, plus the small utility roles the masthead needs. */
   --fs-display:  clamp(3.25rem, 1.85rem + 4.35vw, 5rem);
   --fs-lead:     clamp(1.0625rem, 0.95rem + 0.35vw, 1.1875rem);
   --fs-h2:       1.375rem;
@@ -770,57 +599,17 @@ footer {
   }
 }
 
-/* ── Landing: page ground ──────────────────────────────────
-   The landing page paints the whole viewport, so the ground has to reach past
-   <main> onto the document — otherwise overscroll reveals the prose-page --bg
-   behind it. :has() is the least invasive way to do that without the layout
-   stamping a class onto <body>. */
-html:has(.landing),
-html:has(.landing) body {
-  background: var(--l-ink-950);
-  color: var(--l-fg);
-}
-
-.landing,
-.masthead,
-.sheet,
-.landing-footer {
-  --focus-ring: var(--l-focus);
-}
-
-/* Focus is a designed element here, not the inherited blue ring: a --l-focus
-   halo, held 2px clear of the control so its adjacency is always the page
-   field (10.87:1 dark / 6.35:1 light) and never the blue button fill, plus a
-   dark inner separator so it reads on both. */
-.landing :focus-visible,
-.masthead :focus-visible,
-.sheet :focus-visible,
-.landing-footer :focus-visible {
-  outline: 2px solid var(--l-focus);
-  outline-offset: 2px;
-}
-
-.landing ::selection,
-.masthead ::selection,
-.sheet ::selection,
-.landing-footer ::selection {
-  background: var(--l-accent);
-  color: var(--l-on-accent);
-}
-
-html:has(.landing) {
-  scrollbar-color: var(--l-line-hover) var(--l-ink-950);
-}
-
-/* main's global 1040px cap and padding belong to the prose shell. */
+/* ── Landing: page ground ────────────────────────────────── */
+/* The landing page's bands are full-bleed, so it opts out of the reading
+   column's max-width and gutters entirely and each band re-applies them. */
 main.landing {
+  flex: 1;
   max-width: none;
   width: 100%;
   padding: 0;
   margin: 0;
 }
 
-.landing-shell,
 .masthead-band,
 .masthead-rail > ul,
 .band,
@@ -1219,6 +1008,8 @@ main.landing {
   width: clamp(560px, 52vw, 860px);
   aspect-ratio: 1;
   pointer-events: none;
+  -webkit-mask-image: linear-gradient(100deg, transparent 0%, #000 26%, #000 100%);
+  mask-image: linear-gradient(100deg, transparent 0%, #000 26%, #000 100%);
 }
 
 .hero-graphic {
@@ -1848,12 +1639,15 @@ main.landing {
     background: none;
   }
   .hero-figure {
-    top: -14dvh;
-    right: -44vw;
+    /* Dropped from -14dvh: with the coil's mass below the eyebrow rather than
+       behind it, the scrim can start light and the graphic reads at close to
+       its full opacity instead of being dimmed to ~0.18 effective. */
+    top: 4dvh;
+    right: -46vw;
     bottom: auto;
     translate: none;
-    width: 150vw;
-    opacity: 0.34;
+    width: 152vw;
+    opacity: 0.40;
     filter: none;
     z-index: 0;
   }
@@ -1870,9 +1664,9 @@ main.landing {
     z-index: 1;
     background: linear-gradient(
       180deg,
-      color-mix(in srgb, var(--l-ink-950) 48%, transparent) 0%,
-      color-mix(in srgb, var(--l-ink-950) 70%, transparent) 38%,
-      var(--l-ink-950) 76%
+      color-mix(in srgb, var(--l-ink-950) 22%, transparent) 0%,
+      color-mix(in srgb, var(--l-ink-950) 62%, transparent) 44%,
+      var(--l-ink-950) 80%
     );
     pointer-events: none;
   }
@@ -1886,6 +1680,8 @@ main.landing {
 
   /* ── bands ── */
   .band-head { gap: var(--s-4); margin-bottom: var(--s-8); }
+  /* Full-bleed: the rule runs off the right edge of the viewport. */
+  .band-rule { margin-right: calc(var(--page-margin) * -1); }
 
   /* ── what I do: icon moves inline, beside the heading ── */
   .stream-row { grid-template-columns: 1fr; }
@@ -1987,6 +1783,7 @@ main.landing {
   /* Motion is removed, not shortened. The ribbon stays: its bands are authored
      at their final angles, so the resting composition is the designed one. */
   .landing, .landing *,
+  main.page, main.page *,
   .masthead, .masthead *,
   .sheet, .sheet *,
   .landing-footer, .landing-footer * {

@@ -3,14 +3,14 @@
 	import { page } from '$app/stores';
 	import { onNavigate } from '$app/navigation';
 	import { site } from '$lib/site';
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import Footer from '$lib/components/Footer.svelte';
+	import SiteHeader from '$lib/components/SiteHeader.svelte';
+	import LandingFooter from '$lib/components/LandingFooter.svelte';
 
 	let { children } = $props();
 
-	// The landing page is its own composition — a full-bleed header, hero and
-	// footer card (see docs/design-system.md → "Landing page"). Every other
-	// route keeps the sidebar rail + centred content shell.
+	// One shell for the whole site: the masthead and the footer card wrap every
+	// route. The landing page renders its own <main> because its bands are
+	// full-bleed; every other route gets the centred reading column below.
 	const isLanding = $derived($page.url.pathname === '/');
 
 	// Reproduce the old transitions.js 220ms cross-fade via the View
@@ -40,17 +40,14 @@
 	<link rel="canonical" href={site.url + $page.url.pathname} />
 </svelte:head>
 
+<SiteHeader />
+
 {#if isLanding}
 	{@render children()}
 {:else}
-	<main>
-		<div class="home-layout">
-			<Sidebar />
-			<div class="page-content">
-				{@render children()}
-			</div>
-		</div>
+	<main class="page">
+		{@render children()}
 	</main>
-
-	<Footer />
 {/if}
+
+<LandingFooter />

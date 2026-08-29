@@ -17,64 +17,89 @@ no serif body text, no long-form essay column as the default.
 
 ## Tokens (`:root` in `app.css`)
 
+**One token layer drives the whole site** — the masthead, the landing bands,
+the reading column, the CV and the footer card. There is no second palette.
+It lives under the `DESIGN TOKENS + LANDING PAGE` banner, with a contrast
+table above it (see "Tokens" under "Landing page" below for the detail).
+
 - **Type** — `--font-sans` (system UI stack) for everything; `--font-mono`
   (`ui-monospace` stack) for eyebrows, labels, section headings, tech chips,
-  and the monogram. No serif anywhere.
-- **Surfaces / lines** — `--bg`, `--surface`, `--surface-2`, `--border`,
-  `--border-strong`.
-- **Accent** — `--accent` (blue) + `--accent-2` (cyan) drive the gradient
-  monogram, hero top-rule (`--accent-line`), and `--accent-soft` tints.
-- **Depth** — `--shadow-sm|md|lg` give cards and buttons elevation.
-- **Geometry** — `--radius` (8px) for controls, `--radius-lg` (16px) for
-  cards / panels; `--sidebar-w` for the rail.
+  the sheet's row indices and the monogram lockup. No serif anywhere.
+- **Ground** — `--l-ink-950` (page) → `--l-ink-700` (raised), five steps.
+- **Lines** — `--l-line`, `--l-line-strong`, `--l-line-hover`, and
+  `--l-line-interactive` for control boundaries (which have their own 3:1
+  floor under WCAG 1.4.11).
+- **Text** — `--l-fg`, `--l-fg-muted` (body), `--l-fg-dim` (chips and meta
+  only — never anything a visitor must read).
+- **Accent** — `--l-accent` is a **fill**, never text; `--l-accent-text` is the
+  text blue; `--l-focus` is the focus ring.
+- **Depth** — `--e1`–`--e3`. On dark these are borders plus an inset top
+  highlight; on light, a conventional shadow ladder.
+- **Scales** — `--s-1`…`--s-15` (4px base), `--r-xs`…`--r-full`,
+  `--fs-display`…`--fs-name`, four `--ease-*` curves, `--page-max` /
+  `--page-margin`.
 
-Dark mode is a contrast-tuned Tokyo Night palette in a single
-`@media (prefers-color-scheme: dark)` block that overrides the tokens. The
-landing page adds a second, independent `--l-*` token layer on top of this —
-see "Landing page" below.
+Light and dark are one design in two lights: a single
+`@media (prefers-color-scheme: dark)` block re-points the palette, and the two
+places the schemes deliberately diverge are documented at the token block.
 
 ## Layout
 
-`src/routes/+layout.svelte` branches on the route:
+`src/routes/+layout.svelte` wraps **every** route in one shell — `SiteHeader`
+(the masthead) above, `LandingFooter` (the footer card) below. The old sidebar
+rail is gone; navigation lives in the masthead on every page, so a visitor's
+mental model doesn't change when they leave the home page.
 
-- **The landing page (`/`) opts out of the shell** and renders its own masthead,
-  hero, bands and footer card — see "Landing page" below.
-- **Every other route** is wrapped in `.home-layout` — a two-column grid: a
-  sticky **identity rail** (`Sidebar.svelte`: gradient monogram, name,
-  `site.role`, tagline, primary nav with an **active** state via `aria-current`)
-  beside `.page-content`. Below ~760px the grid collapses to one column and the
-  nav becomes a horizontal row.
+Between them the layout branches once:
+
+- **The landing page (`/`)** renders its own `<main class="landing">`, because
+  its bands are full-bleed and each one re-applies the page gutters itself.
+- **Every other route** gets `<main class="page">` — a single centred reading
+  column (`--page-max` wide, `--page-margin` gutters) whose content is
+  left-aligned to the same rail as the masthead brand and the hero headline.
 
 ## Component vocabulary
 
-- **`.hero`** — gradient panel with a mono `.hero-eyebrow`, oversized tight
-  headline, muted lead, and a `.btn` row. `.btn-arrow` adds the nudging arrow.
-- **`.stream-card`** — elevated card, `.stream-tag` mono pill label, hover-lift.
-- **Selected work** — lives on the landing page now (`WorkRow.svelte`); see
-  "Landing page" below. The old auto-rotating `ProjectCarousel.svelte` and its
-  `<noscript>` grid fallback in `app.html` were removed with it.
-- **`.page-content h2`** — mono uppercase section eyebrow (shared by all pages).
-- **`.prose` / `.post-content`** — sans-serif long-form for Services,
-  Capabilities, and the legal pages. `.capability-data` is a two-column
-  label/value data sheet.
-- **`.cv`** — résumé layout reusing the mono section-heading pattern. Opens
-  with a `.cv-actions` row holding a `.btn btn-primary` download link to
+Shared by every route:
+
+- **`.masthead`** — the brand lockup over the nav rail, with `.rail-dot`
+  marking the current page. See "Landing page" for the compact behaviour.
+- **`.landing-footer`** — the footer card: lockup, legal links, social buttons,
+  a divider and the copyright line.
+- **`.button`** (`-primary` / `-outline`) — the only button family. The CV's
+  download link uses it.
+
+The reading column (Services, Capabilities, CV, Contact, the legal pages, the
+error page):
+
+- **`.prose` / `.prose-header` / `.post-content`** — sans-serif long-form at a
+  68ch measure. The header's rule is the same fading hairline the landing
+  page's band labels sit on.
+- **`.capability-data`** — a label/value data sheet on the same card surface as
+  `.stream-card`.
+- **`.cv`** — résumé layout reusing the mono section-heading pattern, opening
+  with a `.cv-actions` row holding a `.button button-primary` download link to
   `/cv.pdf`. That PDF is **generated from this page at build time**
   (`pnpm build:pdf` → `scripts/generate_cv_pdf.mjs` prints the prerendered
   `/cv/` with headless Chromium), so page and PDF can't drift. The
-  `@media print` block at the end of `app.css` is what the PDF renders:
-  sidebar/footer/button hidden, and the screen-hidden `.cv-print-header`
-  (name · role · email · site) shown in their place.
+  `@media print` block near the top of `app.css` is what the PDF renders:
+  masthead / sheet / footer / download button hidden, an explicit light ground
+  forced over the site-wide `color-scheme`, and the screen-hidden
+  `.cv-print-header` (name · role · email · site) shown in their place.
+
+The landing page's own vocabulary is listed under "Landing page" below. The old
+auto-rotating `ProjectCarousel.svelte`, its `<noscript>` grid fallback in
+`app.html`, and the `Sidebar.svelte` / `Footer.svelte` rail were all removed
+with the redesign.
 
 ## Landing page
 
 The landing page (`src/routes/+page.svelte`) is a **separate composition** from
-the rest of the site. `+layout.svelte` checks the pathname and renders it
-without the sidebar shell, so it owns its own masthead, hero, section bands and
-footer card. Everything it needs is namespaced `--l-*` / `.landing` /
-`.masthead` / `.sheet` / `.landing-footer` in `app.css`, under the
-`LANDING PAGE` banner — it can hold a deeper, more saturated palette than the
-prose pages without leaking into them, the CV, or the print stylesheet.
+the rest of the site. It shares the site's masthead and footer
+card, but renders its own full-bleed `<main class="landing">` instead of the
+reading column, so it owns the hero and the section bands. Its rules live in
+`app.css` after the token block, under the `DESIGN TOKENS + LANDING PAGE`
+banner.
 
 **Two compositions ship, not one responsive layout.** They split at 720px and
 1080px, and what changes between them is structural:
@@ -89,24 +114,56 @@ prose pages without leaking into them, the CV, or the print stylesheet.
 | CTAs | inline pair | inline pair | full-width stacked, 52px |
 | Footer links | inline row | inline row | 2×2 grid (single column below 400px) |
 
+### Focal hierarchy
+
+**The headline is the subject; the graphic is the setting.** On a page where an
+80px headline and an 860px graphic share the fold, that has to be stated and
+then built, not assumed. Three things carry it:
+
+- The graphic is **cropped by the viewport** — it bleeds past the right page
+  margin and its lower bands duck below the hero. A subject would be whole.
+- Its leading edge **dissolves into the ground** as it approaches the type
+  (`mask-image` on `.hero-figure`), so it emerges from the page rather than
+  sitting on top of it.
+- It carries **no information**: `aria-hidden`, no alt text, no role. Removing
+  it costs the page nothing but atmosphere.
+
+The crest is the single brightest pixel on the dark page (10.75:1 against the
+ground) — but over a tiny area, and the coil's *mass* sits near the ground
+(1.16:1 at the ramp's dark end). Brightness without area is a glint, not a
+focal point. Motion agrees: the accent words colouring in at 620ms is the last
+beat of the entrance, after the graphic has already settled.
+
 ### Tokens
 
-The `--l-*` block carries its own ground/line/text/accent scales plus spacing
+The token block carries the ground/line/text/accent scales plus spacing
 (`--s-1`…`--s-15`, 4px base), radii (`--r-xs`…`--r-full`), four easing curves
 (`--ease-out-expo`, `--ease-out-quart`, `--ease-spring`, `--ease-ambient`), a
 type scale (`--fs-display` … `--fs-role`) and a three-step elevation ladder.
-A **computed contrast table** sits as a comment directly above the block and
-covers both schemes; keep it accurate when you touch a colour. Two rules the
-table encodes:
+A **contrast table** sits as a comment directly above the block, covering both
+schemes. Every row is computed from the hex values immediately below it, so it
+can be recomputed rather than trusted — do that when you touch a colour. Two
+rules the table encodes:
 
 - `--l-accent` is a **fill**, never text — `#2563EB` on the navy field is
   2.66:1. Accent text is always `--l-accent-text`.
 - `--l-fg-dim` never carries anything a visitor must read: chips, indices and
   the copyright line only.
 
-On the dark scheme, depth comes from **border luminance plus an inset top
-highlight** rather than drop shadows — a shadow on a near-black field is
-decoration that does nothing. The light twin uses a conventional shadow ladder.
+The two schemes are **the same design in two lights**, not one recipe rescaled.
+They diverge in two places, deliberately:
+
+- **Elevation.** Dark builds depth from border luminance plus an inset top
+  highlight — a shadow on a near-black field is decoration that does nothing.
+  Light uses a conventional shadow ladder.
+- **The ribbon.** On a dark ground the rim carries depth and the specular crest
+  is the brightest thing on screen. On a near-white ground there is no headroom
+  above the ground for a crest, so gloss is carried by a **dark core** instead:
+  the light ramp's deepest stop runs 11.22:1 against the page and its crest only
+  1.60:1. Chrome reads on white paper because the highlight is *ringed by very
+  dark tone*, not because the highlight is bright. Get this wrong — a crest at
+  ~1.1:1 against the page — and the highlight stops reading as a highlight and
+  starts reading as a hole punched through the band.
 
 ### Hero graphic
 
@@ -139,18 +196,28 @@ backgrounded, and stops entirely under reduced motion.
 
 On compact viewports the graphic sits *behind* the hero copy, so the binding
 contrast case is the **light** scheme: the eyebrow is dark accent text, and what
-threatens it is the ribbon's dark bands rather than its lit ones. The scrim
-therefore does real work from 0% rather than fading in. Measured worst case
-under the live composite (text hidden, background sampled pixel by pixel):
+threatens it is the ribbon's dark bands rather than its lit ones.
+
+The fix that worked was **compositional, not a dimmer switch**. Dropping the
+crop so the coil's mass sits *below* the eyebrow rather than behind it let the
+scrim start light (22% at the top instead of 48%) — so the graphic reads at a
+higher opacity than before *and* the contrast improved. Fading the atmosphere
+out until it passes is the move to avoid; it buys the number and loses the page.
+
+Measured worst case under the live composite:
 
 | | 375×667 | 320×568 |
 | --- | --- | --- |
-| headline, dark | 14.8:1 | 14.5:1 |
-| headline, light | 13.3:1 | 13.2:1 |
-| eyebrow, dark | 7.2:1 | 7.0:1 |
-| eyebrow, light | 4.9:1 | 4.9:1 |
+| headline, dark | 12.3:1 | 12.0:1 |
+| headline, light | 10.8:1 | 10.7:1 |
+| eyebrow, dark | 7.8:1 | 7.7:1 |
+| eyebrow, light | 6.0:1 | 6.0:1 |
 
-Re-measure these if the scrim, the graphic's opacity, or its crop changes.
+**Method** (re-run it if the scrim, the graphic's opacity or its crop changes):
+set `visibility: hidden` on `.hero-title` and `.eyebrow` so the layout is
+unchanged but the type is gone, screenshot each element's bounding box, and
+compare the text colour against the *extreme* background luminance across every
+pixel in that box — not against the token the ground nominally is.
 
 ### Motion
 
@@ -168,13 +235,31 @@ Re-measure these if the scrim, the graphic's opacity, or its crop changes.
   delegated, rAF-throttled listener per row writing `--mx`/`--my`. The highlight
   is a background gradient, so it costs no compositor layer; it simply never
   paints for coarse pointers or under reduced motion.
-- The nav rail's active marker **slides to whichever item the pointer is over**
-  and returns to the current page on leave. It needs measurement, so it is
-  mount-gated: until then — and permanently, without JavaScript — a static CSS
-  dot marks the active item instead.
+- The nav rail's active marker **slides to whichever item the pointer is over
+  or the keyboard has focused** — both, not just the pointer — and returns to
+  the current page on leave. Its measurement is rAF-batched, like every other
+  layout read on the page. It needs measurement at all, so it is mount-gated:
+  until then — and permanently, without JavaScript — a static CSS dot marks the
+  active item instead.
 - `prefers-reduced-motion` **removes** motion rather than shortening it, and the
   ribbon's pointer listener is never attached — re-evaluated on `change`, so
   toggling the OS setting takes effect without a reload.
+
+### The reading column
+
+Services, Capabilities, CV, Contact and the three legal pages share
+`<main class="page">` inside the same shell. They keep the markup they always
+had — `.prose` / `.prose-header` / `.post-content`, and `.cv` — and pick up the
+token layer instead of a separate palette: the `.prose-header` and `.cv h2`
+rules sit on the same fading hairline the landing page's band labels use, and
+`.capability-data` is the same card as `.stream-card`. Measure is capped at
+68ch, left-aligned to the masthead's rail rather than centred, so the eye keeps
+one vertical edge across the whole site.
+
+The CV's `@media print` block is what `scripts/generate_cv_pdf.mjs` renders, so
+it hides `.masthead` / `.sheet` / `.landing-footer` and forces an explicit
+light ground — the site-wide `color-scheme: light dark` must never reach the
+PDF. Verify with `emulateMedia('print')` after touching either.
 
 ### Component vocabulary
 
@@ -197,9 +282,9 @@ screenshots** — nothing on the page purports to show a real client site, and t
 
 The identity is a **JH ligature** — the J's stem is shared with the H's left
 post and hooks underneath — in white on the blue→cyan brand gradient, matching
-`--accent`/`--accent-2`. The same mark appears in the browser tab, the sidebar
-rail (inlined as an SVG glyph in `Sidebar.svelte`), and the logo lockup, so the
-brand reads consistently everywhere.
+the brand blue and cyan. The same mark appears in the browser tab, the masthead
+and footer lockups (inlined as an SVG glyph in `Monogram.svelte`), and the logo
+lockup, so the brand reads consistently everywhere.
 
 All assets are hand-authored SVG rendered locally with Inkscape + ImageMagick
 (no web icon services), and live in `static/`:
@@ -221,10 +306,11 @@ the multi-res `.ico`).
 
 ## Accessibility
 
-- Global `:focus-visible` ring (keyboard only). The landing page overrides it
-  with a `--l-focus` ring at 2px offset plus a dark inner separator, so the
-  indicator reads on both the deep field and the blue button fill.
-- One `<h1>` per page: the sidebar brand is a link, not a heading, so each
+- Global `:focus-visible` ring (keyboard only): `--l-focus` at 2px with a 2px
+  offset, so the ring's inner edge always sits on the page or card field
+  (11.4:1 / 10.1:1 dark, 6.0:1 / 6.6:1 light) rather than on a blue button
+  fill. No `border-radius` in that rule — it would reshape the element itself.
+- One `<h1>` per page: the masthead brand is a link, not a heading, so each
   page's own `<h1>` (hero / prose-header / CV) is the sole top heading.
 - `prefers-reduced-motion` disables hover transforms, view-transition
   cross-fades, and smooth scroll.
