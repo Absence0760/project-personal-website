@@ -513,6 +513,10 @@ main.page {
   --s-6: 24px;  --s-7: 28px;  --s-8: 32px;  --s-9: 40px;  --s-10: 48px;
   --s-11: 64px; --s-12: 80px; --s-13: 96px; --s-14: 128px; --s-15: 160px;
 
+  /* Block padding for the nav sheet. Tightened on short viewports (landscape
+     phones) so the sheet still fits without scrolling — see the sheet rules. */
+  --sheet-pad-block: var(--s-12);
+
   /* Radii. Nested radii follow r_inner = r_outer − padding where the maths
      stays sane, and are clamped optically where it does not (a 20px card with
      28px padding would give a negative inner radius; 16px reads correct). */
@@ -806,9 +810,20 @@ main.landing {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Landscape phones are ~320-430px tall and the sheet's own content is ~480px.
+     Plain `center` overflows in BOTH directions and a flex container cannot be
+     scrolled back to overflow it centred away, so the rows nearest the edges
+     become unreachable. `safe center` degrades to flex-start exactly when the
+     content stops fitting, which is the only direction that stays scrollable.
+     Declared after `center` so a browser without it keeps the safe fallback. */
+  justify-content: safe center;
   gap: var(--s-10);
   height: 100dvh;
-  padding: max(var(--s-12), env(safe-area-inset-top))
+  overflow-y: auto;
+  /* The page behind is position:fixed while the sheet is open, but a trackpad
+     fling that reaches the end of the sheet would still chain to the document. */
+  overscroll-behavior: contain;
+  padding: max(var(--sheet-pad-block), env(safe-area-inset-top))
            max(var(--page-margin), env(safe-area-inset-right))
            max(var(--s-6), env(safe-area-inset-bottom))
            max(var(--page-margin), env(safe-area-inset-left));
@@ -907,6 +922,19 @@ main.landing {
 @keyframes sheet-row {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: none; }
+}
+
+/* Landscape phones. The sheet is reachable at any height thanks to
+   `overflow-y: auto` + `safe center` above; this block is what keeps it from
+   needing to scroll at all at the sizes people actually turn a phone to.
+   Rows stay >=44px, so WCAG 2.5.8 target size still holds. */
+@media (max-height: 500px) {
+  .sheet {
+    --sheet-pad-block: var(--s-10);
+    gap: var(--s-5);
+  }
+  .sheet-nav a { height: 44px; }
+  .sheet-foot { gap: var(--s-2) var(--s-5); }
 }
 
 /* ── Landing: hero ─────────────────────────────────────────

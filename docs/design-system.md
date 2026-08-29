@@ -267,7 +267,12 @@ PDF. Verify with `emulateMedia('print')` after touching either.
 `.sheet` (the full-screen nav overlay: its own `.sheet-close` button — the
 masthead trigger is *covered* by the open sheet, so it cannot double as the
 close control — plus a focus trap, Escape, `inert` on the page behind, and
-scroll position preserved and restored) · `.hero` / `.hero-title` /
+scroll position preserved and restored; it is also a **scroll container**, and
+centres with `justify-content: safe center` rather than `center`, because a
+landscape phone is shorter than the sheet's own content and plain `center`
+overflows rows out of reach in a container that cannot be scrolled back —
+`@media (max-height: 500px)` then tightens `--sheet-pad-block`, the gap and the
+row height so it usually needs no scrolling at all) · `.hero` / `.hero-title` /
 `.hero-accent` ·
 `.band` + `.band-head` / `.band-label` / `.band-rule` (a **fading** hairline) /
 `.band-action` · `.button` (`-primary` / `-outline`) · `.stream-card` ·
