@@ -8,6 +8,11 @@
 
 	let { children } = $props();
 
+	// The landing page is its own composition — a full-bleed header, hero and
+	// footer card (see docs/design-system.md → "Landing page"). Every other
+	// route keeps the sidebar rail + centred content shell.
+	const isLanding = $derived($page.url.pathname === '/');
+
 	// Reproduce the old transitions.js 220ms cross-fade via the View
 	// Transitions API. Progressive enhancement: browsers without the API (or
 	// users who prefer reduced motion) simply hard-swap. SvelteKit's client
@@ -35,13 +40,17 @@
 	<link rel="canonical" href={site.url + $page.url.pathname} />
 </svelte:head>
 
-<main>
-	<div class="home-layout">
-		<Sidebar />
-		<div class="page-content">
-			{@render children()}
+{#if isLanding}
+	{@render children()}
+{:else}
+	<main>
+		<div class="home-layout">
+			<Sidebar />
+			<div class="page-content">
+				{@render children()}
+			</div>
 		</div>
-	</div>
-</main>
+	</main>
 
-<Footer />
+	<Footer />
+{/if}

@@ -13,6 +13,20 @@ export interface Project {
 	url?: string;
 	blurb: string;
 	tech: readonly string[];
+	/**
+	 * Short uppercase category shown on the home page's work cards. It labels
+	 * what the project *is*, not who it was for — nothing here claims a client.
+	 */
+	kind: string;
+	/**
+	 * Home-page short blurb. The long `blurb` above is written for the carousel
+	 * on other surfaces; the cards need ~2 lines, not ~5.
+	 */
+	cardBlurb: string;
+	/** Surfaced in the home page's "Selected work" trio. */
+	featured?: boolean;
+	/** Decorative preview-panel treatment (see .work-thumb-* in app.css). */
+	thumb: 'analytics' | 'storefront' | 'ledger' | 'mobile' | 'terminal' | 'engine';
 }
 
 export const site = {
@@ -21,6 +35,8 @@ export const site = {
 	description:
 		'Custom web and software development for small businesses and government agencies.',
 	url: 'https://jaredhoward.com',
+	github: 'https://github.com/Absence0760',
+	email: 'contact@jaredhoward.com',
 
 	// Sidebar navigation (order matters).
 	nav: [
@@ -38,7 +54,12 @@ export const site = {
 			repo: 'https://github.com/Absence0760/project-flakey',
 			blurb:
 				'Self-hosted, CI-agnostic test-reporting dashboard — ingests Cypress, Playwright, Jest, and pytest results with flaky-test detection and multi-tenant Postgres row-level security.',
-			tech: ['SvelteKit', 'TypeScript', 'Node', 'PostgreSQL', 'Docker']
+			tech: ['SvelteKit', 'TypeScript', 'Node', 'PostgreSQL', 'Docker'],
+			kind: 'Developer tooling',
+			cardBlurb:
+				'Self-hosted test-reporting dashboard — ingests Cypress, Playwright, Jest and pytest results with flaky-test detection.',
+			featured: true,
+			thumb: 'analytics'
 		},
 		{
 			name: 'Meryl Green Designs',
@@ -46,14 +67,24 @@ export const site = {
 			url: 'https://merylgreendesigns.com',
 			blurb:
 				'E-commerce site for a design studio — gallery, PayFast checkout, and an owner-managed CMS. Serverless on AWS, provisioned end-to-end with Terraform.',
-			tech: ['SvelteKit', 'Hono', 'AWS Lambda', 'Sanity CMS', 'Terraform']
+			tech: ['SvelteKit', 'Hono', 'AWS Lambda', 'Sanity CMS', 'Terraform'],
+			kind: 'E-commerce',
+			cardBlurb:
+				'E-commerce site for a design studio — gallery, checkout and an owner-managed CMS, serverless on AWS.',
+			featured: true,
+			thumb: 'storefront'
 		},
 		{
 			name: 'Account Payables',
 			repo: 'https://github.com/Absence0760/project-account-payables',
 			blurb:
 				'Full-stack accounts-payable app — multi-tenant invoice intake and approvals behind a Python API and a SvelteKit front end.',
-			tech: ['SvelteKit', 'FastAPI', 'Python', 'PostgreSQL']
+			tech: ['SvelteKit', 'FastAPI', 'Python', 'PostgreSQL'],
+			kind: 'Internal tools',
+			cardBlurb:
+				'Full-stack accounts-payable app — multi-tenant invoice intake and approvals behind a Python API.',
+			featured: true,
+			thumb: 'ledger'
 		},
 		{
 			name: 'Cross-platform fitness app',
@@ -61,7 +92,11 @@ export const site = {
 			url: 'https://threkir.com',
 			blurb:
 				'Running, gym, and nutrition app — Flutter on iOS and Android with native Apple Watch and Wear OS companions, a SvelteKit web app, and a Supabase backend.',
-			tech: ['Flutter', 'SwiftUI', 'SvelteKit', 'Supabase']
+			tech: ['Flutter', 'SwiftUI', 'SvelteKit', 'Supabase'],
+			kind: 'Mobile',
+			cardBlurb:
+				'Running, gym and nutrition app — Flutter on iOS and Android with native watch companions.',
+			thumb: 'mobile'
 		},
 		{
 			name: 'disag',
@@ -69,14 +104,22 @@ export const site = {
 			url: 'https://disag.jaredhoward.com',
 			blurb:
 				'Disaggregates monthly streamflow into daily flows — a Python port of a legacy Delphi/Pascal hydrology model, with a SvelteKit web app and cross-platform CLI.',
-			tech: ['Python', 'SvelteKit', 'Terraform']
+			tech: ['Python', 'SvelteKit', 'Terraform'],
+			kind: 'Scientific computing',
+			cardBlurb:
+				'Disaggregates monthly streamflow into daily flows — a Python port of a legacy Delphi hydrology model.',
+			thumb: 'terminal'
 		},
 		{
 			name: 'Going Dark',
 			repo: 'https://github.com/Absence0760/project-gonedark',
 			blurb:
 				'Mobile-first RTS/FPS hybrid — command camps, then possess a single unit and go dark. Pre-production design plus a custom Rust game engine.',
-			tech: ['Rust', 'WGSL', 'Kotlin']
+			tech: ['Rust', 'WGSL', 'Kotlin'],
+			kind: 'Game engine',
+			cardBlurb:
+				'Mobile-first RTS/FPS hybrid — pre-production design plus a custom Rust game engine.',
+			thumb: 'engine'
 		}
 	] satisfies Project[],
 

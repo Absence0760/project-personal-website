@@ -47,4 +47,25 @@ describe('site metadata', () => {
 			}
 		}
 	});
+
+	it('every project carries the fields the landing-page work card renders', () => {
+		const treatments = ['analytics', 'storefront', 'ledger', 'mobile', 'terminal', 'engine'];
+		for (const project of site.projects) {
+			expect(project.kind.length).toBeGreaterThan(0);
+			expect(project.cardBlurb.length).toBeGreaterThan(0);
+			// The card gives the blurb roughly two lines; the long one is too long.
+			expect(project.cardBlurb.length).toBeLessThanOrEqual(140);
+			expect(project.tech.length).toBeGreaterThanOrEqual(3);
+			expect(treatments).toContain(project.thumb);
+		}
+	});
+
+	it('features exactly the three projects the landing-page work row shows', () => {
+		expect(site.projects.filter((project) => project.featured)).toHaveLength(3);
+	});
+
+	it('exposes the profile links the landing-page footer and menu use', () => {
+		expect(site.github).toMatch(/^https:\/\/github\.com\//);
+		expect(site.email).toMatch(/^[^@\s]+@jaredhoward\.com$/);
+	});
 });
