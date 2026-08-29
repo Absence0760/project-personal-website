@@ -263,7 +263,10 @@ PDF. Verify with `emulateMedia('print')` after touching either.
 
 ### Component vocabulary
 
-`.masthead` (+ `.lockup`, `.menu-button`, `.masthead-rail`, `.rail-dot`) ·
+`.masthead` (+ `.lockup`, `.menu-button`, `.masthead-rail`, `.rail-dot` — the
+dot is the *only* current-page marker once it measures itself, since `.has-dot`
+retires the CSS fallback, so it is hidden outright on routes outside `site.nav`
+rather than parked on "Home") ·
 `.sheet` (the full-screen nav overlay: its own `.sheet-close` button — the
 masthead trigger is *covered* by the open sheet, so it cannot double as the
 close control — plus a focus trap, Escape, `inert` on the page behind, and
@@ -278,6 +281,19 @@ row height so it usually needs no scrolling at all) · `.hero` / `.hero-title` /
 `.band-action` · `.button` (`-primary` / `-outline`) · `.stream-card` ·
 `.work-card` with its `.work-preview` panel and overlapping `.work-badge` ·
 `.chips` · `.landing-footer-card`.
+
+Below 720px the masthead is `position: fixed`, so **both** `<main>`s have to
+clear it: `main.landing` offsets by the bar alone (the hero carries its own top
+padding), `main.page` by the bar **plus** the reading column's `--s-9`. Miss the
+second and the first heading of every non-landing route renders under the blur —
+and on `/cv/` the download CTA's top edge falls inside the masthead, where the
+lockup wins the hit test and a tap navigates home.
+
+The scroll-reveal hidden state (`.js [data-reveal]`) is armed by an inline
+script in `app.html` and disarmed by a 2s watchdog unless the layout has set
+`data-hydrated`. That covers the "JS enabled but the bundle never ran" case — a
+dropped chunk or a blocking extension — which would otherwise leave a
+prerendered page present in the DOM but blank on screen.
 
 `WorkThumb.svelte` draws the preview panels. They are **abstractions, not
 screenshots** — nothing on the page purports to show a real client site, and the

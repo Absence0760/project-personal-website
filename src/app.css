@@ -1659,7 +1659,13 @@ main.landing {
   .masthead-hairline { opacity: 0; transition: opacity 180ms linear; }
   .masthead.is-scrolled .masthead-hairline { opacity: 1; }
 
+  /* Both <main>s clear the fixed bar. `main.landing` needs exactly the bar,
+     because the hero carries its own top padding; `main.page` needs the bar
+     PLUS the reading column's own --s-9, or the first heading sits under the
+     blur — and on /cv/ the download CTA's top edge lands inside the masthead,
+     where the lockup wins the hit test and a tap navigates home instead. */
   main.landing { padding-top: calc(56px + env(safe-area-inset-top)); }
+  main.page { padding-top: calc(56px + env(safe-area-inset-top) + var(--s-9)); }
 
   /* ── hero: the graphic becomes atmosphere ── */
   .hero {

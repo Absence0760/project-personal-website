@@ -9,13 +9,25 @@
 		<link rel="manifest" href="%sveltekit.assets%/manifest.webmanifest" />
 		<!-- Matches the page ground in each scheme, so the mobile browser chrome
 		     blends instead of announcing itself in brand blue. -->
-		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f7fa" />
-		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#16161e" />
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#eff3fa" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070b18" />
 		<!-- First-party, inline, blocking and sub-millisecond: it must land before
 		     first paint so the landing page's scroll-reveal can start hidden with
 		     no flash. Without JS the class never lands, `[data-reveal]` is never
 		     hidden, and the fully-composed page renders as prerendered. -->
-		<script>document.documentElement.classList.add('js')</script>
+		<script>
+			var root = document.documentElement;
+			root.classList.add('js');
+			// `.js [data-reveal] { opacity: 0 }` is armed here but only ever cleared
+			// by `use:reveal` after hydration. If the module bundle never runs — a
+			// dropped hashed chunk, a script-blocking extension or proxy, a parse
+			// error — the prerendered content is in the DOM but invisible forever.
+			// The layout sets `data-hydrated` on mount; if that hasn't happened,
+			// disarm so the page falls back to the fully-composed no-JS rendering.
+			setTimeout(function () {
+				if (!root.hasAttribute('data-hydrated')) root.classList.remove('js');
+			}, 2000);
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

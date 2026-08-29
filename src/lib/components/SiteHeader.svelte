@@ -20,7 +20,14 @@
 	let trigger = $state<HTMLButtonElement | null>(null);
 
 	const current = $derived($page.url.pathname);
-	const activeIndex = $derived(Math.max(0, site.nav.findIndex((item) => item.href === current)));
+	// `null` for a route that isn't in the rail at all — the legal pages and the
+	// 404. Clamping those to 0 would slide the dot onto "Home", and since
+	// `.has-dot` retires the CSS fallback marker the dot is the *only* thing on
+	// screen saying which page you're on: it would actively lie.
+	const activeIndex = $derived.by(() => {
+		const i = site.nav.findIndex((item) => item.href === current);
+		return i === -1 ? null : i;
+	});
 
 	// The rail's active marker is a single dot that slides to whichever item the
 	// pointer is over and returns to the current page on leave — so the mark
@@ -32,8 +39,12 @@
 	let dotReady = $state(false);
 
 	let dotFrame = 0;
-	function moveDot(index: number) {
+	function moveDot(index: number | null) {
 		if (dotFrame) cancelAnimationFrame(dotFrame);
+		if (index === null) {
+			dotReady = false;
+			return;
+		}
 		dotFrame = requestAnimationFrame(() => {
 			dotFrame = 0;
 			const link = rail?.querySelectorAll<HTMLElement>('.masthead-rail a')[index];
@@ -126,7 +137,11 @@
 			body.style.position = prior.position;
 			body.style.top = prior.top;
 			body.style.width = prior.width;
-			window.scrollTo(0, y);
+			// `behavior: 'instant'` is load-bearing: `html` carries
+			// `scroll-behavior: smooth`, so a bare scrollTo(0, y) *animates* the
+			// restore — the page snaps to the top and glides back down every
+			// time the sheet closes.
+			window.scrollTo({ top: y, left: 0, behavior: 'instant' });
 		};
 	});
 </script>

@@ -8,6 +8,14 @@
 
 	let { children } = $props();
 
+	// Tells the inline bootstrap in `app.html` that hydration happened, so its
+	// watchdog leaves the `js` class (and with it the scroll-reveal hidden
+	// state) in place. Without this the watchdog would disarm reveals on every
+	// page load two seconds in.
+	$effect(() => {
+		document.documentElement.setAttribute('data-hydrated', '');
+	});
+
 	// One shell for the whole site: the masthead and the footer card wrap every
 	// route. The landing page renders its own <main> because its bands are
 	// full-bleed; every other route gets the centred reading column below.
