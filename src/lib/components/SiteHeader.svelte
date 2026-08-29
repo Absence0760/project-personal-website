@@ -20,6 +20,35 @@
 	let trigger = $state<HTMLButtonElement | null>(null);
 
 	const current = $derived($page.url.pathname);
+	const activeIndex = $derived(Math.max(0, site.nav.findIndex((item) => item.href === current)));
+
+	// The rail's active marker is a single dot that slides to whichever item the
+	// pointer is over and returns to the current page on leave — so the mark
+	// tracks the eye instead of sitting still. It needs measurement, so it is
+	// mount-gated: until `dotReady`, the CSS dot on the active link is what
+	// shows, which is also what a visitor without JavaScript keeps.
+	let rail = $state<HTMLElement | null>(null);
+	let dotX = $state(0);
+	let dotReady = $state(false);
+
+	function moveDot(index: number) {
+		const link = rail?.querySelectorAll<HTMLElement>('.masthead-rail a')[index];
+		if (!link || !rail) return;
+		const box = link.getBoundingClientRect();
+		dotX = box.left - rail.getBoundingClientRect().left + box.width / 2;
+		dotReady = true;
+	}
+
+	$effect(() => {
+		const node = rail;
+		if (!node) return;
+		const index = activeIndex;
+		const settle = () => moveDot(index);
+		settle();
+		const resize = new ResizeObserver(settle);
+		resize.observe(node);
+		return () => resize.disconnect();
+	});
 
 	function close() {
 		if (!open) return;
@@ -119,20 +148,29 @@
 		</button>
 	</div>
 
-	<nav class="masthead-rail rail-in" aria-label="Primary">
+	<nav
+		bind:this={rail}
+		class="masthead-rail rail-in"
+		class:has-dot={dotReady}
+		aria-label="Primary"
+		onpointerleave={() => moveDot(activeIndex)}
+	>
 		<ul>
-			{#each site.nav as item (item.href)}
+			{#each site.nav as item, i (item.href)}
 				<li>
 					<a
 						href={item.href}
 						class:is-active={current === item.href}
 						aria-current={current === item.href ? 'page' : undefined}
+						onpointerenter={() => moveDot(i)}
 					>
 						<span>{item.label}</span>
 					</a>
 				</li>
 			{/each}
 		</ul>
+		<span class="rail-dot" class:is-ready={dotReady} style:--dot-x="{dotX}px" aria-hidden="true"
+		></span>
 	</nav>
 
 	<span class="masthead-hairline hairline-in" aria-hidden="true"></span>
@@ -150,6 +188,10 @@
 	aria-modal="true"
 	aria-label="Site menu"
 >
+	<button class="sheet-close" type="button" onclick={close} aria-label="Close menu">
+		<Icon name="close" size={20} />
+	</button>
+
 	<nav aria-label="Menu">
 		<ul class="sheet-nav">
 			{#each site.nav as item, i (item.href)}

@@ -82,12 +82,12 @@ prose pages without leaking into them, the CV, or the print stylesheet.
 | | ≥1080px | 720–1079px | <720px |
 | --- | --- | --- | --- |
 | Masthead | 88px lockup band over a 56px nav rail, static | same, plus the menu button | 56px **fixed** bar, lockup only, backdrop blur |
-| Navigation | the rail | rail + sheet (sheet is additive: routes, email, GitHub) | the sheet **is** the navigation |
+| Navigation | the rail, with a dot that slides to the hovered item | rail + sheet (sheet is additive: routes, email, GitHub) | the sheet **is** the navigation |
 | Hero graphic | co-equal subject, bleeding past the right margin | same | **atmosphere** — recropped, 4 bands not 7, dimmed and scrimmed behind the copy |
-| Selected work | 3-up grid | 2-up grid | snap-scroller, 82vw cards, peek + progress track |
-| Stream card | 56px icon tile above the heading | same | 40px tile inline beside it |
+| Selected work | 3-up grid | 2-up grid | snap-scroller, 82vw cards, peek + a progress track whose thumb is `clientWidth / scrollWidth` |
+| Stream card | 56px icon tile above the heading | same | 40px tile inline **beside** the heading, copy below both |
 | CTAs | inline pair | inline pair | full-width stacked, 52px |
-| Footer links | inline row | inline row | 2×2 grid |
+| Footer links | inline row | inline row | 2×2 grid (single column below 400px) |
 
 ### Tokens
 
@@ -124,10 +124,33 @@ Colours come from `app.css` **by class**, never from inline attributes:
 `var()` is not honoured inside SVG presentation attributes, so class-based
 styling is the only way both palettes can drive the same markup.
 
+**One light source, upper-left, for the whole cluster.** Every gradient runs the
+same 45° screen vector and every occlusion copy is offset along it, so shadow
+and highlight agree about where the light is — the difference between seven lit
+rings and one lit object. Only the crest's position in the ramp shifts per band.
+The dark and light schemes are not the same recipe rescaled: on a dark ground
+the **rim** carries depth, on a pale one the **shadow** does, so `--rb-shade`
+and `--rb-rim-alpha` are tuned per scheme rather than shared.
+
 Motion: per-band rotation (28–74s, alternating direction), a 13s cluster
 breathe, and a pointer parallax where the far bands move at roughly half the
 near ones. All of it pauses when the graphic scrolls off-screen or the tab is
 backgrounded, and stops entirely under reduced motion.
+
+On compact viewports the graphic sits *behind* the hero copy, so the binding
+contrast case is the **light** scheme: the eyebrow is dark accent text, and what
+threatens it is the ribbon's dark bands rather than its lit ones. The scrim
+therefore does real work from 0% rather than fading in. Measured worst case
+under the live composite (text hidden, background sampled pixel by pixel):
+
+| | 375×667 | 320×568 |
+| --- | --- | --- |
+| headline, dark | 14.8:1 | 14.5:1 |
+| headline, light | 13.3:1 | 13.2:1 |
+| eyebrow, dark | 7.2:1 | 7.0:1 |
+| eyebrow, light | 4.9:1 | 4.9:1 |
+
+Re-measure these if the scrim, the graphic's opacity, or its crop changes.
 
 ### Motion
 
@@ -145,15 +168,22 @@ backgrounded, and stops entirely under reduced motion.
   delegated, rAF-throttled listener per row writing `--mx`/`--my`. The highlight
   is a background gradient, so it costs no compositor layer; it simply never
   paints for coarse pointers or under reduced motion.
+- The nav rail's active marker **slides to whichever item the pointer is over**
+  and returns to the current page on leave. It needs measurement, so it is
+  mount-gated: until then — and permanently, without JavaScript — a static CSS
+  dot marks the active item instead.
 - `prefers-reduced-motion` **removes** motion rather than shortening it, and the
   ribbon's pointer listener is never attached — re-evaluated on `change`, so
   toggling the OS setting takes effect without a reload.
 
 ### Component vocabulary
 
-`.masthead` (+ `.lockup`, `.menu-button`, `.masthead-rail`) · `.sheet` (the
-full-screen nav overlay: focus trap, Escape, `inert` on the page behind, scroll
-position preserved and restored) · `.hero` / `.hero-title` / `.hero-accent` ·
+`.masthead` (+ `.lockup`, `.menu-button`, `.masthead-rail`, `.rail-dot`) ·
+`.sheet` (the full-screen nav overlay: its own `.sheet-close` button — the
+masthead trigger is *covered* by the open sheet, so it cannot double as the
+close control — plus a focus trap, Escape, `inert` on the page behind, and
+scroll position preserved and restored) · `.hero` / `.hero-title` /
+`.hero-accent` ·
 `.band` + `.band-head` / `.band-label` / `.band-rule` (a **fading** hairline) /
 `.band-action` · `.button` (`-primary` / `-outline`) · `.stream-card` ·
 `.work-card` with its `.work-preview` panel and overlapping `.work-badge` ·

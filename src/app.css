@@ -33,6 +33,11 @@
   /* Type */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Site-wide: lets scrollbars and form controls follow the OS scheme, which
+     the palette below already does. Print is unaffected — the @media print
+     block sets an explicit white ground. */
+  color-scheme: light dark;
 }
 
 html { font-size: 16px; scroll-behavior: smooth; }
@@ -594,39 +599,48 @@ footer {
    ─────────────────────────────────────────────────────────────────────────── */
 
 /* ── Landing tokens ─────────────────────────────────────────
-   Contrast, computed (WCAG 2.x relative luminance), dark scheme:
+   Contrast, recomputed against the surfaces that actually render. The hero
+   paints two *transparent* gradients over the page ground, so hero copy sits
+   on --l-ink-950, not on --l-ink-900; --l-ink-900 is only ever a fill inside
+   the work thumbs and the badge. Chips, icon tiles and preview panels sit on
+   --l-ink-700; the footer card and the nav sheet sit on --l-ink-850.
 
-     --l-fg              on --l-ink-950   16.72:1   (min 4.5)
-     --l-fg              on --l-ink-900   15.88:1
-     --l-fg              on --l-ink-800   14.69:1
-     --l-fg-muted        on --l-ink-900    7.89:1   ← body copy, ≥7 target
-     --l-fg-muted        on --l-ink-800    7.30:1
-     --l-fg-dim          on --l-ink-900    5.41:1   ← chips/meta ONLY
-     --l-accent-text     on --l-ink-900    7.40:1
-     --l-accent-text     on --l-ink-800    6.85:1
-     #fff                on --l-accent     5.17:1
-     #fff                on --l-accent-hover 4.81:1 ← do not lighten further
-     --l-line-interactive on --l-ink-900   3.64:1   ← control borders, SC 1.4.11
-     --l-focus           on --l-ink-900   10.87:1
+                                    DARK     LIGHT    min
+     --l-fg           on ink-950   16.72     15.94    4.5
+     --l-fg           on ink-800   14.72     17.57    4.5
+     --l-fg           on ink-850   14.98     17.28    4.5
+     --l-fg-muted     on ink-950    8.30      7.28    4.5   ← body copy, ≥7
+     --l-fg-muted     on ink-800    7.31      8.02    4.5
+     --l-fg-muted     on ink-700    6.73      7.01    4.5
+     --l-fg-muted     on ink-850    7.44      7.89    4.5   ← sheet nav
+     --l-fg-dim       on ink-700    5.24      4.85    4.5   ← tech chips
+     --l-fg-dim       on ink-850    5.80      5.46    4.5   ← sheet index, ©
+     --l-fg-dim       on ink-950    6.47      5.03    4.5
+     --l-accent-text  on ink-950    7.79      6.02    4.5
+     --l-accent-text  on ink-800    6.86      6.64    4.5
+     --l-accent-text  on ink-850    6.98      6.53    4.5
+     #fff             on accent     5.17      5.17    4.5
+     #fff             on accent-hov 4.81      6.60    4.5   ← do not lighten dark
+     --l-line-inter.  on ink-950    3.84      3.33    3.0   ← SC 1.4.11 borders
+     --l-focus        on ink-950   11.44      6.02    3.0
+     --l-focus        on ink-800   10.07      6.64    3.0
 
-   Light scheme:
+   Two rules follow, and neither is negotiable:
+   · --l-accent is a FILL, never a text colour. #2563EB on the navy ground is
+     2.66:1. Accent text is always --l-accent-text.
+   · --l-fg-dim never carries anything a visitor must read — tech chips, the
+     sheet's row indices and the copyright line only. Its tightest pairing is
+     4.85:1, and that margin is the reason it is scoped that narrowly.
 
-     --l-fg              on --l-ink-900   16.95:1
-     --l-fg-muted        on --l-ink-900    7.67:1
-     --l-fg-dim          on --l-ink-900    4.97:1   ← chips/meta ONLY
-     --l-accent-text     on --l-ink-900    6.35:1
-     #fff                on --l-accent     5.17:1
-     #fff                on --l-accent-hover 6.60:1
-     --l-line-interactive on --l-ink-900   3.51:1
-
-   Two rules follow from this table and are not negotiable:
-   · --l-accent is a FILL, never a text colour. #2563EB on navy is 2.66:1.
-     Accent text is always --l-accent-text.
-   · --l-fg-dim never carries anything a visitor must read. */
+   Note on naming: these tokens are *prefixed*, not scoped. They live on :root
+   because four sibling subtrees (.landing, .masthead, .sheet, .landing-footer)
+   need them, and the --l-/--rb- prefixes are what keeps them from colliding
+   with the prose-page palette above. The unprefixed scales below (--s-*,
+   --fs-*, --r-*, --e1..3, --ease-*, --page-*, --band-gap) are likewise global;
+   nothing outside the landing page consumes them today, but they are not
+   fenced off, so check before reusing a name. */
 
 :root {
-  color-scheme: light dark;
-
   /* Ground */
   --l-ink-950: #eff3fa;   /* page base            */
   --l-ink-900: #f6f9fe;   /* hero field           */
@@ -643,7 +657,7 @@ footer {
   /* Text */
   --l-fg:       #0e1729;
   --l-fg-muted: #445068;
-  --l-fg-dim:   #616d87;
+  --l-fg-dim:   #5c6880;
 
   /* Accent */
   --l-accent:       #2563eb;
@@ -659,11 +673,13 @@ footer {
   --rb-1: #3a6bc8;
   --rb-2: #4a82e4;
   --rb-3: #79a9f7;
-  --rb-crest: #ffffff;
+  --rb-crest: #dbe9ff;
   --rb-4: #3d6fd0;
   --rb-5: #2a4e9e;
-  --rb-occlusion: rgba(30, 52, 100, 0.09);
+  --rb-occlusion: #172a58;
+  --rb-shade: 0.45;
   --rb-rim: #ffffff;
+  --rb-rim-alpha: 0.25;
   --rb-bloom: #6d9af0;
 
   /* Elevation. On the light twin this is a conventional shadow ladder; the
@@ -698,12 +714,9 @@ footer {
   --fs-h3:       1.1875rem;
   --fs-body:     0.9375rem;
   --fs-body-sm:  0.875rem;
-  --fs-label:    0.75rem;
-  --fs-badge:    0.6875rem;
-  --fs-chip:     0.75rem;
-  --fs-nav:      0.9375rem;
+  --fs-label:    0.75rem;   /* section labels, eyebrow, tech chips */
+  --fs-badge:    0.6875rem; /* work badge, sheet index, lockup role */
   --fs-name:     1.0625rem;
-  --fs-role:     0.6875rem;
 
   /* Geometry */
   --page-max: 1280px;
@@ -727,7 +740,7 @@ footer {
 
     --l-fg:       #e8edf7;
     --l-fg-muted: #9ba9c6;
-    --l-fg-dim:   #7c8aac;
+    --l-fg-dim:   #8794b4;
 
     --l-accent:       #2563eb;
     --l-accent-hover: #3169ec;
@@ -742,8 +755,10 @@ footer {
     --rb-crest: #8fc4ff;
     --rb-4: #1b3e9c;
     --rb-5: #0c1e52;
-    --rb-occlusion: rgba(4, 7, 15, 0.55);
+    --rb-occlusion: #04070f;
+    --rb-shade: 1;
     --rb-rim: #a9cbff;
+    --rb-rim-alpha: 0.42;
     --rb-bloom: #1d4ed8;
 
     /* Depth from border luminance + inset top-highlight, not drop shadow. */
@@ -783,8 +798,6 @@ html:has(.landing) body {
 .landing-footer :focus-visible {
   outline: 2px solid var(--l-focus);
   outline-offset: 2px;
-  box-shadow: 0 0 0 1px var(--l-ink-950);
-  border-radius: var(--r-xs);
 }
 
 .landing ::selection,
@@ -864,7 +877,7 @@ main.landing {
 
 .lockup-role {
   font-family: var(--font-mono);
-  font-size: var(--fs-role);
+  font-size: var(--fs-badge);
   font-weight: 500;
   line-height: 1;
   letter-spacing: 0.17em;
@@ -918,6 +931,8 @@ main.landing {
 .menu-button-bars.is-open > span:nth-child(2) { opacity: 0; }
 .menu-button-bars.is-open > span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
+.masthead-rail { position: relative; }
+
 .masthead-rail > ul {
   display: flex;
   align-items: center;
@@ -930,7 +945,7 @@ main.landing {
   position: relative;
   display: block;
   padding-block: var(--s-2);
-  font-size: var(--fs-nav);
+  font-size: var(--fs-body);
   font-weight: 500;
   letter-spacing: -0.005em;
   color: var(--l-fg-muted);
@@ -955,8 +970,10 @@ main.landing {
 .masthead-rail a:hover::after { transform: scaleX(1); }
 
 .masthead-rail a.is-active { color: var(--l-fg); }
-.masthead-rail a.is-active::after { display: none; }
-.masthead-rail a.is-active > span::after {
+
+/* Pre-JS and no-JS marker: a static dot under the current page. Once the
+   sliding dot has measured itself, `.has-dot` retires this one. */
+.masthead-rail a.is-active::before {
   content: "";
   position: absolute;
   left: 50%;
@@ -967,7 +984,21 @@ main.landing {
   border-radius: var(--r-full);
   background: var(--l-accent-text);
 }
-.masthead-rail a.is-active > span { position: static; }
+.masthead-rail.has-dot a.is-active::before { display: none; }
+
+.rail-dot {
+  position: absolute;
+  left: 0;
+  bottom: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: var(--r-full);
+  background: var(--l-accent-text);
+  opacity: 0;
+  translate: calc(var(--dot-x, 0px) - 2.5px) 0;
+  transition: translate 260ms var(--ease-out-quart), opacity 200ms linear;
+}
+.rail-dot.is-ready { opacity: 1; }
 
 .masthead-hairline {
   display: block;
@@ -1013,6 +1044,27 @@ main.landing {
     visibility 0s linear 0s;
 }
 
+.sheet-close {
+  position: absolute;
+  top: max(var(--s-2), env(safe-area-inset-top));
+  right: max(var(--s-3), env(safe-area-inset-right));
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: var(--r-md);
+  background: none;
+  color: var(--l-fg-muted);
+  cursor: pointer;
+  transition: color 240ms var(--ease-out-quart), background-color 240ms var(--ease-out-quart);
+}
+.sheet-close:hover {
+  color: var(--l-fg);
+  background: var(--l-accent-soft);
+  transition-duration: 120ms;
+}
+
 .sheet-nav { list-style: none; }
 
 .sheet-nav li + li { border-top: 1px solid var(--l-line); }
@@ -1056,11 +1108,11 @@ main.landing {
 }
 .sheet-foot a:hover { color: var(--l-accent-text); text-decoration: none; }
 
-/* Rows arrive after the sheet, 40ms apart, capped so the whole entrance is
-   settled well inside 400ms. Exits never stagger — they're 160ms flat. */
+/* Rows arrive after the sheet, 40ms apart, capped at three steps so the last
+   row lands at 60 + 120 + 240 = 420ms. Exits never stagger — 160ms flat. */
 .sheet.is-open .sheet-nav li,
 .sheet.is-open .sheet-foot {
-  animation: sheet-row 240ms var(--ease-out-expo) calc(60ms + min(var(--row), 5) * 40ms) both;
+  animation: sheet-row 240ms var(--ease-out-expo) calc(60ms + min(var(--row), 3) * 40ms) both;
 }
 
 @keyframes sheet-row {
@@ -1195,19 +1247,27 @@ main.landing {
 .rb-bloom-mid  { stop-color: var(--rb-bloom); stop-opacity: 0.10; }
 .rb-bloom-edge { stop-color: var(--rb-bloom); stop-opacity: 0; }
 
-/* Static geometry lives here rather than repeated across 28 presentation
-   attributes — it keeps the inline SVG under its byte budget. */
-.rb-occlusion,
-.rb-body,
-.rb-rim { stroke-linecap: round; }
+/* Static geometry lives here rather than repeated across every arc — it keeps
+   the inline SVG under its byte budget. */
+/* stroke-linecap is inheritable, so the band group sets it once for its ~8 arcs. */
+.rb-band { stroke-linecap: round; }
 
-.rb-occlusion { stroke: var(--rb-occlusion); translate: 0 12px; }
-.rb-occlusion-wide { opacity: 0.55; translate: 0 16px; }
+/* Each pass widens, fades and slides further along the light vector. Four of
+   them read as a soft shadow; two read as concentric outlines. --rb-shade
+   scales the whole ramp, because a pale ground needs a lighter hand. */
+.rb-o1, .rb-o2, .rb-o3, .rb-o4 { stroke: var(--rb-occlusion); }
+.rb-o1 { opacity: calc(0.34 * var(--rb-shade)); translate: 5.7px 5.7px; }
+.rb-o2 { opacity: calc(0.22 * var(--rb-shade)); translate: 7.8px 7.8px; }
+.rb-o3 { opacity: calc(0.13 * var(--rb-shade)); translate: 9.9px 9.9px; }
+.rb-o4 { opacity: calc(0.07 * var(--rb-shade)); translate: 12.7px 12.7px; }
+
+/* The rim sits on the lit edge, so it moves *against* the shadow. */
 .rb-rim {
   stroke: var(--rb-rim);
-  stroke-opacity: 0.42;
+  stroke-opacity: var(--rb-rim-alpha);
   stroke-width: 1.5;
   stroke-dasharray: 0.28 0.72;
+  translate: -1.1px -1.1px;
 }
 
 /* Every rotation turns about the coil's centre in view-box coordinates — not
@@ -1232,7 +1292,6 @@ main.landing {
    Two-tier separation: --band-gap between bands, --s-10 between a band's
    label and its content. */
 .band { padding-block: 0 var(--band-gap); }
-.band:first-of-type { padding-top: 0; }
 
 .band-head {
   display: flex;
@@ -1272,6 +1331,7 @@ main.landing {
   font-weight: 500;
   color: var(--l-accent-text);
   text-decoration: none;
+  transition: transform 240ms var(--ease-spring);
 }
 .band-action:hover { color: var(--l-accent-text); text-decoration: none; }
 
@@ -1343,9 +1403,11 @@ main.landing {
   font-weight: 500;
   color: var(--l-accent-text);
   text-decoration: none;
-  transition: color 240ms var(--ease-out-quart);
+  transition: color 240ms var(--ease-out-quart), transform 240ms var(--ease-spring);
 }
-.card-link:hover { color: var(--l-accent-text); text-decoration: none; }
+.card-link:hover { color: var(--l-accent-text); text-decoration: none; transition-duration: 120ms; }
+.card-link:active,
+.band-action:active { transform: scale(0.97); transition-duration: 90ms; }
 .card-link-quiet { color: var(--l-fg-muted); }
 .card-link-quiet:hover { color: var(--l-fg); }
 
@@ -1364,7 +1426,7 @@ main.landing {
   border-radius: var(--r-sm);
   background: var(--l-ink-700);
   font-family: var(--font-mono);
-  font-size: var(--fs-chip);
+  font-size: var(--fs-label);
   font-weight: 500;
   letter-spacing: 0.01em;
   color: var(--l-fg-dim);
@@ -1402,7 +1464,7 @@ main.landing {
 
 .stream-card {
   gap: var(--s-4);
-  padding: var(--s-7);
+  padding: var(--s-6);
 }
 
 .stream-icon {
@@ -1416,8 +1478,8 @@ main.landing {
   color: var(--l-accent-text);
 }
 
-.stream-text h3 {
-  margin-bottom: var(--s-3);
+.stream-card h3 {
+  margin-bottom: 0;
   font-size: var(--fs-h2);
   font-weight: 700;
   line-height: 1.20;
@@ -1453,9 +1515,10 @@ main.landing {
   aspect-ratio: 3 / 2;
   margin-bottom: var(--s-8);
   border: 1px solid var(--l-line-strong);
-  /* r_outer 20 − 16 padding = 4, which reads wrong at this size; 16 is the
-     optical match. Stated rather than accidental. */
-  border-radius: var(--r-lg);
+  /* Concentric with the card: r_outer 20 − 16 inset = 4 arithmetically, which
+     reads far too sharp against a 20px shell. 12 is the optical concentric —
+     halfway, and the value the eye accepts as "same curve, smaller". */
+  border-radius: var(--r-md);
   background: var(--l-ink-700);
 }
 
@@ -1489,7 +1552,7 @@ main.landing {
 .work-body p {
   margin-bottom: var(--s-4);
   font-size: var(--fs-body-sm);
-  line-height: 1.60;
+  line-height: 1.65;
   color: var(--l-fg-muted);
   text-wrap: pretty;
 }
@@ -1620,7 +1683,7 @@ main.landing {
   height: 100%;
   /* The clip sits here, not on .work-preview — the badge overhangs the panel
      by design and must not be cut off by it. */
-  border-radius: calc(var(--r-lg) - 1px);
+  border-radius: calc(var(--r-md) - 1px);
   overflow: hidden;
 }
 .thumb svg { display: block; width: 100%; height: 100%; }
@@ -1790,12 +1853,16 @@ main.landing {
     bottom: auto;
     translate: none;
     width: 150vw;
-    opacity: 0.42;
+    opacity: 0.34;
     filter: none;
     z-index: 0;
   }
-  /* Contrast on this page is measured against the scrimmed result, not against
-     the bare ground: the headline must never sit on a lit band. */
+  /* Contrast here is measured against the scrimmed result, not the bare ground,
+     and the binding case is the *light* scheme: the eyebrow is dark accent text,
+     so what threatens it is the ribbon's dark bands, not its lit ones. The scrim
+     therefore has to be doing real work from 0% — the eyebrow sits at roughly
+     13% of the hero's height, where a transparent-at-the-top ramp gives it
+     nothing. Measured worst case after this: see docs/design-system.md. */
   .hero::after {
     content: "";
     position: absolute;
@@ -1803,9 +1870,9 @@ main.landing {
     z-index: 1;
     background: linear-gradient(
       180deg,
-      transparent 0%,
-      color-mix(in srgb, var(--l-ink-950) 55%, transparent) 42%,
-      var(--l-ink-950) 74%
+      color-mix(in srgb, var(--l-ink-950) 48%, transparent) 0%,
+      color-mix(in srgb, var(--l-ink-950) 70%, transparent) 38%,
+      var(--l-ink-950) 76%
     );
     pointer-events: none;
   }
@@ -1813,15 +1880,12 @@ main.landing {
   .rb-band-5, .rb-band-6, .rb-band-7 { display: none; }
 
   .hero-title { max-width: none; line-height: 1.06; letter-spacing: -0.030em; }
-  .hero-lead { line-height: 1.60; }
 
   .hero-actions { flex-direction: column; align-items: stretch; }
   .hero-actions .button { width: 100%; height: 52px; }
 
   /* ── bands ── */
   .band-head { gap: var(--s-4); margin-bottom: var(--s-8); }
-  /* Full-bleed to the viewport edge less the page margin. */
-  .band-rule { margin-right: calc(var(--page-margin) * -1 + 20px); }
 
   /* ── what I do: icon moves inline, beside the heading ── */
   .stream-row { grid-template-columns: 1fr; }
@@ -1834,6 +1898,8 @@ main.landing {
   }
   .stream-icon { width: 40px; height: 40px; }
   .stream-icon svg { width: 20px; height: 20px; }
+  /* Row 1: tile beside the heading. Row 2: the copy, spanning both columns. */
+  .stream-card h3 { grid-column: 2; align-self: center; }
   .stream-text { grid-column: 1 / -1; }
   .stream-text p { max-width: none; }
   .stream-card .card-link { grid-column: 1 / -1; }
@@ -1866,7 +1932,7 @@ main.landing {
   }
   .work-progress-thumb {
     display: block;
-    width: var(--thumb-width, 33%);
+    width: var(--thumb-width, 38%);
     height: 100%;
     border-radius: inherit;
     background: var(--l-accent-text);
@@ -1907,14 +1973,23 @@ main.landing {
   .landing-footer-links { grid-column: 1; grid-row: 3; }
 }
 
+/* At 320×568 the headline runs to five lines. Untightened, the primary CTA
+   lands at 92% of the viewport — effectively below the fold. */
+@media (max-width: 359px) {
+  .eyebrow { margin-bottom: var(--s-4); }
+  .hero { padding-block: var(--s-9) var(--s-11); }
+  .hero-title { margin-bottom: var(--s-4); }
+  .hero-lead { margin-bottom: var(--s-6); font-size: var(--fs-body); }
+}
+
 /* ═══ Landing: motion, contrast and forced-colours ═════════ */
 @media (prefers-reduced-motion: reduce) {
   /* Motion is removed, not shortened. The ribbon stays: its bands are authored
      at their final angles, so the resting composition is the designed one. */
-  .landing *,
-  .masthead *,
-  .sheet *,
-  .landing-footer * {
+  .landing, .landing *,
+  .masthead, .masthead *,
+  .sheet, .sheet *,
+  .landing-footer, .landing-footer * {
     animation: none !important;
     transition: none !important;
   }

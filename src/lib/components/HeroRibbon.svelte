@@ -8,16 +8,21 @@
 	// one. Rotation adds life; it does not create the arrangement.
 	//
 	// Per band, back to front:
-	//   1. occlusion — two wide, offset, near-black copies at low opacity, so a
-	//      band reads as sitting *in front of* the one behind rather than beside
-	//      it. Deliberately NOT a Gaussian blur: the occlusion has to rotate with
-	//      its band, and a filtered subtree that animates is re-rasterised every
-	//      frame. Two stacked soft strokes buy the same read for no filter cost —
-	//      which is why this file ships zero <filter> elements;
+	//   1. occlusion — a four-stop ramp of widening, fading, offset copies. It
+	//      approximates a Gaussian closely enough that nobody reads the steps,
+	//      and unlike a real blur it rotates with its band for free: a filtered
+	//      subtree that animates is re-rasterised every frame, which is why this
+	//      file ships zero <filter> elements. The copies are `<use>` references
+	//      to one authored arc, so the path data is stored once per band;
 	//   2. body — three tapering sub-arcs sharing one gradient, whose narrow
-	//      specular crest (15% of the ramp) is what makes a stroke read as a
-	//      turned, glossy surface;
-	//   3. rim — a hairline catching light along ~28% of the arc's leading edge.
+	//      specular crest is what makes a stroke read as a turned, glossy surface;
+	//   3. rim — a hairline catching light along ~28% of the arc's lit edge.
+	//
+	// ONE light source, upper-left, for the whole cluster. Every gradient runs
+	// the same 45° screen vector and every occlusion copy is offset along it, so
+	// shadow and highlight agree on where the light is — that is the difference
+	// between seven lit rings and one lit object. Only the crest's position in
+	// the ramp shifts per band (±3%), the way surface curvature would shift it.
 	//
 	// Behind all of it sits a single radial-gradient bloom (a gradient, not a
 	// blurred shape — free instead of expensive).
@@ -63,17 +68,31 @@
 		{ at: 0.7, to: 1, scale: 0.58 }
 	];
 
+	// The global light vector: upper-left, so shadows fall to the lower-right.
+	const LIGHT = Math.SQRT1_2;
+
+	// Widening, fading, further-offset copies. Four stops is where the stepping
+	// stops being visible against a two-stop pair.
+	const OCCLUSION = [
+		{ scale: 1.08, step: 1 },
+		{ scale: 1.2, step: 2 },
+		{ scale: 1.34, step: 3 },
+		{ scale: 1.52, step: 4 }
+	];
+
 	const bands = BANDS.map((band, i) => {
-		// Gradient vector rotated by the band's own start angle, so no two
-		// specular crests line up — the light source stays consistent, the
-		// crests do not repeat.
-		const a = (band.from + 40) * RAD;
-		const dx = Math.cos(a) * band.r;
-		const dy = Math.sin(a) * band.r;
+		const dx = LIGHT * band.r;
+		const dy = LIGHT * band.r;
 
 		return {
 			i,
 			...band,
+			// Crest position drifts ±3% across the stack; its *direction* never does.
+			crest: 44 + ((i % 3) - 1) * 3,
+			occlusion: OCCLUSION.map((o) => ({
+				width: Math.round(band.w * o.scale),
+				className: `rb-o${o.step}`
+			})),
 			gradient: { x1: CX - dx, y1: CY - dy, x2: CX + dx, y2: CY + dy },
 			full: arc(band.r, band.from, band.from + band.sweep),
 			segments: TAPER.map((t) => ({
@@ -166,7 +185,7 @@
 </script>
 
 <div bind:this={host} class="hero-graphic" class:is-paused={!running} aria-hidden="true">
-	<svg viewBox="0 0 760 760" preserveAspectRatio="xMidYMid meet" fill="none" focusable="false" role="presentation">
+	<svg viewBox="0 0 760 760" preserveAspectRatio="xMidYMid meet" fill="none" focusable="false">
 		<defs>
 			{#each bands as band (band.i)}
 				<linearGradient
@@ -177,15 +196,17 @@
 					x2={band.gradient.x2.toFixed(0)}
 					y2={band.gradient.y2.toFixed(0)}
 				>
-					<stop class="rb-0" offset="0%" />
-					<stop class="rb-1" offset="16%" />
-					<stop class="rb-2" offset="34%" />
-					<stop class="rb-3" offset="48%" />
-					<stop class="rb-crest" offset="55%" />
-					<stop class="rb-3" offset="63%" />
-					<stop class="rb-4" offset="80%" />
-					<stop class="rb-5" offset="100%" />
+					<stop class="rb-1" offset="0%" />
+					<stop class="rb-2" offset="{band.crest - 30}%" />
+					<stop class="rb-3" offset="{band.crest - 12}%" />
+					<stop class="rb-crest" offset="{band.crest}%" />
+					<stop class="rb-3" offset="{band.crest + 14}%" />
+					<stop class="rb-4" offset="76%" />
+					<stop class="rb-5" offset="90%" />
+					<stop class="rb-0" offset="100%" />
 				</linearGradient>
+				<!-- Authored once; the occlusion ramp and the rim reference it. -->
+				<path id="rb-a{band.i}" d={band.full} pathLength="1" />
 			{/each}
 
 			<radialGradient id="rb-bloom" cx="0.5" cy="0.5" r="0.5">
@@ -196,8 +217,8 @@
 
 		</defs>
 
-		<!-- Atmosphere. A gradient, not a blurred shape. -->
-		<ellipse class="rb-atmosphere" cx="400" cy="360" rx="360" ry="330" fill="url(#rb-bloom)" />
+		<!-- Atmosphere. A gradient, not a blurred shape, centred on the coil. -->
+		<ellipse class="rb-atmosphere" cx="380" cy="380" rx="360" ry="330" fill="url(#rb-bloom)" />
 
 		<g class="rb-cluster">
 			{#each [{ key: 'near', list: near }, { key: 'far', list: far }] as layer (layer.key)}
@@ -209,14 +230,15 @@
 							style:animation-direction={band.reverse ? 'reverse' : 'normal'}
 						>
 							<!-- 1 · occlusion -->
-							<path class="rb-occlusion rb-occlusion-wide" d={band.full} stroke-width={(band.w * 1.4).toFixed(1)} />
-							<path class="rb-occlusion" d={band.full} stroke-width={(band.w * 1.15).toFixed(1)} />
+							{#each band.occlusion as pass (pass.className)}
+								<use href="#rb-a{band.i}" class={pass.className} stroke-width={pass.width} />
+							{/each}
 							<!-- 2 · body, tapering across three sub-arcs -->
 							{#each band.segments as segment, s (s)}
-								<path class="rb-body" d={segment.d} stroke="url(#rb-{band.i})" stroke-width={segment.width} />
+								<path d={segment.d} stroke="url(#rb-{band.i})" stroke-width={segment.width} />
 							{/each}
 							<!-- 3 · rim -->
-							<path class="rb-rim" d={band.full} pathLength="1" stroke-dashoffset={band.rimOffset} />
+							<use href="#rb-a{band.i}" class="rb-rim" stroke-dashoffset={band.rimOffset} />
 						</g>
 					{/each}
 				</g>

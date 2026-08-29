@@ -8,7 +8,6 @@
 		| 'business'
 		| 'government'
 		| 'external'
-		| 'menu'
 		| 'close';
 
 	let {
@@ -59,8 +58,6 @@
 		<path d="M12 2.8 3.6 7.4h16.8L12 2.8Z" />
 		<path d="M4.8 17.6V9.6M9.6 17.6V9.6M14.4 17.6V9.6M19.2 17.6V9.6" />
 		<path d="M3.6 17.6h16.8" />
-	{:else if name === 'menu'}
-		<path stroke-width="2" d="M4 7h16M4 12h16M4 17h16" />
 	{:else if name === 'close'}
 		<path stroke-width="2" d="m6 6 12 12M18 6 6 18" />
 	{/if}

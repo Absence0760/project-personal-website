@@ -33,8 +33,8 @@
 			</p>
 
 			<h1 class="hero-title hero-in hero-in-title" id="hero-title">
-				Software and web development for <em class="hero-accent">businesses</em> and
-				<em class="hero-accent">government</em>.
+				Software and web development for <span class="hero-accent">businesses</span> and
+				<span class="hero-accent">government</span>.
 			</h1>
 
 			<p class="hero-lead hero-in hero-in-lead">
@@ -62,8 +62,8 @@
 		<div class="stream-row" use:spotlight={'.stream-card'}>
 			<article class="stream-card" data-reveal use:reveal={{ index: 0 }}>
 				<span class="stream-icon" aria-hidden="true"><Icon name="business" size={26} /></span>
+				<h3>For small businesses</h3>
 				<div class="stream-text">
-					<h3>For small businesses</h3>
 					<p>
 						Custom web apps, SaaS dashboards, e-commerce storefronts and internal tools — designed,
 						built, hosted and maintained. Billed as a project, a retainer or a subscription.
@@ -77,8 +77,8 @@
 
 			<article class="stream-card" data-reveal use:reveal={{ index: 1 }}>
 				<span class="stream-icon" aria-hidden="true"><Icon name="government" size={26} /></span>
+				<h3>For government</h3>
 				<div class="stream-text">
-					<h3>For government</h3>
 					<p>
 						Application development, systems integration and test automation for public-sector
 						work, under NAICS 541511, 541512 and 513210.

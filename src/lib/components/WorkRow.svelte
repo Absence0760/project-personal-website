@@ -19,7 +19,11 @@
 
 	let rail = $state<HTMLElement | null>(null);
 	let scrollable = $state(false);
+	/** How far through the scroll we are, 0–1. */
 	let ratio = $state(0);
+	/** Visible fraction of the track — the thumb's width, and the honest one:
+	    card count says 33% for three cards that actually show 38% of the rail. */
+	let visible = $state(1);
 
 	onMount(() => {
 		const node = rail;
@@ -30,6 +34,7 @@
 			const span = node.scrollWidth - node.clientWidth;
 			scrollable = span > 4;
 			ratio = span > 4 ? node.scrollLeft / span : 0;
+			visible = node.scrollWidth > 0 ? node.clientWidth / node.scrollWidth : 1;
 		};
 
 		function onScroll() {
@@ -120,8 +125,8 @@
 		<div class="work-progress" aria-hidden="true">
 			<span
 				class="work-progress-thumb"
-				style:--thumb-width="{(100 / projects.length).toFixed(3)}%"
-				style:--thumb-shift="{(ratio * (projects.length - 1) * 100).toFixed(2)}%"
+				style:--thumb-width="{(visible * 100).toFixed(2)}%"
+				style:--thumb-shift="{(ratio * (1 / visible - 1) * 100).toFixed(2)}%"
 			></span>
 		</div>
 	{/if}
