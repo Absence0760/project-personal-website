@@ -1,3 +1,12 @@
+<script lang="ts">
+	import SectionRail from '$lib/components/SectionRail.svelte';
+	import { site } from '$lib/site';
+
+	// No h2s on this page, so there is no index to build — but the address is
+	// the entire point of the route and it was buried in the third paragraph.
+	// The rail lifts it to the top right, where the eye lands first.
+</script>
+
 <svelte:head>
 	<title>Contact | Jared Howard</title>
 	<meta
@@ -68,3 +77,14 @@
 		</p>
 	</div>
 </article>
+
+<SectionRail>
+	<div class="rail-card">
+		<p class="rail-card-label">Reach me</p>
+		<p class="rail-card-lead"><a href="mailto:{site.email}">{site.email}</a></p>
+		<p class="rail-card-note">
+			Use a subject line from the list — it routes faster. I typically reply within a few business
+			days.
+		</p>
+	</div>
+</SectionRail>

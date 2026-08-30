@@ -1,3 +1,23 @@
+<script lang="ts">
+	import SectionRail from '$lib/components/SectionRail.svelte';
+
+	// Index for the >=1080px right rail. Kept beside the markup rather than
+	// derived from the DOM so it prerenders and works with no JavaScript.
+	const sections = [
+		{ id: 'about-this-policy', label: '1. About this policy' },
+		{ id: 'personal-information-we-collect', label: '2. Personal information we collect' },
+		{ id: 'sale-or-sharing-of-personal-information', label: '3. Sale or sharing of personal information' },
+		{ id: 'service-providers-and-other-recipients', label: '4. Service providers and other recipients' },
+		{ id: 'your-privacy-rights', label: '5. Your privacy rights' },
+		{ id: 'how-to-exercise-your-rights', label: '6. How to exercise your rights' },
+		{ id: 'how-to-appeal-a-denied-request-virginia-and-similar-states', label: '7. How to appeal a denied request (Virginia and similar states)' },
+		{ id: 'cookies-tracking-and-analytics', label: '8. Cookies, tracking, and analytics' },
+		{ id: 'security', label: '9. Security' },
+		{ id: 'changes-to-this-policy', label: '10. Changes to this policy' },
+		{ id: 'contact', label: '11. Contact' }
+	];
+</script>
+
 <svelte:head>
 	<title>Privacy Policy | Jared Howard</title>
 	<meta
@@ -25,7 +45,7 @@
 
 		<p>If you do not agree with this policy, please do not use the services.</p>
 
-		<h2>1. About this policy</h2>
+		<h2 id="about-this-policy">1. About this policy</h2>
 		<p>
 			We are a US-based sole proprietorship. Our customers are primarily US consumers and US small
 			businesses. We do not direct the services to residents of the European Economic Area, the
@@ -44,7 +64,7 @@
 			described in Section 5.
 		</p>
 
-		<h2>2. Personal information we collect</h2>
+		<h2 id="personal-information-we-collect">2. Personal information we collect</h2>
 		<p>
 			We organize personal information by the categories used in the California Consumer Privacy Act
 			(CCPA) so the disclosures below carry over to the similar privacy laws of Virginia, Colorado,
@@ -160,7 +180,7 @@
 			reconstruct the original card number.
 		</p>
 
-		<h2>3. Sale or sharing of personal information</h2>
+		<h2 id="sale-or-sharing-of-personal-information">3. Sale or sharing of personal information</h2>
 		<p>
 			The CCPA and similar state laws define <strong>"sale"</strong> and <strong>"sharing"</strong>
 			as distinct concepts. "Sale" means disclosing personal information to a third party for monetary
@@ -182,7 +202,7 @@
 			the address in Section 11 and we will respond.
 		</p>
 
-		<h2>4. Service providers and other recipients</h2>
+		<h2 id="service-providers-and-other-recipients">4. Service providers and other recipients</h2>
 		<p>
 			We use a small set of third-party service providers to operate the business. Each receives only
 			the personal information they need to perform the service, and each is bound by contract or by
@@ -221,7 +241,7 @@
 			property of any person.
 		</p>
 
-		<h2>5. Your privacy rights</h2>
+		<h2 id="your-privacy-rights">5. Your privacy rights</h2>
 		<p>Depending on the US state you reside in, you may have some or all of the following rights:</p>
 		<ul>
 			<li>
@@ -269,7 +289,7 @@
 			decline, we will tell you why.
 		</p>
 
-		<h2>6. How to exercise your rights</h2>
+		<h2 id="how-to-exercise-your-rights">6. How to exercise your rights</h2>
 		<p>Send a request by email to:</p>
 		<p>
 			<strong><a href="mailto:contact@jaredhoward.com">contact@jaredhoward.com</a></strong>
@@ -311,7 +331,7 @@
 			relevant statute (or, for non-statute states, this policy) allows.
 		</p>
 
-		<h2>7. How to appeal a denied request (Virginia and similar states)</h2>
+		<h2 id="how-to-appeal-a-denied-request-virginia-and-similar-states">7. How to appeal a denied request (Virginia and similar states)</h2>
 		<p>
 			If we deny a request in whole or in part, residents of Virginia, Colorado, Connecticut, and
 			other states that grant an appeal right may appeal that decision within 60 days of our response
@@ -326,7 +346,7 @@
 			Attorney General (https://www.oag.state.va.us/).
 		</p>
 
-		<h2>8. Cookies, tracking, and analytics</h2>
+		<h2 id="cookies-tracking-and-analytics">8. Cookies, tracking, and analytics</h2>
 		<p>
 			As of the Effective date of this policy, this website does <strong>not</strong> use third-party
 			analytics, advertising cookies, advertising pixels, or cross-site tracking technologies. All
@@ -346,7 +366,7 @@
 			point.
 		</p>
 
-		<h2>9. Security</h2>
+		<h2 id="security">9. Security</h2>
 		<p>
 			We take reasonable administrative, technical, and physical safeguards to protect personal
 			information against accidental or unlawful loss, access, disclosure, alteration, or destruction.
@@ -360,7 +380,7 @@
 			any regulator we are legally required to notify) in accordance with applicable law.
 		</p>
 
-		<h2>10. Changes to this policy</h2>
+		<h2 id="changes-to-this-policy">10. Changes to this policy</h2>
 		<p>
 			We may update this Privacy Policy from time to time. The "Effective" date at the top reflects
 			the current version. We will notify you of material changes by (a) updating the Effective date,
@@ -370,7 +390,7 @@
 			the updated policy.
 		</p>
 
-		<h2>11. Contact</h2>
+		<h2 id="contact">11. Contact</h2>
 		<p>
 			For privacy questions, to exercise a right, or to file a complaint about our handling of
 			personal information:
@@ -383,3 +403,5 @@
 		</p>
 	</div>
 </article>
+
+<SectionRail {sections} />

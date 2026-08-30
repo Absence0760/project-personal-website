@@ -299,6 +299,21 @@ script in `app.html` and disarmed by a 2s watchdog unless the layout has set
 dropped chunk or a blocking extension — which would otherwise leave a
 prerendered page present in the DOM but blank on screen.
 
+**The interior right rail (`SectionRail.svelte`, ≥1080px).** The reading column
+is 68ch inside a 1280px page, which left ~450px of dead field down the right of
+every interior route — read as a failed load rather than as air, because the
+footer card below spanned the full width and retroactively announced the page
+had been that wide all along. The rail gives that field a job: an optional card
+plus an index of the page's own `h2`s. Capabilities uses the card to lift the
+corporate-data `<dl>` off the bottom of a long page (it is the first thing a
+SAM.gov buyer scans for); Contact uses it for the address, which was buried in
+its third paragraph. Below 1080px the rail stops being a column and its
+contents flow in document order, i.e. after the prose — a card still reads
+correctly there, an index does not, so the index is dropped rather than
+stacked. Each page declares its own `sections` array beside its markup rather
+than deriving it from the DOM, so the index prerenders and works with no
+JavaScript; only the active marker is scripted.
+
 **Porting a ribbon value between schemes: carry the ratio, not the number.**
 Both defects this graphic has shipped were a dark-scheme alpha reused on a
 ground with different headroom — the round-2 specular crest, then the round-3

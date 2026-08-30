@@ -254,6 +254,32 @@ Because no commitment moved, this did not trigger the `us-legal-doc-reviewer`
 re-run below. If a future redesign changes any legal page's *wording* — not
 just its styling — that re-run is required.
 
+### Addendum, 2026-08-29 — section index added to the legal routes
+
+A right-hand rail (`SectionRail.svelte`, ≥1080px only) was added to `terms/`,
+`privacy/` and `refunds/`, and a "Reach me" card to `contact/`. **Again no
+wording changed.** The edits to the three policy files are mechanical and
+navigational only:
+
+- Each `<h2>` gained an `id` (slug of its own text, with the leading section
+  number stripped — `1. The services` → `the-services`). No heading text, and
+  therefore **no section number, changed**: the numbering that Terms §8.3's
+  survival list and every internal cross-reference depend on is untouched, so
+  the "on any section renumbering or split" rule below is **not** triggered.
+- Each file gained a `<script>` block declaring its own section list, and a
+  `<SectionRail {sections} />` element after the closing `</article>`. The rail
+  renders plain in-page anchor links; it adds no outbound link, no new
+  sub-processor, and nothing that runs without JavaScript.
+- Privacy §8 still holds: the rail's only script is a first-party module under
+  `src/lib/`, used for the active-section marker. Still no cookies, no
+  storage, no third-party host.
+
+Re-verified after the change: all four footer links still render 4/4 distinct
+on all 8 built routes, and each anchor id in every rail resolves to a heading
+that exists on its own page (asserted in `scripts/`-adjacent verification, see
+the commit). Counsel review is still pending per the launch gates above; this
+addendum does not change what counsel needs to look at.
+
 ## Maintenance rhythm
 
 - After any material site change → re-run the `us-legal-doc-reviewer`

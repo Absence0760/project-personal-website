@@ -51,6 +51,137 @@ main.page {
 /* ── Prose page (services, capabilities, legal, contact, error) ── */
 .prose { max-width: 68ch; }
 
+/* ── Reading-page right rail (>=1080px) ────────────────────────
+   The reading column is 68ch inside a 1280px page, which used to leave ~450px
+   of dead field down the right of every interior route — read as a failed load
+   rather than as air, because the footer card below spanned the full width and
+   retroactively announced the page had been that wide all along. The rail gives
+   the field a job. Below 1080px it is not rendered as a column at all: the card
+   flows inline after the prose, the index is dropped (a section list above a
+   short screenful is noise), and the single-column reading measure is restored. */
+.section-rail { display: contents; }
+.section-rail-inner > * + * { margin-top: var(--s-8); }
+
+/* Below 1080px the rail is not a column: its contents flow in document order,
+   i.e. AFTER the prose. A card still reads correctly there — Capabilities'
+   corporate data lands where it used to live, at the end of the statement, and
+   Contact's address makes a fair closing summary. An index does not: a list of
+   jump links placed after the thing it indexes is worse than no list. So the
+   index is dropped rather than stacked. */
+@media (max-width: 1079px) {
+  .rail-index { display: none; }
+  .section-rail-inner { margin-top: var(--s-10); }
+}
+
+.rail-index-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-badge);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--l-fg-dim);
+  margin-bottom: var(--s-4);
+}
+
+.rail-index ul { list-style: none; }
+
+.rail-index a {
+  display: block;
+  padding: var(--s-2) 0 var(--s-2) var(--s-4);
+  /* The marker is a border rather than a pseudo-element so the text never
+     shifts when it lights up. */
+  border-left: 2px solid var(--l-line);
+  font-size: var(--fs-body-sm);
+  line-height: 1.4;
+  color: var(--l-fg-dim);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out-quart), border-color 200ms var(--ease-out-quart);
+}
+.rail-index a:hover {
+  color: var(--l-fg);
+  border-left-color: var(--l-line-hover);
+  text-decoration: none;
+}
+.rail-index a.is-active {
+  color: var(--l-accent-text);
+  border-left-color: var(--l-accent);
+}
+
+/* A card lifted into the rail — Capabilities' corporate data, Contact's email. */
+.rail-card {
+  border-radius: var(--r-xl);
+  border: 1px solid var(--l-line);
+  background: var(--l-ink-800);
+  box-shadow: var(--e1);
+  padding: var(--s-5);
+}
+/* Nested in the rail card, the data block drops its own surface — one card, not
+   two. It keeps the class because the UEI/CAGE rows land here after SAM.gov
+   registration (docs/sam-gov-checklist.md). */
+.rail-card .capability-data {
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  grid-template-columns: 1fr;
+  gap: var(--s-1) 0;
+  font-size: var(--fs-body-sm);
+}
+.rail-card .capability-data dd + dt { margin-top: var(--s-3); }
+
+.rail-card-lead {
+  font-size: var(--fs-body);
+  font-weight: 600;
+  margin-bottom: var(--s-3);
+  word-break: break-word;
+}
+.rail-card-note {
+  font-size: var(--fs-body-sm);
+  line-height: 1.5;
+  color: var(--l-fg-muted);
+}
+
+.rail-card-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-badge);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--l-fg-dim);
+  margin-bottom: var(--s-4);
+}
+
+@media (min-width: 1080px) {
+  main.page {
+    display: grid;
+    /* The prose keeps its own 68ch measure; the rail takes what is left, capped
+       so it never grows into a second column of reading width. */
+    grid-template-columns: minmax(0, 68ch) minmax(0, 1fr);
+    column-gap: var(--s-11);
+    align-items: start;
+  }
+  /* The header spans both columns so the h1 and its fading rule still run the
+     full measure of the page, the way the landing page's band rules do. */
+  main.page > .prose,
+  main.page > .cv { grid-column: 1; min-width: 0; }
+
+  .section-rail { display: block; }
+  .section-rail-inner {
+    position: sticky;
+    /* Clears the masthead plus the reading column's own top padding. */
+    top: var(--s-12);
+    max-height: calc(100dvh - var(--s-12) * 2);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Anchor targets must clear the fixed masthead below 720px, and sit off the
+   very top edge above it. */
+.post-content h2,
+.cv h2 { scroll-margin-top: calc(56px + env(safe-area-inset-top) + var(--s-4)); }
+
 .prose-header {
   margin-bottom: var(--s-8);
   padding-bottom: var(--s-6);
@@ -315,6 +446,8 @@ main.page {
   .sheet,
   .landing-footer,
   .cv-actions,
+  /* An on-page index is meaningless in a PDF. */
+  .section-rail,
   /* The PDF gets its identity from .cv-print-header instead — two titles would
      stack at the top of page 1. */
   .cv-screen-header {
