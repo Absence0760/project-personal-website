@@ -213,9 +213,23 @@
 	aria-modal="true"
 	aria-label="Site menu"
 >
-	<button class="sheet-close" type="button" onclick={close} aria-label="Close menu">
-		<Icon name="close" size={20} />
-	</button>
+	<!-- The masthead row is reproduced inside the sheet, on the same 56px
+	     baseline, so opening it reads as the bar expanding rather than the page
+	     being replaced by a list — the brand used to vanish at exactly the
+	     moment the visitor was deciding where to go. aria-hidden on the lockup
+	     because the sheet is a modal whose own label already names the site,
+	     and a second "home" link here would just be a third way out. -->
+	<div class="sheet-top">
+		<span class="lockup" aria-hidden="true">
+			<Monogram size={34} />
+			<span class="lockup-text">
+				<span class="lockup-name">{site.title}</span>
+			</span>
+		</span>
+		<button class="sheet-close" type="button" onclick={close} aria-label="Close menu">
+			<Icon name="close" size={20} />
+		</button>
+	</div>
 
 	<nav aria-label="Menu">
 		<ul class="sheet-nav">

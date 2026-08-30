@@ -106,18 +106,38 @@
 	<section class="band" aria-labelledby="about-label">
 		<div class="band-head" data-reveal use:reveal={{}}>
 			<h2 class="band-label" id="about-label">About</h2>
+			<!-- No band-action here: the closing CTA below points to the same
+			     place at far greater weight, and two links to /contact/ in one
+			     band is a choice the reader has to make for no reason. The rule
+			     runs the full measure instead. -->
 			<span class="band-rule" aria-hidden="true"></span>
-			<a class="band-action" href="/contact/">
-				<span>Get in touch</span>
-				<Icon name="arrow" size={15} class="icon-nudge" />
-			</a>
 		</div>
 
-		<p class="about-copy" data-reveal use:reveal={{}}>
-			I'm based in Virginia and work as a QA-minded software engineer, building and maintaining
-			automated test suites alongside the applications they support. My <a href="/cv/">CV</a> has the
-			full background, and my
-			<a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a> has the code.
-		</p>
+		<!-- Two columns, because this is the page's last beat and it was ending on
+		     a biography. The bio keeps its place; the right column is the terminal
+		     CTA the page never had — at hero-CTA weight, not the 14px muted
+		     band-action in the head above. It also fills the ~40% of empty band
+		     that a single paragraph left, so the page's rhythm doesn't decay to
+		     nothing right at the end. -->
+		<div class="about-grid">
+			<p class="about-copy" data-reveal use:reveal={{}}>
+				I'm based in Virginia and work as a QA-minded software engineer, building and maintaining
+				automated test suites alongside the applications they support. My <a href="/cv/">CV</a> has
+				the full background, and my
+				<a href={site.github} target="_blank" rel="noopener noreferrer">GitHub</a> has the code.
+			</p>
+
+			<div class="about-cta" data-reveal use:reveal={{ index: 1 }}>
+				<p class="about-cta-lead">Have something you need built?</p>
+				<a class="button button-primary" href="/contact/">
+					<span>Start a project</span>
+					<Icon name="arrow" size={16} class="icon-nudge" />
+				</a>
+				<a class="about-cta-mail" href="mailto:{site.email}">
+					<Icon name="mail" size={16} />
+					<span>{site.email}</span>
+				</a>
+			</div>
+		</div>
 	</section>
 </main>

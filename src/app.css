@@ -662,9 +662,6 @@ main.page {
   --s-6: 24px;  --s-7: 28px;  --s-8: 32px;  --s-9: 40px;  --s-10: 48px;
   --s-11: 64px; --s-12: 80px; --s-13: 96px; --s-14: 128px; --s-15: 160px;
 
-  /* Block padding for the nav sheet. Tightened on short viewports (landscape
-     phones) so the sheet still fits without scrolling — see the sheet rules. */
-  --sheet-pad-block: var(--s-12);
 
   /* Radii. Nested radii follow r_inner = r_outer − padding where the maths
      stays sane, and are clamped optically where it does not (a 20px card with
@@ -958,21 +955,20 @@ main.landing {
   z-index: 60;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  /* Landscape phones are ~320-430px tall and the sheet's own content is ~480px.
-     Plain `center` overflows in BOTH directions and a flex container cannot be
-     scrolled back to overflow it centred away, so the rows nearest the edges
-     become unreachable. `safe center` degrades to flex-start exactly when the
-     content stops fitting, which is the only direction that stays scrollable.
-     Declared after `center` so a browser without it keeps the safe fallback. */
-  justify-content: safe center;
-  gap: var(--s-10);
+  /* Top-aligned, not centred. The list used to pool in the middle with ~275px
+     of nothing above it and ~310px below — the sheet read as 60% empty. Anchored
+     under its own masthead row, with the contact block pushed to the bottom
+     edge by `margin-top: auto`, the space becomes structure instead of a void.
+     This also retires the old `safe center` guard: flex-start was the fallback
+     that guard degraded to, so short landscape viewports simply scroll. */
+  justify-content: flex-start;
+  gap: var(--s-8);
   height: 100dvh;
   overflow-y: auto;
   /* The page behind is position:fixed while the sheet is open, but a trackpad
      fling that reaches the end of the sheet would still chain to the document. */
   overscroll-behavior: contain;
-  padding: max(var(--sheet-pad-block), env(safe-area-inset-top))
+  padding: max(var(--s-2), env(safe-area-inset-top))
            max(var(--page-margin), env(safe-area-inset-right))
            max(var(--s-6), env(safe-area-inset-bottom))
            max(var(--page-margin), env(safe-area-inset-left));
@@ -997,10 +993,25 @@ main.landing {
     visibility 0s linear 0s;
 }
 
+/* The in-sheet masthead row: lockup left, close right, on one baseline.
+   Sticky, because on a landscape phone the sheet scrolls and the close control
+   would otherwise scroll away from the visitor reaching for it. */
+.sheet-top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-height: 56px;
+  margin-bottom: var(--s-4);
+  background: var(--l-ink-850);
+}
+.sheet-top .lockup { min-height: 0; }
+.sheet-top .lockup-name { font-size: var(--fs-body); }
+
 .sheet-close {
-  position: absolute;
-  top: max(var(--s-2), env(safe-area-inset-top));
-  right: max(var(--s-3), env(safe-area-inset-right));
   display: grid;
   place-items: center;
   width: 48px;
@@ -1049,6 +1060,11 @@ main.landing {
   display: flex;
   flex-wrap: wrap;
   gap: var(--s-3) var(--s-6);
+  /* Pushed to the bottom edge, so the sheet is anchored top and bottom rather
+     than pooled in the middle. Collapses to a normal flow item once the content
+     is taller than the viewport, which is what makes short landscape scroll. */
+  margin-top: auto;
+  padding-top: var(--s-8);
 }
 .sheet-foot a {
   display: inline-flex;
@@ -1077,13 +1093,20 @@ main.landing {
    `overflow-y: auto` + `safe center` above; this block is what keeps it from
    needing to scroll at all at the sizes people actually turn a phone to.
    Rows stay >=44px, so WCAG 2.5.8 target size still holds. */
+/* On a tall phone the five rows left a large gap between the list and the
+   anchored contact block. Taller rows are the right way to spend it: the list
+   is the sheet's whole purpose, and 72px targets are easier to hit one-handed
+   than 56px ones. */
+@media (min-height: 700px) {
+  .sheet-nav a { height: 72px; }
+  .sheet-top { margin-bottom: var(--s-6); }
+}
+
 @media (max-height: 500px) {
-  .sheet {
-    --sheet-pad-block: var(--s-10);
-    gap: var(--s-5);
-  }
+  .sheet { gap: var(--s-5); }
+  .sheet-top { min-height: 44px; margin-bottom: var(--s-2); }
   .sheet-nav a { height: 44px; }
-  .sheet-foot { gap: var(--s-2) var(--s-5); }
+  .sheet-foot { gap: var(--s-2) var(--s-5); padding-top: var(--s-5); }
 }
 
 /* ── Landing: hero ─────────────────────────────────────────
@@ -1537,6 +1560,45 @@ main.landing {
 
 /* ── Landing: about ────────────────────────────────────────
    The only long-measure text on the page, so it gets its own measure. */
+/* The closing band. One column below 900px — the CTA follows the bio, which is
+   the right order either way. */
+.about-grid {
+  display: grid;
+  gap: var(--s-10);
+  align-items: start;
+}
+@media (min-width: 900px) {
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--s-12);
+  }
+}
+
+.about-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+.about-cta-lead {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--l-fg);
+  text-wrap: balance;
+}
+.about-cta-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 44px;
+  font-size: var(--fs-body-sm);
+  color: var(--l-fg-muted);
+  text-decoration: none;
+  transition: color 200ms var(--ease-out-quart);
+}
+.about-cta-mail:hover { color: var(--l-accent-text); text-decoration: none; }
+
 .about-copy {
   max-width: 62ch;
   font-size: var(--fs-lead);
@@ -1761,6 +1823,31 @@ main.landing {
   .menu-button { display: grid; }
   .masthead-rail > ul { gap: var(--s-8); }
   .work-track { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Three featured projects into two columns orphans the last one, and it was
+     rendered at IDENTICAL width to its siblings with a same-sized hole beside
+     it — which reads as "the fourth card failed to load", not as "the list
+     ended". Spanning it and switching to the horizontal anatomy makes it a
+     deliberate wide closer instead of a gap. Scoped to an odd last child, so a
+     future even-numbered work list keeps the plain 2-up grid. */
+  .work-item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .work-item:last-child:nth-child(odd) .work-card {
+    display: grid;
+    grid-template-columns: minmax(0, 34%) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: var(--s-8);
+    align-content: start;
+  }
+  .work-item:last-child:nth-child(odd) .work-preview {
+    grid-row: 1 / -1;
+    margin-bottom: 0;
+    /* The wide card is shorter than a column card, so the 3:2 preview would
+       tower over its own body. Let it fill the row instead. */
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+  .work-item:last-child:nth-child(odd) .work-body { align-self: center; }
+  .work-item:last-child:nth-child(odd) .work-foot { align-self: end; }
+
   :root { --band-gap: var(--s-13); }
 }
 

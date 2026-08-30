@@ -271,10 +271,15 @@ rather than parked on "Home") ·
 `.cv-print-header`, which carries the identity line into the generated PDF and
 is the *only* h1 the page used to have, leaving the screen outline starting at
 h2; the screen one is hidden under `@media print` so the PDF has one title) ·
-`.sheet` (the full-screen nav overlay: its own `.sheet-close` button — the
-masthead trigger is *covered* by the open sheet, so it cannot double as the
-close control — plus a focus trap, Escape, `inert` on the page behind, and
-scroll position preserved and restored; it is also a **scroll container**, and
+`.sheet` (the full-screen nav overlay: it reproduces the masthead row inside
+itself as `.sheet-top` — lockup left, `.sheet-close` right, on one 56px
+baseline, sticky so the close control never scrolls away — because the masthead
+trigger is *covered* by the open sheet and the brand used to vanish at exactly
+the moment the visitor was choosing where to go. Top-aligned rather than
+centred, with `.sheet-foot` taking the bottom edge via `margin-top: auto`, so
+the sheet is anchored at both ends instead of pooling its content in the middle;
+plus a focus trap, Escape, `inert` on the page behind, and scroll position
+preserved and restored; it is also a **scroll container**, and
 centres with `justify-content: safe center` rather than `center`, because a
 landscape phone is shorter than the sheet's own content and plain `center`
 overflows rows out of reach in a container that cannot be scrolled back —
@@ -313,6 +318,22 @@ correctly there, an index does not, so the index is dropped rather than
 stacked. Each page declares its own `sections` array beside its markup rather
 than deriving it from the DOM, so the index prerenders and works with no
 JavaScript; only the active marker is scripted.
+
+**The About band closes the page, it doesn't trail off.** It was a single
+paragraph in a full-bleed band — ~40% empty, no structure, and the last beat of
+a conversion page was a biography whose only call to action was a 14px muted
+`band-action`. It is now two columns: bio left, a terminal CTA right at
+hero-CTA weight with the address under it. The head's `band-action` was removed
+with it — two links to `/contact/` in one band is a choice the reader has to
+make for no reason.
+
+**The odd last work card spans.** Three featured projects into the 720–1079px
+two-column grid orphaned the last one at identical width to its siblings with a
+same-sized hole beside it, which reads as a failed load rather than the end of
+a list. `.work-item:last-child:nth-child(odd)` spans the row and switches to
+the horizontal anatomy — preview left, body right — so it closes the grid
+deliberately. Scoped to an odd last child, so an even-numbered work list keeps
+the plain 2-up grid.
 
 **Porting a ribbon value between schemes: carry the ratio, not the number.**
 Both defects this graphic has shipped were a dark-scheme alpha reused on a
