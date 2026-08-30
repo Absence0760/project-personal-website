@@ -19,8 +19,8 @@ export interface Project {
 	 */
 	kind: string;
 	/**
-	 * Home-page short blurb. The long `blurb` above is written for the carousel
-	 * on other surfaces; the cards need ~2 lines, not ~5.
+	 * Home-page short blurb. The long `blurb` above is what `/work/` renders;
+	 * the home cards need ~2 lines, not ~5.
 	 */
 	cardBlurb: string;
 	/** Surfaced in the home page's "Selected work" trio. */
@@ -42,12 +42,14 @@ export const site = {
 	nav: [
 		{ href: '/', label: 'Home' },
 		{ href: '/services/', label: 'Services' },
+		{ href: '/work/', label: 'Work' },
 		{ href: '/capabilities/', label: 'Capabilities' },
 		{ href: '/cv/', label: 'CV' },
 		{ href: '/contact/', label: 'Contact' }
 	] satisfies NavLink[],
 
-	// Selected public work shown on the home page (each links to its GitHub repo).
+	// Public work. All of it renders on /work/; the three flagged `featured`
+	// also appear in the home page's "Selected work" trio.
 	projects: [
 		{
 			name: 'Flakey',
@@ -135,6 +137,7 @@ export const site = {
 	routes: [
 		'/',
 		'/services/',
+		'/work/',
 		'/capabilities/',
 		'/cv/',
 		'/contact/',

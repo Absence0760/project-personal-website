@@ -51,6 +51,60 @@ main.page {
 /* ── Prose page (services, capabilities, legal, contact, error) ── */
 .prose { max-width: 68ch; }
 
+/* ── /work/ entries ────────────────────────────────────────
+   Long-form siblings of the landing page's work cards: the same preview panel
+   and badge, but the full `blurb` and the whole tech list rather than the
+   two-line card version. Horizontal from 620px, where the preview stops
+   squeezing the copy into a gutter. */
+.work-entries {
+  list-style: none;
+  margin: var(--s-10) 0;
+  display: grid;
+  gap: var(--s-11);
+}
+
+.work-entry { display: grid; gap: var(--s-6); }
+@media (min-width: 620px) {
+  .work-entry {
+    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
+    column-gap: var(--s-8);
+    align-items: start;
+  }
+}
+
+.work-entry-preview {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  border: 1px solid var(--l-line-strong);
+  border-radius: var(--r-md);
+  background: var(--l-ink-700);
+  /* No `overflow: hidden` here: .work-badge hangs 14px below this panel by
+     design (same as the landing card), and clipping it cuts the label in half.
+     The margin is what reserves room for the overhang when the entry stacks. */
+  margin-bottom: var(--s-5);
+}
+
+/* The heading is the entry's anchor target, so it carries the scroll offset
+   rather than inheriting the .post-content h2 rule's larger one. */
+.work-entry-body > h2 {
+  margin-top: 0;
+  font-size: var(--fs-h3);
+}
+.work-entry-body > p { margin-bottom: var(--s-4); }
+
+/* `.post-content a` is (0,1,1) and outranks `.card-link` at (0,1,0), so the
+   prose underline leaks onto these. Two classes beats one class + one type. */
+.post-content .card-link,
+.post-content .card-link:hover { text-decoration: none; }
+
+.work-entry-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3) var(--s-6);
+  margin-top: var(--s-4);
+}
+
 /* ── Reading-page right rail (>=1080px) ────────────────────────
    The reading column is 68ch inside a 1280px page, which used to leave ~450px
    of dead field down the right of every interior route — read as a failed load
@@ -180,7 +234,8 @@ main.page {
 /* Anchor targets must clear the fixed masthead below 720px, and sit off the
    very top edge above it. */
 .post-content h2,
-.cv h2 { scroll-margin-top: calc(56px + env(safe-area-inset-top) + var(--s-4)); }
+.cv h2,
+.work-entry-body > h2 { scroll-margin-top: calc(56px + env(safe-area-inset-top) + var(--s-4)); }
 
 .prose-header {
   margin-bottom: var(--s-8);

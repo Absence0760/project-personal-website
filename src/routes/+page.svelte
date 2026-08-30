@@ -93,7 +93,10 @@
 		<div class="band-head" data-reveal use:reveal={{}}>
 			<h2 class="band-label" id="work-label">Selected work</h2>
 			<span class="band-rule" aria-hidden="true"></span>
-			<a class="band-action" href={site.github} target="_blank" rel="noopener noreferrer">
+			<!-- /work/, not the GitHub profile: "all work" promised a curated set
+			     and delivered a code host, off-site, asking a small-business
+			     buyer to evaluate raw repositories. -->
+			<a class="band-action" href="/work/">
 				<span>View all work</span>
 				<Icon name="arrow" size={15} class="icon-nudge" />
 			</a>

@@ -274,11 +274,15 @@ navigational only:
   `src/lib/`, used for the active-section marker. Still no cookies, no
   storage, no third-party host.
 
+A ninth route, `/work/`, was added in the same change. It is marketing content
+(the public project list) with no legal commitment of its own, and it carries
+the same footer. It does not alter anything in this tracker.
+
 Re-verified after the change: all four footer links still render 4/4 distinct
-on all 8 built routes, and each anchor id in every rail resolves to a heading
-that exists on its own page (asserted in `scripts/`-adjacent verification, see
-the commit). Counsel review is still pending per the launch gates above; this
-addendum does not change what counsel needs to look at.
+on all **9** built routes, and each anchor id in every rail resolves to a
+heading that exists on its own page. Counsel review is still pending per the
+launch gates above; this addendum does not change what counsel needs to look
+at.
 
 ## Maintenance rhythm
 
