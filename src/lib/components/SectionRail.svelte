@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import { railScrollDelta } from '$lib/railScroll';
 
 	// The right-hand rail on reading pages, ≥1080px only.
 	//
@@ -73,10 +74,25 @@
 	});
 
 	// Keep the marked item in view when the index is longer than the rail.
+	//
+	// This must move the rail's OWN scroll box and nothing else. The obvious
+	// `link.scrollIntoView({ block: 'nearest' })` scrolls every scrollable
+	// ancestor including the document, so marking the active item dragged the
+	// page back toward the rail while the reader was scrolling away from it —
+	// and `html { scroll-behavior: smooth }` animated the drag. On every rail
+	// page that formed a loop the reader could not escape: scroll down, a new
+	// heading activates, the document is pulled up, the previous heading
+	// re-activates. Measured on /work/ at 1440px, scrollY oscillated between
+	// 259 and 600 and never advanced.
 	$effect(() => {
 		if (!active || !nav) return;
 		const link = nav.querySelector<HTMLElement>(`a[href="#${CSS.escape(active)}"]`);
-		link?.scrollIntoView({ block: 'nearest' });
+		const box = nav.closest<HTMLElement>('.section-rail-inner');
+		if (!link || !box) return;
+
+		const delta = railScrollDelta(box.getBoundingClientRect(), link.getBoundingClientRect());
+		// A no-op when the rail isn't overflowing, which is the common case.
+		if (delta !== 0) box.scrollTop += delta;
 	});
 </script>
 

@@ -328,6 +328,24 @@ stacked. Each page declares its own `sections` array beside its markup rather
 than deriving it from the DOM, so the index prerenders and works with no
 JavaScript; only the active marker is scripted.
 
+The marker keeps itself visible when the index is longer than the rail, and
+**how it does that is load-bearing**. It must move the rail's own scroll box
+and nothing else. `Element.scrollIntoView()` cannot be used: it scrolls every
+scrollable ancestor, the document included, so marking the active item drags
+the page back toward the rail while the reader is scrolling away from it — and
+`html { scroll-behavior: smooth }` animates the drag. That shipped, and it made
+all eight rail pages effectively unscrollable: scroll down, the next heading
+activates, the document is pulled up, the previous heading re-activates. On
+`/work/` at 1440px the scroll position oscillated between 259 and 600 and never
+advanced. The reader was in a loop.
+
+`src/lib/railScroll.ts` replaces it with a pure `railScrollDelta(box, link)`
+returning how far the rail's box must move — negative up, positive down, `0`
+when the link is already visible. The caller adds that to `box.scrollTop` and
+has no other lever, so the document scroller is simply not reachable from the
+marker. `railScroll.test.ts` covers the zero cases (including both flush
+edges), the minimum-distance property, and a link taller than the box.
+
 **The About band closes the page, it doesn't trail off.** It was a single
 paragraph in a full-bleed band — ~40% empty, no structure, and the last beat of
 a conversion page was a biography whose only call to action was a 14px muted
