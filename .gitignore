@@ -20,3 +20,8 @@ pnpm-debug.log*
 
 # Test / coverage
 coverage/
+
+# Playwright (e2e) — reports and traces are per-run artefacts
+playwright-report/
+test-results/
+.playwright/
