@@ -391,6 +391,34 @@ regenerate the rasters after editing an SVG, re-run the Inkscape/ImageMagick
 export steps (Inkscape `--export-type=png --export-width=N`; `magick` to build
 the multi-res `.ico`).
 
+`icon-maskable.svg`, `logo.svg`, `logo-light.svg` and `favicon-96x96.png` are
+**deliberately unreferenced** by the site — the first is the export source for
+the rasters, the lockups are for off-site use, and the 96px raster is a legacy
+size. `src/lib/static-assets.test.ts` keeps an allowlist naming each one, so a
+genuinely stray file added to `static/` fails `pnpm test` while these do not.
+Delete one and you lose a source asset, not dead weight.
+
+### The 404 page
+
+`static/404.html` is the page GitHub Pages serves for any URL that does not
+resolve to a built route. It is a **full document load that never touches
+`app.css`**, so it is the one page in the system that cannot use the token
+layer: the stylesheet ships as `_app/immutable/assets/0.<hash>.css` and the
+hash changes every build, so a static file cannot link it.
+
+It therefore inlines the five tokens it needs — ground, foreground, muted,
+link and rule — copied from `app.css`. That copy is the whole risk: the
+previous 404 was written before the redesign and still carried the old
+palette months later, because nothing compared the two. `static-assets.test.ts`
+now asserts each inlined value still equals its `app.css` token in **both**
+schemes, so the copy cannot drift silently again.
+
+Keep it in step with `src/routes/+error.svelte`, which handles the same
+condition for an in-app navigation after hydration. Two files, one message.
+Measured: 16.08:1 body text and 6.02:1 links in light, 16.72:1 and 7.79:1 in
+dark, no horizontal overflow from 320 to 2560, and it still renders — footer
+links included — with JavaScript disabled.
+
 ## Accessibility
 
 - Global `:focus-visible` ring (keyboard only): `--l-focus` at 2px with a 2px

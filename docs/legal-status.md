@@ -284,6 +284,37 @@ heading that exists on its own page. Counsel review is still pending per the
 launch gates above; this addendum does not change what counsel needs to look
 at.
 
+### Addendum, 2026-09-01 — the 404 page was missing the footer links
+
+The footer-link check above was run as a glob over `build/**/index.html`. Every
+route is an `index.html` inside a directory, so that pattern matches all nine —
+and structurally cannot match `build/404.html`, which sits at the root. The one
+page it could never see was the one page that failed.
+
+`static/404.html` was a hand-written pre-redesign file that GitHub Pages serves
+on any unresolved URL. It shipped with no masthead and no footer, so **Contact ·
+Terms · Privacy · Refunds were absent** from it, while the tracker recorded them
+as present on "every built page".
+
+Fixed by rewriting `static/404.html` in the current design with the four legal
+links in a footer. Re-verified in headless Chromium: it returns **HTTP 404**,
+carries **4/4 distinct legal links** at seven widths in both colour schemes,
+and still renders them with **JavaScript disabled**.
+
+No wording on any of the four policy pages changed, and no section was
+renumbered, so the renumbering rule is not triggered.
+
+Two follow-ons worth recording, since both are commitments rather than styling:
+
+- The rewritten page makes **no third-party request** — no font, no script, no
+  stylesheet, no absolute URL of any kind. Privacy §4/§8 (first-party only)
+  therefore holds on the 404 as well; its predecessor named `"Inter"` in a
+  font stack but never fetched it, so neither page ever breached §8.
+- `src/lib/static-assets.test.ts` now asserts the four legal links are present
+  in `static/404.html`, so this specific gap fails `pnpm test` rather than
+  waiting for the next manual audit. **Verify the footer-link claim against
+  `build/*.html` as well as `build/**/index.html` in future passes.**
+
 ## Maintenance rhythm
 
 - After any material site change → re-run the `us-legal-doc-reviewer`

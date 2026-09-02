@@ -4,56 +4,158 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Page not found | Jared Howard</title>
+		<meta name="robots" content="noindex" />
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#eff3fa" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070b18" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+		<!--
+			GitHub Pages serves this file for any URL that does not resolve to a
+			built page, so it is reached by a full document load, not by the
+			client-side router. src/routes/+error.svelte handles the in-app case
+			(a bad link followed after hydration); this file handles the direct
+			hit, and the two are kept saying the same thing.
+
+			It has to be self-contained: the real stylesheet is emitted as
+			_app/immutable/assets/0.<hash>.css and that hash changes on every
+			build, so a static file cannot link it. The tokens below are
+			therefore copied from src/app.css — and src/lib/static-assets.test.ts
+			asserts they still match, so this page cannot silently drift away
+			from the palette again the way its predecessor did.
+
+			No external request of any kind (no font, no script, no stylesheet):
+			the Privacy Policy §4/§8 commitment to first-party-only applies to
+			this page as much as to the rest of the site.
+		-->
 		<style>
 			:root {
 				color-scheme: light dark;
-				--bg: #fafaf8;
-				--text: #1a1a1a;
-				--muted: #6b6b6b;
-				--accent: #2563eb;
+				/* --l-ink-950 */
+				--ground: #eff3fa;
+				/* --l-fg */
+				--fg: #0e1729;
+				/* --l-fg-muted */
+				--muted: #445068;
+				/* --l-accent-text */
+				--link: #1d4ed8;
+				/* --l-line */
+				--line: #dee6f2;
 			}
+
 			@media (prefers-color-scheme: dark) {
 				:root {
-					--bg: #1a1b26;
-					--text: #a9b1d6;
-					--muted: #565f89;
-					--accent: #7aa2f7;
+					--ground: #070b18;
+					--fg: #e8edf7;
+					--muted: #9ba9c6;
+					--link: #7aa2f7;
+					--line: #1a2440;
 				}
 			}
+
+			* {
+				box-sizing: border-box;
+			}
+
 			body {
 				margin: 0;
-				min-height: 100vh;
+				min-height: 100dvh;
 				display: flex;
 				flex-direction: column;
-				align-items: center;
+				/* --font-sans */
+				font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+					sans-serif;
+				line-height: 1.65;
+				background: var(--ground);
+				color: var(--fg);
+				-webkit-font-smoothing: antialiased;
+			}
+
+			main {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
 				justify-content: center;
 				gap: 0.75rem;
-				padding: 2rem;
-				font-family: "Inter", system-ui, -apple-system, sans-serif;
-				background: var(--bg);
-				color: var(--text);
-				text-align: center;
+				width: 100%;
+				max-width: 34rem;
+				margin: 0 auto;
+				padding: 2rem 1.25rem 3rem;
 			}
-			h1 {
-				font-size: 2rem;
-				margin: 0;
-			}
-			p {
+
+			.code {
+				font-size: 0.8125rem;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
 				color: var(--muted);
 				margin: 0;
 			}
+
+			h1 {
+				font-size: clamp(1.75rem, 1.3rem + 2vw, 2.5rem);
+				line-height: 1.15;
+				letter-spacing: -0.02em;
+				margin: 0;
+			}
+
+			p {
+				margin: 0;
+				color: var(--muted);
+			}
+
 			a {
-				color: var(--accent);
+				color: var(--link);
 				text-decoration: none;
 			}
-			a:hover {
+
+			a:hover,
+			a:focus-visible {
 				text-decoration: underline;
+			}
+
+			footer {
+				border-top: 1px solid var(--line);
+				padding: 1.25rem;
+			}
+
+			.footer-inner {
+				max-width: 34rem;
+				margin: 0 auto;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 1.25rem;
+				align-items: baseline;
+				font-size: 0.875rem;
+				color: var(--muted);
+			}
+
+			.footer-inner nav {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem 1.25rem;
+				margin-left: auto;
 			}
 		</style>
 	</head>
 	<body>
-		<h1>404 — Page not found</h1>
-		<p>That page doesn't exist.</p>
-		<p><a href="/">Return to the home page</a> or <a href="/contact/">get in touch</a>.</p>
+		<main>
+			<p class="code">Error 404</p>
+			<h1>That page couldn&rsquo;t be found.</h1>
+			<p>
+				The link may be out of date, or the address mistyped. Head back to the
+				<a href="/">home page</a>, or <a href="/contact/">get in touch</a> if you think
+				something here is broken.
+			</p>
+		</main>
+		<footer>
+			<div class="footer-inner">
+				<span>&copy; 2026 Jared Howard</span>
+				<nav aria-label="Legal">
+					<a href="/contact/">Contact</a>
+					<a href="/terms/">Terms</a>
+					<a href="/privacy/">Privacy</a>
+					<a href="/refunds/">Refunds</a>
+				</nav>
+			</div>
+		</footer>
 	</body>
 </html>

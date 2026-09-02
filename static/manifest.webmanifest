@@ -4,8 +4,8 @@
 	"description": "Custom web and software development for small businesses and government agencies.",
 	"start_url": "/",
 	"display": "browser",
-	"background_color": "#0f172a",
-	"theme_color": "#2563eb",
+	"background_color": "#eff3fa",
+	"theme_color": "#eff3fa",
 	"icons": [
 		{ "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
 		{ "src": "/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any maskable" },
