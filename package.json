@@ -13,12 +13,14 @@
     "//-- check --": "Type + Svelte diagnostics. svelte-kit sync first so generated types (.svelte-kit/) exist.",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "//-- test --": "Vitest unit suite; test:scripts validates this file's script layout (scripts/check_root_scripts.mjs).",
+    "//-- test --": "Vitest unit suite; test:e2e is the Playwright browser suite over ./build (run `pnpm build` first; needs `pnpm exec playwright install chromium` once); test:scripts validates this file's script layout (scripts/check_root_scripts.mjs).",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:e2e": "playwright test",
     "test:scripts": "node scripts/check_root_scripts.mjs"
   },
   "devDependencies": {
+    "@playwright/test": "1.62.1",
     "@sveltejs/adapter-static": "3.0.10",
     "@sveltejs/kit": "2.70.3",
     "@sveltejs/vite-plugin-svelte": "7.3.0",

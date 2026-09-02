@@ -44,7 +44,7 @@ Two workflows publish a job named `CI gate`: `ci.yml` (the real one — `pnpm ch
 
 ## Every code change updates docs (and tests) in the same change
 
-1. If the change has a testable unit (e.g. `src/lib/` logic), add or update a Vitest `*.test.ts` beside it.
+1. If the change has a testable unit (e.g. `src/lib/` logic), add or update a Vitest `*.test.ts` beside it. If it has runtime behaviour a browser would notice — scrolling, navigation, focus, the 404 — add a case to `e2e/` instead (or as well); Vitest cannot see any of it.
 2. Update the relevant file in `docs/` if the change affects layout, commands, deploy, or features. A one-line doc edit is still an edit.
 3. If the change touches a legal page or its underlying commitments, update `docs/legal-status.md` to reflect what moved.
 
@@ -52,7 +52,14 @@ Treat "code changed, docs unchanged" as an incomplete task — flag it before ha
 
 ## UI verification
 
-Don't spin up the dev server to visually verify UI changes before reporting a task complete. `pnpm build` succeeding + `pnpm check` + the CI checks (`.github/workflows/ci.yml`) are enough; the operator reviews visuals themselves. Only run `pnpm dev` if explicitly asked.
+Don't spin up the dev server to **visually** verify UI changes before reporting a task complete — the operator reviews visuals themselves. Only run `pnpm dev` if explicitly asked.
+
+**But `pnpm build` + `pnpm check` are not sufficient for behaviour.** They are structurally blind to it: `check` type-checks, Vitest runs in a `node` environment with no DOM, and `build` only proves the site compiles. A page that renders perfectly and then fights the reader's scroll passes all three — which is exactly what shipped once. If a change touches scrolling, navigation, focus, or anything else that only exists at runtime, run `pnpm build && pnpm test:e2e` and add a case to `e2e/` covering it.
+
+Two rules learned the hard way when writing those cases:
+
+1. **Assert progress, not absence.** The ad-hoc sweep that missed the scroll bug checked overflow, `h1` counts and reveal state, and wheel-scrolled straight through a page that never moved. "Did not error" is not "worked".
+2. **Prove the test can fail.** Reintroduce the bug and watch it go red before trusting it. A test asserting `getComputedStyle('.masthead').opacity` stays `1` during a view transition passes whether or not the fix is present, because the fade happens on a pseudo-element overlay — that test was written, and only mutation testing caught that it was vacuous.
 
 ## Available Claude tooling
 
@@ -76,7 +83,8 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 - `docs/legal-status.md` — pre-counsel tracker for the four legal pages; **read before editing any of them**.
 - `docs/sam-gov-checklist.md` — what to obtain (UEI, CAGE, NAICS, certs) to replace the capability-statement placeholders once SAM.gov registration is done.
 - `docs/smooth-transitions.md` — feature note for the page cross-fade (now the View Transitions API, wired in `src/routes/+layout.svelte`).
-- `.github/workflows/ci.yml` — PR gate: `pnpm check` + `pnpm test` + `pnpm build`, aggregated by the required `CI gate` job.
+- `.github/workflows/ci.yml` — PR gate: `pnpm check` + `pnpm test` + `pnpm build` + `pnpm build:pdf` + `pnpm test:e2e`, aggregated by the required `CI gate` job.
+- `e2e/` + `playwright.config.ts` — Playwright browser suite over the built `./build`, served by `scripts/serve_build.mjs` the way GitHub Pages serves it (`vite preview` would answer unknown URLs with SvelteKit's error page instead of the static `404.html`). See `docs/run-locally.md` → "What each gate can and cannot see".
 - `.github/workflows/deploy.yml` — release-gated deploy to GitHub Pages (builds `build/`, publishes on a GitHub Release / manual dispatch, not on push to `main`).
 - `.github/workflows/gitleaks.yml` — secret scanning.
 - `.github/workflows/security.yml` — CodeQL static analysis (JS/TS + Actions). Was `codeql.yml`; renamed in the base-scaffolding sync.

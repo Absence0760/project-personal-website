@@ -1,8 +1,8 @@
 name: CI
 
 # PR-only build check. Installs deps and runs the SvelteKit build + checks
-# against the PR head to catch type errors, broken components, or a failing
-# build before merge. Deploy is release-gated (`deploy.yml` fires on a
+# against the PR head to catch type errors, broken components, a failing build,
+# or a browser-level regression (the Playwright suite in ./e2e) before merge. Deploy is release-gated (`deploy.yml` fires on a
 # published Release, not on push to main), so this PR check is the build signal
 # that gates merges into main — breakage is caught here, well before a release
 # is cut (especially dependabot's bumps — auto-merge waits on this job before
@@ -61,6 +61,29 @@ jobs:
 
       - name: Generate cv.pdf from the built /cv/ page
         run: pnpm build:pdf
+
+      # Browser-level regression suite. It runs here rather than as its own job
+      # because everything it needs is already on this runner — Chromium from
+      # the step above, and ./build from the build step — so a separate job
+      # would pay the install cost twice for a ~90s suite.
+      #
+      # It covers what `check`, `test` and `build` structurally cannot: those
+      # three type-check, run Vitest in a *node* environment with no DOM, and
+      # prove the site compiles. A page that renders perfectly and then fights
+      # the reader's scroll passes all three, which is exactly what shipped.
+      - name: End-to-end regression suite (Playwright)
+        run: pnpm test:e2e
+
+      # Traces for the failing tests only; nothing is uploaded on a green run.
+      - name: Upload Playwright report on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
 
   ci-gate:
     name: CI gate
