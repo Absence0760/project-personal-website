@@ -82,7 +82,6 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 - `.github/workflows/security.yml` — CodeQL static analysis (JS/TS + Actions). Was `codeql.yml`; renamed in the base-scaffolding sync.
 - `.github/workflows/audit.yml` — on-demand `/audit/*` sweeps.
 - `.github/workflows/ci-gate-docs.yml` — satisfies the required `CI gate` check for docs-only PRs without running the heavy jobs. See "Merging & branch protection".
-- `.github/workflows/dependabot-lockfile.yml` — refreshes `pnpm-lock.yaml` on Dependabot PRs.
 - `.github/workflows/scorecard.yml` — OSSF Scorecard.
 - `.github/workflows/claude.yml` — Claude Code automation on PRs/issues (operator-gated).
 - `.github/workflows/dependabot-auto-merge.yml` — auto-merges minor/patch Dependabot bumps (npm + Actions).
