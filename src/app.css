@@ -478,6 +478,22 @@ main.page {
 ::view-transition-old(root) { animation: 220ms ease both vt-fade-out; }
 ::view-transition-new(root) { animation: 220ms ease both vt-fade-in; }
 
+/* Hold the shell OUT of the cross-fade.
+
+   The masthead and the footer card are identical on every route, and the
+   layout keeps the same elements mounted across a client-side navigation —
+   they never actually change. But an unnamed transition captures the whole
+   document as one `root` snapshot, so they faded out and back in with the
+   content on every click. A full-width fade of the entire page, masthead
+   included, is exactly what a browser does on a real page load, so the
+   navigation read as a full refresh even though nothing is ever refetched
+   (measured: zero document loads, one HTML request for the whole session).
+
+   Naming them promotes each to its own snapshot, which is left alone by the
+   rules above, so only the page content cross-fades and the frame stays put. */
+.masthead { view-transition-name: masthead; }
+.landing-footer { view-transition-name: site-footer; }
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) { animation: none; }
