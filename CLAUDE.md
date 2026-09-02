@@ -81,5 +81,5 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 - `.github/workflows/scorecard.yml` — OSSF Scorecard.
 - `.github/workflows/claude.yml` — Claude Code automation on PRs/issues (operator-gated).
 - `.github/workflows/dependabot-auto-merge.yml` — auto-merges minor/patch Dependabot bumps (npm + Actions).
-- `.github/dependabot.yml` — npm (Svelte toolchain) + GitHub Actions version updates.
+- `.github/dependabot.yml` — npm (Svelte toolchain) + GitHub Actions version updates. TypeScript majors are ignored: `svelte-check` 4.x cannot consume TS 7, so a grouped major sweep breaks `pnpm check`.
 - `SECURITY.md` — vulnerability reporting policy.
