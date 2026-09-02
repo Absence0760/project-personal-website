@@ -10,6 +10,15 @@
 //   · anything unresolved returns build/404.html with a real 404 status
 //   · everything else is a byte-for-byte static file
 //
+// The request path is never joined onto a filesystem path. The site is fully
+// prerendered, so the set of servable files is fixed and known before the
+// first request: it is enumerated once at startup into a URL → absolute-path
+// map, and serving is a lookup in that map. A request for `/../../etc/passwd`
+// is simply a key that isn't present, so there is no traversal to defend
+// against and nothing for CodeQL's js/path-injection to flag — an earlier
+// version did `path.join(ROOT, urlPath)` behind a `startsWith` containment
+// check, which was safe but unverifiable by dataflow analysis.
+//
 // Port comes from PORT so playwright.config.ts owns the choice.
 
 import http from 'node:http';
@@ -39,28 +48,49 @@ if (!fs.existsSync(ROOT)) {
 	process.exit(1);
 }
 
+/** Every file in build/, keyed by the URL path GitHub Pages would serve it at. */
+function indexBuild(dir, urlPrefix, routes) {
+	for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+		const absolute = path.join(dir, entry.name);
+		if (entry.isDirectory()) {
+			indexBuild(absolute, `${urlPrefix}${entry.name}/`, routes);
+		} else if (entry.name === 'index.html') {
+			// build/work/index.html is served at /work/ — and at /work, which Pages
+			// redirects; accepting both keeps a missing slash out of the results.
+			routes.set(urlPrefix, absolute);
+			if (urlPrefix.length > 1) routes.set(urlPrefix.slice(0, -1), absolute);
+		} else {
+			routes.set(`${urlPrefix}${entry.name}`, absolute);
+		}
+	}
+	return routes;
+}
+
+const ROUTES = indexBuild(ROOT, '/', new Map());
+const NOT_FOUND = ROUTES.get('/404.html');
+
 const server = http.createServer((req, res) => {
-	const urlPath = decodeURIComponent((req.url ?? '/').split('?')[0]);
-
-	// Contain everything to build/ — a path that escapes it is a 404, not a read.
-	let file = path.join(ROOT, urlPath);
-	if (urlPath.endsWith('/')) file = path.join(file, 'index.html');
-	const resolved = path.resolve(file);
-
-	const missing =
-		!resolved.startsWith(path.resolve(ROOT)) ||
-		!fs.existsSync(resolved) ||
-		fs.statSync(resolved).isDirectory();
-
-	if (missing) {
-		const notFound = path.join(ROOT, '404.html');
-		res.writeHead(404, { 'Content-Type': TYPES['.html'] });
-		if (fs.existsSync(notFound)) return fs.createReadStream(notFound).pipe(res);
-		return res.end('Not found');
+	let requested = (req.url ?? '/').split('?')[0].split('#')[0];
+	try {
+		requested = decodeURIComponent(requested);
+	} catch {
+		// A malformed escape sequence is simply not a route we serve.
 	}
 
-	res.writeHead(200, { 'Content-Type': TYPES[path.extname(resolved)] ?? 'application/octet-stream' });
-	fs.createReadStream(resolved).pipe(res);
+	// A lookup, not a path construction: `file` can only ever be a value this
+	// process put into ROUTES by walking build/ itself.
+	const file = ROUTES.get(requested);
+
+	if (file === undefined) {
+		res.writeHead(404, { 'Content-Type': TYPES['.html'] });
+		if (NOT_FOUND === undefined) return res.end('Not found');
+		return fs.createReadStream(NOT_FOUND).pipe(res);
+	}
+
+	res.writeHead(200, { 'Content-Type': TYPES[path.extname(file)] ?? 'application/octet-stream' });
+	fs.createReadStream(file).pipe(res);
 });
 
-server.listen(PORT, () => console.log(`serve_build: ${ROOT} on http://localhost:${PORT}`));
+server.listen(PORT, () =>
+	console.log(`serve_build: ${ROUTES.size} routes from ${ROOT} on http://localhost:${PORT}`)
+);
