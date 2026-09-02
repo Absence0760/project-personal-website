@@ -72,4 +72,14 @@ jobs:
           # check turns green. If branch protection blocks the merge,
           # `--auto` queues it — a human can land it manually after the
           # protection is satisfied.
-          gh pr merge --auto --squash "$PR_URL"
+          #
+          # Tolerated the same way as the approval above: when the repo
+          # setting "Allow auto-merge" is off, this returns "Auto merge is
+          # not allowed for this repository (enablePullRequestAutoMerge)"
+          # and, without the guard, fails the job — putting a red check on
+          # every single Dependabot PR for a repo that has deliberately
+          # chosen manual merges. Auto-merge is OFF here on purpose: deploys
+          # are release-gated, so there is no urgency to land bumps
+          # unattended. Flip the repo setting on if that changes; nothing
+          # else here needs to move.
+          gh pr merge --auto --squash "$PR_URL" || echo "::notice::Auto-merge not enabled for this repository (turn on Settings → General → 'Allow auto-merge' to enable). Leaving the PR for a manual merge."
