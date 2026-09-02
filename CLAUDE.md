@@ -40,6 +40,8 @@ Root `scripts` follow the estate-wide format canonized in the templates repo's `
 
 `main` follows the estate "sealed main + CI gate" standard: every change reaches `origin/main` through a PR — **no direct pushes** (enforced on admins, including the owner). Merging requires a green **`CI gate`** status check — the single required check, an aggregator job present in each functional CI workflow that `needs:` that workflow's jobs. There are **0 required approvals** — a green CI is the merge gate, not a human sign-off. Force-pushes, branch deletion, and unresolved conversations are blocked; history is linear. Commit locally per-piece, but land via a CI-gated PR.
 
+Two workflows publish a job named `CI gate`: `ci.yml` (the real one — `pnpm check` + `pnpm test` + `pnpm build`) and `ci-gate-docs.yml`, which passes the gate for **docs-only** PRs without running those jobs. Both use the same name deliberately, so exactly one of them satisfies the required check per PR. If you widen what counts as docs-only, you are widening what can reach `main` untested.
+
 ## Every code change updates docs (and tests) in the same change
 
 1. If the change has a testable unit (e.g. `src/lib/` logic), add or update a Vitest `*.test.ts` beside it.
@@ -77,7 +79,10 @@ Run these as slash-commands. Each delegates to a specialised agent in `.claude/a
 - `.github/workflows/ci.yml` — PR gate: `pnpm check` + `pnpm test` + `pnpm build`, aggregated by the required `CI gate` job.
 - `.github/workflows/deploy.yml` — release-gated deploy to GitHub Pages (builds `build/`, publishes on a GitHub Release / manual dispatch, not on push to `main`).
 - `.github/workflows/gitleaks.yml` — secret scanning.
-- `.github/workflows/codeql.yml` — CodeQL static analysis (JS/TS + Actions).
+- `.github/workflows/security.yml` — CodeQL static analysis (JS/TS + Actions). Was `codeql.yml`; renamed in the base-scaffolding sync.
+- `.github/workflows/audit.yml` — on-demand `/audit/*` sweeps.
+- `.github/workflows/ci-gate-docs.yml` — satisfies the required `CI gate` check for docs-only PRs without running the heavy jobs. See "Merging & branch protection".
+- `.github/workflows/dependabot-lockfile.yml` — refreshes `pnpm-lock.yaml` on Dependabot PRs.
 - `.github/workflows/scorecard.yml` — OSSF Scorecard.
 - `.github/workflows/claude.yml` — Claude Code automation on PRs/issues (operator-gated).
 - `.github/workflows/dependabot-auto-merge.yml` — auto-merges minor/patch Dependabot bumps (npm + Actions).

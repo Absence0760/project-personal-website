@@ -9,7 +9,7 @@ name: gitleaks
 # be referenced from a Stripe account — keeping a clean secret-scan record
 # matters if someone ever pastes a test key while debugging locally.
 #
-# Complements CodeQL (workflows/codeql.yml), which finds source-level injection
+# Complements CodeQL (workflows/security.yml), which finds source-level injection
 # vulns but not secrets, and Scorecard (workflows/scorecard.yml), which audits
 # repo posture but doesn't read file contents.
 #
@@ -25,7 +25,7 @@ on:
     # Weekly full-history sweep. The push / PR triggers above only diff
     # against the base, so a secret that landed on a forgotten branch
     # and got merged via fast-forward could slip through.
-    # 06:00 UTC Monday — same tide as codeql.yml / scorecard.yml.
+    # 06:00 UTC Monday — same tide as security.yml / scorecard.yml.
     - cron: '0 6 * * 1'
 
 permissions: read-all

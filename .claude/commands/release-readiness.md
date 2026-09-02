@@ -60,7 +60,7 @@ gh run list --branch main --limit 1 --json status,conclusion,workflowName,headSh
 Also check the most recent runs of the security workflows on `main`:
 
 ```
-gh run list --workflow=codeql.yml --branch main --limit 1
+gh run list --workflow=security.yml --branch main --limit 1
 gh run list --workflow=gitleaks.yml --branch main --limit 1
 gh run list --workflow=scorecard.yml --branch main --limit 1
 gh run list --workflow=deploy.yml --branch main --limit 1
