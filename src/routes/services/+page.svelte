@@ -1,3 +1,16 @@
+<script lang="ts">
+	import SectionRail from '$lib/components/SectionRail.svelte';
+
+	// Index for the >=1080px right rail. Kept beside the markup rather than
+	// derived from the DOM so it prerenders and works with no JavaScript.
+	const sections = [
+		{ id: 'custom-web-software-development', label: 'Custom web & software development' },
+		{ id: 'government-federal-it-services', label: 'Government & federal IT services' },
+		{ id: 'how-i-work', label: 'How I work' },
+		{ id: 'engagement-billing', label: 'Engagement & billing' }
+	];
+</script>
+
 <svelte:head>
 	<title>Services | Jared Howard</title>
 	<meta
@@ -18,7 +31,7 @@
 			browser-based: no downloadable installers, no physical goods.
 		</p>
 
-		<h2>Custom web &amp; software development</h2>
+		<h2 id="custom-web-software-development">Custom web &amp; software development</h2>
 		<p>
 			For small businesses, startups, and operators who need something built right and kept running:
 		</p>
@@ -41,7 +54,7 @@
 			</li>
 		</ul>
 
-		<h2>Government &amp; federal IT services</h2>
+		<h2 id="government-federal-it-services">Government &amp; federal IT services</h2>
 		<p>Capability areas for public-sector work:</p>
 		<ul>
 			<li>
@@ -60,7 +73,7 @@
 			the <a href="/capabilities/">capability statement</a>.
 		</p>
 
-		<h2>How I work</h2>
+		<h2 id="how-i-work">How I work</h2>
 		<ul>
 			<li>
 				<strong>Principal-led.</strong> You work directly with the engineer doing the build — not an
@@ -76,7 +89,7 @@
 			</li>
 		</ul>
 
-		<h2>Engagement &amp; billing</h2>
+		<h2 id="engagement-billing">Engagement &amp; billing</h2>
 		<ul>
 			<li><strong>Project fee</strong> — fixed scope, fixed price, for a defined build.</li>
 			<li>
@@ -101,3 +114,5 @@
 		</p>
 	</div>
 </article>
+
+<SectionRail {sections} />

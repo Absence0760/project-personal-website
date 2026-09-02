@@ -47,4 +47,54 @@ describe('site metadata', () => {
 			}
 		}
 	});
+
+	it('flags exactly three featured projects, matching the home page trio', () => {
+		const featured = site.projects.filter((project) => project.featured);
+		expect(featured).toHaveLength(3);
+		// Every featured project is also in the full list /work/ renders — the
+		// home page is a subset of that page, never a separate source of truth.
+		for (const project of featured) {
+			expect(site.projects).toContain(project);
+		}
+	});
+
+	it('exposes a /work/ route for the projects the home page does not feature', () => {
+		expect(site.routes).toContain('/work/');
+		expect(site.nav.some((link) => link.href === '/work/')).toBe(true);
+		// The point of the page: there is work beyond the featured trio.
+		expect(site.projects.length).toBeGreaterThan(3);
+	});
+
+	it('derives unique /work/ anchor slugs from project names', () => {
+		const slugs = site.projects.map((project) =>
+			project.name
+				.toLowerCase()
+				.replace(/[^\w\s-]/g, '')
+				.trim()
+				.replace(/[\s_]+/g, '-')
+		);
+		expect(new Set(slugs).size).toBe(slugs.length);
+		for (const slug of slugs) expect(slug).toMatch(/^[a-z0-9-]+$/);
+	});
+
+	it('every project carries the fields the landing-page work card renders', () => {
+		const treatments = ['analytics', 'storefront', 'ledger', 'mobile', 'terminal', 'engine'];
+		for (const project of site.projects) {
+			expect(project.kind.length).toBeGreaterThan(0);
+			expect(project.cardBlurb.length).toBeGreaterThan(0);
+			// The card gives the blurb roughly two lines; the long one is too long.
+			expect(project.cardBlurb.length).toBeLessThanOrEqual(140);
+			expect(project.tech.length).toBeGreaterThanOrEqual(3);
+			expect(treatments).toContain(project.thumb);
+		}
+	});
+
+	it('features exactly the three projects the landing-page work row shows', () => {
+		expect(site.projects.filter((project) => project.featured)).toHaveLength(3);
+	});
+
+	it('exposes the profile links the landing-page footer and menu use', () => {
+		expect(site.github).toMatch(/^https:\/\/github\.com\//);
+		expect(site.email).toMatch(/^[^@\s]+@jaredhoward\.com$/);
+	});
 });

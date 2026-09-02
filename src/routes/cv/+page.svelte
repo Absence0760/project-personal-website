@@ -1,5 +1,17 @@
 <script lang="ts">
+	import SectionRail from '$lib/components/SectionRail.svelte';
 	import { site } from '$lib/site';
+
+	// Index for the >=1080px right rail. Kept beside the markup rather than
+	// derived from the DOM so it prerenders and works with no JavaScript.
+	const sections = [
+		{ id: 'summary', label: 'Summary' },
+		{ id: 'experience', label: 'Experience' },
+		{ id: 'education', label: 'Education' },
+		{ id: 'skills', label: 'Skills' },
+		{ id: 'school-projects', label: 'School Projects' },
+		{ id: 'awards', label: 'Awards' }
+	];
 </script>
 
 <svelte:head>
@@ -11,16 +23,25 @@
 </svelte:head>
 
 <div class="cv">
+	<!-- Screen title. Every other route opens with a display h1 on the fading
+	     rule; without this one the CV opened on a blue download button with no
+	     subject attached to it, and the document's only h1 was the print-only
+	     one below — display:none, so the screen outline started at h2. The
+	     masthead says "Jared Howard / Software Engineer", not what this page is. -->
+	<header class="prose-header cv-screen-header">
+		<h1>Curriculum Vitae</h1>
+	</header>
+
 	<div class="cv-actions">
 		<!-- rel="external": build/cv.pdf is generated AFTER `vite build` (by
 		     build:pdf), so the prerender crawler must not follow this link. -->
-		<a class="btn btn-primary" href="/cv.pdf" download="jared-howard-cv.pdf" rel="external">
+		<a class="button button-primary" href="/cv.pdf" download="jared-howard-cv.pdf" rel="external">
 			Download CV (PDF)
 		</a>
 	</div>
 
 	<!-- Print-only: the PDF is generated from this page (scripts/generate_cv_pdf.mjs)
-	     with the sidebar hidden, so the identity line must live here. -->
+	     with the masthead hidden, so the identity line must live here. -->
 	<header class="cv-print-header">
 		<h1>{site.title}</h1>
 		<p>
@@ -29,7 +50,7 @@
 		</p>
 	</header>
 
-	<h2>Summary</h2>
+	<h2 id="summary">Summary</h2>
 	<p>
 		Software engineer working as a QA Software Engineer at enChoice, Inc., with a background
 		leading the development and maintenance of automated Cypress and Playwright test suites.
@@ -37,7 +58,7 @@
 		applications for small-business clients.
 	</p>
 
-	<h2>Experience</h2>
+	<h2 id="experience">Experience</h2>
 
 	<h3>QA Software Engineer at enChoice, Inc. — May 2025–Present</h3>
 	<ul>
@@ -88,7 +109,7 @@
 	<h3>Externship at NYCTechPros — July 2019–September 2019</h3>
 	<p>Further developed a website for a client as part of my final semester.</p>
 
-	<h2>Education</h2>
+	<h2 id="education">Education</h2>
 
 	<h3>Le Moyne College — Bachelor of Science in Computer Science | May 2022</h3>
 	<ul>
@@ -101,7 +122,7 @@
 		<li>Athletic Scholarship (Tennis)</li>
 	</ul>
 
-	<h2>Skills</h2>
+	<h2 id="skills">Skills</h2>
 	<p><strong>Programming:</strong> Javascript, Python, HCL</p>
 	<p><strong>Software:</strong> Gitlab, Github, Azure Devops, AWS, GCP, Jira</p>
 	<p>
@@ -111,7 +132,7 @@
 	</p>
 	<p><strong>Foreign Languages:</strong> Afrikaans</p>
 
-	<h2>School Projects</h2>
+	<h2 id="school-projects">School Projects</h2>
 
 	<h3>Le Moyne Dolphin App — May 2022</h3>
 	<p>
@@ -132,7 +153,7 @@
 		memory manager for the simulation.
 	</p>
 
-	<h2>Awards</h2>
+	<h2 id="awards">Awards</h2>
 	<ul>
 		<li>ASA College Dean's List</li>
 		<li>Le Moyne College Academic Excellence Spring 2020</li>
@@ -145,3 +166,5 @@
 		<li>All-Conference First Team at #1 singles and #1 doubles</li>
 	</ul>
 </div>
+
+<SectionRail {sections} />

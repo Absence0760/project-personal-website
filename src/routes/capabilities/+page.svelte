@@ -1,3 +1,19 @@
+<script lang="ts">
+	import SectionRail from '$lib/components/SectionRail.svelte';
+
+	// Corporate data is the first thing a SAM.gov buyer scans for, so it sits in
+	// the rail rather than at the bottom of a long page. Below 1080px the rail
+	// stops being a column and the block flows inline after the prose, reading
+	// in roughly its old position.
+	// NOTE: the UEI/CAGE rows go into this same <dl class="capability-data">
+	// once SAM.gov registration completes — see docs/sam-gov-checklist.md.
+	const sections = [
+		{ id: 'core-competencies', label: 'Core competencies' },
+		{ id: 'differentiators', label: 'Differentiators' },
+		{ id: 'relevant-experience', label: 'Relevant experience' }
+	];
+</script>
+
 <svelte:head>
 	<title>Capability Statement | Jared Howard</title>
 	<meta
@@ -17,7 +33,7 @@
 			web development, test automation, and cloud services for commercial and government clients.
 		</p>
 
-		<h2>Core competencies</h2>
+		<h2 id="core-competencies">Core competencies</h2>
 		<ul>
 			<li>
 				<strong>Custom application &amp; web development</strong> — web applications, multi-tenant
@@ -37,7 +53,7 @@
 			</li>
 		</ul>
 
-		<h2>Differentiators</h2>
+		<h2 id="differentiators">Differentiators</h2>
 		<ul>
 			<li>
 				<strong>Principal-led delivery.</strong> The engineer you contract with does the work — no
@@ -57,7 +73,7 @@
 			</li>
 		</ul>
 
-		<h2>Relevant experience</h2>
+		<h2 id="relevant-experience">Relevant experience</h2>
 		<p><em>Selected commercial experience:</em></p>
 		<ul>
 			<li>
@@ -77,8 +93,18 @@
 		</ul>
 		<p>See the full <a href="/cv/">CV</a> for detailed history, education, and skills.</p>
 
-		<h2>Corporate data</h2>
+		<hr />
 
+		<p>
+			To discuss a requirement or request a tailored capability statement,
+			<a href="/contact/">get in touch</a>.
+		</p>
+	</div>
+</article>
+
+<SectionRail {sections}>
+	<div class="rail-card">
+		<p class="rail-card-label">Corporate data</p>
 		<dl class="capability-data">
 			<dt>Legal name</dt>
 			<dd>Jared Howard (sole proprietor)</dd>
@@ -104,13 +130,6 @@
 
 			<dt>Point of contact</dt>
 			<dd>Jared Howard — <a href="mailto:contact@jaredhoward.com">contact@jaredhoward.com</a></dd>
-		</dl>
-
-		<hr />
-
-		<p>
-			To discuss a requirement or request a tailored capability statement,
-			<a href="/contact/">get in touch</a>.
-		</p>
+			</dl>
 	</div>
-</article>
+</SectionRail>

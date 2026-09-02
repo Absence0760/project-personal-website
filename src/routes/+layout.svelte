@@ -3,10 +3,23 @@
 	import { page } from '$app/stores';
 	import { onNavigate } from '$app/navigation';
 	import { site } from '$lib/site';
-	import Sidebar from '$lib/components/Sidebar.svelte';
-	import Footer from '$lib/components/Footer.svelte';
+	import SiteHeader from '$lib/components/SiteHeader.svelte';
+	import LandingFooter from '$lib/components/LandingFooter.svelte';
 
 	let { children } = $props();
+
+	// Tells the inline bootstrap in `app.html` that hydration happened, so its
+	// watchdog leaves the `js` class (and with it the scroll-reveal hidden
+	// state) in place. Without this the watchdog would disarm reveals on every
+	// page load two seconds in.
+	$effect(() => {
+		document.documentElement.setAttribute('data-hydrated', '');
+	});
+
+	// One shell for the whole site: the masthead and the footer card wrap every
+	// route. The landing page renders its own <main> because its bands are
+	// full-bleed; every other route gets the centred reading column below.
+	const isLanding = $derived($page.url.pathname === '/');
 
 	// Reproduce the old transitions.js 220ms cross-fade via the View
 	// Transitions API. Progressive enhancement: browsers without the API (or
@@ -35,13 +48,14 @@
 	<link rel="canonical" href={site.url + $page.url.pathname} />
 </svelte:head>
 
-<main>
-	<div class="home-layout">
-		<Sidebar />
-		<div class="page-content">
-			{@render children()}
-		</div>
-	</div>
-</main>
+<SiteHeader />
 
-<Footer />
+{#if isLanding}
+	{@render children()}
+{:else}
+	<main class="page">
+		{@render children()}
+	</main>
+{/if}
+
+<LandingFooter />

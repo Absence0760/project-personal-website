@@ -1,3 +1,28 @@
+<script lang="ts">
+	import SectionRail from '$lib/components/SectionRail.svelte';
+
+	// Index for the >=1080px right rail. Kept beside the markup rather than
+	// derived from the DOM so it prerenders and works with no JavaScript.
+	const sections = [
+		{ id: 'the-services', label: '1. The services' },
+		{ id: 'eligibility-and-accounts', label: '2. Eligibility and accounts' },
+		{ id: 'payment-and-billing', label: '3. Payment and billing' },
+		{ id: 'automatic-renewal-of-subscriptions', label: '4. Automatic renewal of subscriptions' },
+		{ id: 'acceptable-use', label: '5. Acceptable use' },
+		{ id: 'intellectual-property-and-content', label: '6. Intellectual property and content' },
+		{ id: 'third-party-services', label: '7. Third-party services' },
+		{ id: 'termination', label: '8. Termination' },
+		{ id: 'disclaimer-of-warranties', label: '9. Disclaimer of warranties' },
+		{ id: 'limitation-of-liability', label: '10. Limitation of liability' },
+		{ id: 'indemnification', label: '11. Indemnification' },
+		{ id: 'governing-law', label: '12. Governing law' },
+		{ id: 'dispute-resolution', label: '13. Dispute resolution' },
+		{ id: 'changes-to-these-terms', label: '14. Changes to these Terms' },
+		{ id: 'general-provisions', label: '15. General provisions' },
+		{ id: 'contact', label: '16. Contact' }
+	];
+</script>
+
 <svelte:head>
 	<title>Terms of Service | Jared Howard</title>
 	<meta
@@ -28,7 +53,7 @@
 
 		<p>If you do not agree to these Terms, do not access or use the services.</p>
 
-		<h2>1. The services</h2>
+		<h2 id="the-services">1. The services</h2>
 		<p>We provide two categories of service, both digital:</p>
 		<ul>
 			<li>
@@ -50,7 +75,7 @@
 			anything in an Order conflicts with these Terms, the Order controls for that engagement.
 		</p>
 
-		<h2>2. Eligibility and accounts</h2>
+		<h2 id="eligibility-and-accounts">2. Eligibility and accounts</h2>
 		<p>
 			You must be at least 18 years old and capable of forming a binding contract to use the
 			services. If you are using the services on behalf of an organization, you confirm that you are
@@ -63,7 +88,7 @@
 			believe your account has been compromised.
 		</p>
 
-		<h2>3. Payment and billing</h2>
+		<h2 id="payment-and-billing">3. Payment and billing</h2>
 		<p>
 			Fees for software-product subscriptions are billed in advance for the billing period selected
 			at sign-up (monthly or annual). Fees for custom development engagements are billed according to
@@ -83,7 +108,7 @@
 			subscription before the next renewal date.
 		</p>
 
-		<h2>4. Automatic renewal of subscriptions</h2>
+		<h2 id="automatic-renewal-of-subscriptions">4. Automatic renewal of subscriptions</h2>
 		<blockquote>
 			<p>
 				⚠️ <strong>PLEASE READ — AUTOMATIC RENEWAL DISCLOSURE.</strong> Software-product
@@ -140,7 +165,7 @@
 			or terminate your subscription. We will notify you by email before doing so.
 		</p>
 
-		<h2>5. Acceptable use</h2>
+		<h2 id="acceptable-use">5. Acceptable use</h2>
 		<p>
 			You agree not to use the services to (a) violate any applicable law or regulation, (b) infringe
 			on the intellectual-property, privacy, or publicity rights of any person, (c) transmit malware,
@@ -154,7 +179,7 @@
 			reasonably believe creates risk or legal exposure for us or other customers.
 		</p>
 
-		<h2>6. Intellectual property and content</h2>
+		<h2 id="intellectual-property-and-content">6. Intellectual property and content</h2>
 		<p>
 			<strong>6.1 Our materials.</strong> As between you and us, we (and our licensors) own all
 			right, title, and interest in and to the services, the software, documentation, designs, and
@@ -221,7 +246,7 @@
 			compensation.
 		</p>
 
-		<h2>7. Third-party services</h2>
+		<h2 id="third-party-services">7. Third-party services</h2>
 		<p>
 			The services may integrate with or link to third-party services (for example, Stripe for
 			payments, GitHub Pages for site hosting, and email providers for transactional and support
@@ -229,7 +254,7 @@
 			services. Your use of any third-party service is governed by that service's own terms.
 		</p>
 
-		<h2>8. Termination</h2>
+		<h2 id="termination">8. Termination</h2>
 		<p>
 			<strong>8.1 By you.</strong> You may terminate these Terms at any time by cancelling your
 			subscription and ceasing to use the services. Cancellation is described in Section 4.4.
@@ -258,7 +283,7 @@
 			Wind-Down Period ends.
 		</p>
 
-		<h2>9. Disclaimer of warranties</h2>
+		<h2 id="disclaimer-of-warranties">9. Disclaimer of warranties</h2>
 		<blockquote>
 			<p>
 				<strong
@@ -277,7 +302,7 @@
 			exclusions may not apply to you.
 		</p>
 
-		<h2>10. Limitation of liability</h2>
+		<h2 id="limitation-of-liability">10. Limitation of liability</h2>
 		<p>
 			For the purposes of this Section 10, "<strong>we</strong>", "<strong>our</strong>", and
 			"<strong>us</strong>" include Jared Howard and our employees, contractors, agents, licensors,
@@ -315,7 +340,7 @@
 			limitations above may not apply to you.
 		</p>
 
-		<h2>11. Indemnification</h2>
+		<h2 id="indemnification">11. Indemnification</h2>
 		<p>
 			<strong>11.1 By you.</strong> You agree to indemnify, defend, and hold harmless Jared Howard
 			and our employees, contractors, agents, licensors, and successors ("<strong
@@ -353,14 +378,14 @@
 			and (c) reasonably cooperate in the defense at the Indemnitor's expense.
 		</p>
 
-		<h2>12. Governing law</h2>
+		<h2 id="governing-law">12. Governing law</h2>
 		<p>
 			These Terms, and any dispute arising out of or relating to them or the services, are governed
 			by the laws of the Commonwealth of Virginia, without regard to its conflict-of-laws principles.
 			The United Nations Convention on Contracts for the International Sale of Goods does not apply.
 		</p>
 
-		<h2>13. Dispute resolution</h2>
+		<h2 id="dispute-resolution">13. Dispute resolution</h2>
 		<p>
 			<strong>13.1 Informal resolution first.</strong> Before either party files any legal action
 			arising out of or relating to these Terms, the party with a concern must send a written notice
@@ -381,7 +406,7 @@
 			extent permitted by applicable law, after which it is permanently barred.
 		</p>
 
-		<h2>14. Changes to these Terms</h2>
+		<h2 id="changes-to-these-terms">14. Changes to these Terms</h2>
 		<p>
 			We may update these Terms from time to time. The "Effective" date at the top reflects the
 			current version. If a change is material, we will (a) update the Effective date, (b) notify
@@ -392,7 +417,7 @@
 			subscription before the change takes effect.
 		</p>
 
-		<h2>15. General provisions</h2>
+		<h2 id="general-provisions">15. General provisions</h2>
 		<p>
 			<strong>15.1 Entire agreement.</strong> These Terms, together with any Order, our Privacy
 			Policy, and our Refund and Cancellation Policy, constitute the entire agreement between you and
@@ -439,7 +464,7 @@
 			interpretation.
 		</p>
 
-		<h2>16. Contact</h2>
+		<h2 id="contact">16. Contact</h2>
 		<p>
 			Questions about these Terms, requests to cancel a subscription, or any notice required by these
 			Terms should be sent to:
@@ -450,3 +475,5 @@
 		</p>
 	</div>
 </article>
+
+<SectionRail {sections} />

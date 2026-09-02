@@ -227,6 +227,63 @@ When the custom domain is registered and pointed at the site (see
   per `docs/domain-setup.md`) and then re-run the `us-legal-doc-reviewer`
   to catch any references to the old GitHub-Pages URL.
 
+## Change log — site redesign, 2026-08-28
+
+The site was restyled (new masthead, landing page, footer card, single token
+layer). **No legal-page wording changed** — `terms/`, `privacy/`, `refunds/`
+and `contact/` kept their markup verbatim; only the shell around them and the
+typography did. What was re-verified against this tracker at the time:
+
+- All four footer links (Contact · Terms · Privacy · Refunds) render on **every**
+  built page, now from `LandingFooter` rather than the old `Footer` component.
+  Verified against `build/**/index.html`, 4/4 distinct targets on all 8 routes.
+- The homepage service description still matches **Terms §1**: two streams,
+  browser-based only, no physical goods, no downloadable installers, billed as
+  project fees / retainers / subscriptions. The Stripe-readiness checkbox above
+  therefore still holds.
+- **Privacy §8** ("all client-side JavaScript on the marketing site is
+  first-party code we wrote ourselves; there are no embedded third-party
+  scripts and no remote-loaded tracking tags") still holds. The redesign added
+  one inline `<script>` to `src/app.html` — first-party, no `src`, four
+  statements, sets a `js` class before first paint — plus first-party modules
+  under `src/lib/`. No cookies, no `localStorage`, no third-party host: the
+  built output's only off-origin references are `href` links to github.com and
+  merylgreendesigns.com. Nothing in §4's sub-processor list changed.
+
+Because no commitment moved, this did not trigger the `us-legal-doc-reviewer`
+re-run below. If a future redesign changes any legal page's *wording* — not
+just its styling — that re-run is required.
+
+### Addendum, 2026-08-29 — section index added to the legal routes
+
+A right-hand rail (`SectionRail.svelte`, ≥1080px only) was added to `terms/`,
+`privacy/` and `refunds/`, and a "Reach me" card to `contact/`. **Again no
+wording changed.** The edits to the three policy files are mechanical and
+navigational only:
+
+- Each `<h2>` gained an `id` (slug of its own text, with the leading section
+  number stripped — `1. The services` → `the-services`). No heading text, and
+  therefore **no section number, changed**: the numbering that Terms §8.3's
+  survival list and every internal cross-reference depend on is untouched, so
+  the "on any section renumbering or split" rule below is **not** triggered.
+- Each file gained a `<script>` block declaring its own section list, and a
+  `<SectionRail {sections} />` element after the closing `</article>`. The rail
+  renders plain in-page anchor links; it adds no outbound link, no new
+  sub-processor, and nothing that runs without JavaScript.
+- Privacy §8 still holds: the rail's only script is a first-party module under
+  `src/lib/`, used for the active-section marker. Still no cookies, no
+  storage, no third-party host.
+
+A ninth route, `/work/`, was added in the same change. It is marketing content
+(the public project list) with no legal commitment of its own, and it carries
+the same footer. It does not alter anything in this tracker.
+
+Re-verified after the change: all four footer links still render 4/4 distinct
+on all **9** built routes, and each anchor id in every rail resolves to a
+heading that exists on its own page. Counsel review is still pending per the
+launch gates above; this addendum does not change what counsel needs to look
+at.
+
 ## Maintenance rhythm
 
 - After any material site change → re-run the `us-legal-doc-reviewer`

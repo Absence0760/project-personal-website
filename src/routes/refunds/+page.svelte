@@ -1,3 +1,18 @@
+<script lang="ts">
+	import SectionRail from '$lib/components/SectionRail.svelte';
+
+	// Index for the >=1080px right rail. Kept beside the markup rather than
+	// derived from the DOM so it prerenders and works with no JavaScript.
+	const sections = [
+		{ id: 'cancelling-a-software-product-subscription', label: '1. Cancelling a software-product subscription' },
+		{ id: 'refunds-for-software-product-subscriptions', label: '2. Refunds for software-product subscriptions' },
+		{ id: 'custom-development-engagements', label: '3. Custom-development engagements' },
+		{ id: 'billing-errors', label: '4. Billing errors' },
+		{ id: 'billing-disputes-and-chargebacks', label: '5. Billing disputes and chargebacks' },
+		{ id: 'contact', label: '6. Contact' }
+	];
+</script>
+
 <svelte:head>
 	<title>Refund and Cancellation Policy | Jared Howard</title>
 	<meta
@@ -23,7 +38,7 @@
 			together with, our Terms of Service at <code>/terms/</code>.
 		</p>
 
-		<h2>1. Cancelling a software-product subscription</h2>
+		<h2 id="cancelling-a-software-product-subscription">1. Cancelling a software-product subscription</h2>
 		<p>
 			You may cancel at any time. The cancellation method we offer will, at all times, be
 			<strong>at least as easy to use as the method you used to sign up</strong>.
@@ -59,7 +74,7 @@
 			cancel.
 		</p>
 
-		<h2>2. Refunds for software-product subscriptions</h2>
+		<h2 id="refunds-for-software-product-subscriptions">2. Refunds for software-product subscriptions</h2>
 		<p>
 			<strong>Monthly plans.</strong> Monthly subscription fees are non-refundable once charged,
 			except for billing errors (see Section 4).
@@ -87,7 +102,7 @@
 			Discretionary refunds are not precedent for future requests.
 		</p>
 
-		<h2>3. Custom-development engagements</h2>
+		<h2 id="custom-development-engagements">3. Custom-development engagements</h2>
 		<p>
 			Refund terms for custom-development work are set in the statement of work ("<strong>SOW</strong
 			>") for each engagement. Unless an SOW says otherwise, the following defaults apply:
@@ -118,7 +133,7 @@
 			at the address in Section 6 (Contact) and we will work to resolve it.
 		</p>
 
-		<h2>4. Billing errors</h2>
+		<h2 id="billing-errors">4. Billing errors</h2>
 		<p>
 			If you believe you were charged in error — duplicate charge, charge after cancellation, wrong
 			plan, or wrong amount — email us at the address in Section 6 (Contact) within 60 days of the
@@ -132,7 +147,7 @@
 			payment method originally charged.
 		</p>
 
-		<h2>5. Billing disputes and chargebacks</h2>
+		<h2 id="billing-disputes-and-chargebacks">5. Billing disputes and chargebacks</h2>
 		<p>
 			If you have a billing dispute that has not been resolved by Section 1 or Section 4, please
 			contact us <strong>before</strong> initiating a chargeback with your card issuer. Most disputes
@@ -155,7 +170,7 @@
 			that is properly owed under these Terms.
 		</p>
 
-		<h2>6. Contact</h2>
+		<h2 id="contact">6. Contact</h2>
 		<p>For cancellations, refund requests, billing errors, or disputes:</p>
 		<p>
 			<strong>Jared Howard</strong><br />
@@ -167,3 +182,5 @@
 		</p>
 	</div>
 </article>
+
+<SectionRail {sections} />
